@@ -31,6 +31,9 @@
     <link rel="stylesheet" type="text/css" href="~/Assets/Login/css/util.css">
     <link rel="stylesheet" type="text/css" href="~/Assets/Login/css/main.css">
     <!--===============================================================================================-->
+    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 </head>
 <body>
 
@@ -43,7 +46,7 @@
                     </span>
 
 
-                    <div class="wrap-input100 validate-input m-b-23" data-validate="Username is reauired">
+                    <div class="wrap-input100 validate-input m-b-23" data-validate="Username is required">
                         <span class="label-input100">Username</span>
                         <input class="input100" type="text" name="username" placeholder="Type your username">
                         <span class="focus-input100" data-symbol="&#xf206;"></span>
@@ -51,7 +54,7 @@
 
                     <div class="wrap-input100 validate-input" data-validate="Password is required">
                         <span class="label-input100">Password</span>
-                        <input class="input100" type="password" name="pass" placeholder="Type your password">
+                        <input class="input100" type="password" name="password" placeholder="Type your password">
                         <span class="focus-input100" data-symbol="&#xf190;"></span>
                     </div>
 
@@ -71,7 +74,7 @@
                     <div class="container-login100-form-btn">
                         <div class="wrap-login100-form-btn">
                             <div class="login100-form-bgbtn"></div>
-                            <button class="login100-form-btn" type="submit">
+                            <button  class="login100-form-btn" type="submit">
                                 Login
                             </button>
                         </div>
@@ -108,7 +111,77 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            // Attach an event listener to the form submission
+            $('form').submit(function (e) {
+                e.preventDefault(); // Prevent the default form submission
 
+                // Get the username and password from the form
+                var username = $('input[name="username"]').val();
+                var password = $('input[name="password"]').val();
+
+                // Create the login data object
+                var loginData = {
+                    accountEmail: username,
+                    accountPassword: password
+                };
+
+                // Make an Ajax request to the login API
+                $.ajax({
+                    type: 'POST',
+                    url: 'https://localhost:7008/api/Person/SignIn',
+                    contentType: 'application/json',
+                    data: JSON.stringify(loginData),
+                    success: function (data) {
+                        // If login is successful, handle the JWT token
+                        var JwtToken = data.jwtToken;
+
+                        // Decode the JWT token to get user information, including roles
+                        var decodedToken = parseJwt(JwtToken);
+
+                        console.log('Decoded Token:', decodedToken);
+                        // Check the user's role
+
+                        if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
+                            decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'].includes('Audience')) {
+                            // Redirect to page a
+                            window.location.href = '/Audience/Manage/Manage'.replace('/Home', '');
+                        } else if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
+                            decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'].includes('Admin')) {
+
+                            window.location.href = '~/Admin/Manage/Manage'.replace('/Home', '');
+                        }
+                        else if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
+                            decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'].includes('SuperAdmin')) {
+
+                            window.location.href = '~/Admin/Manage/Manage'.replace('/Home', '');
+                        }
+
+                        else {
+                            // Handle other roles or scenarios
+                            console.log('Unknown role or scenario');
+                        }
+                    },
+                    error: function (error) {
+                        // Handle login error, display error message, etc.
+                        console.log('Login error:', error);
+                    }
+                });
+            });
+
+            // Function to parse the JWT token
+            function parseJwt(token) {
+                var base64Url = token.split('.')[1];
+                var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                return JSON.parse(jsonPayload);
+            }
+        });
+    </script>
 
     <div id="dropDownSelect1"></div>
 
