@@ -31,9 +31,14 @@
     <link rel="stylesheet" type="text/css" href="~/Assets/Login/css/util.css">
     <link rel="stylesheet" type="text/css" href="~/Assets/Login/css/main.css">
     <!--===============================================================================================-->
-    
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        #error-message {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
 
@@ -58,6 +63,7 @@
                         <span class="focus-input100" data-symbol="&#xf190;"></span>
                     </div>
 
+                    <div id="error-message" class="text-danger"></div>
 
                     @if (ViewBag.Error != null)
                     {
@@ -74,7 +80,7 @@
                     <div class="container-login100-form-btn">
                         <div class="wrap-login100-form-btn">
                             <div class="login100-form-bgbtn"></div>
-                            <button  class="login100-form-btn" type="submit">
+                            <button class="login100-form-btn" type="submit">
                                 Login
                             </button>
                         </div>
@@ -139,8 +145,12 @@
 
                         // Decode the JWT token to get user information, including roles
                         var decodedToken = parseJwt(JwtToken);
+                        var userEmail = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+                        sessionStorage.setItem('userEmail', userEmail);
 
-                        console.log('Decoded Token:', decodedToken);
+                        // Truy xuất thông tin người dùng từ sessionStorage ở các trang HTML khác
+                        var storedUserEmail = sessionStorage.getItem('userEmail');
+                        console.log(storedUserEmail);
                         // Check the user's role
 
                         if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
@@ -163,9 +173,17 @@
                             console.log('Unknown role or scenario');
                         }
                     },
-                    error: function (error) {
-                        // Handle login error, display error message, etc.
-                        console.log('Login error:', error);
+                    error: function (xhr, status, error) {
+                        console.log('Login error: ', xhr.responseText);
+
+                        if (xhr.status === 401) {
+                            // Display an error message for incorrect username or password
+                            $('#error-message').text('Incorrect username or password. Please try again.').show();
+                            $('input[name="pass"]').val('');
+                        } else {
+                            // Handle other error scenarios
+                            $('#error-message').text('An error occurred during login. Please try again later.').show();
+                        }
                     }
                 });
             });

@@ -74,16 +74,17 @@
                   
                     <img id="artworkImage" class="card-img-top mb-2" src="" alt="Card image">
                     <div class="card-body">
-                    <h1 id="artworkTitle" class="card-title display-4">
-                          
+                        <h1 id="artworkTitle">
                         </h1>
-                        
+                        <h3 id="artworkPrice">
+                        </h3>
+
                         <div id="ratingContainer" class="d-flex align-items-center">
                             <div id="starRatingContainer"></div>
                             <span id="likeCount" class="ml-2" onclick="addLike()"><i id="heartIcon" class="fa fa-heart text-danger"></i> <span id="likeCountValue">0</span></span>
                         </div>
                         <!-- Begin Comments -replace demowebsite with your own id
-                        <!-- Bình luận -->
+    <!-- Bình luận -->
                         <div id="comments" class="mt-4">
                             <!-- Hiển thị danh sách bình luận từ cơ sở dữ liệu -->
                         </div>
@@ -91,6 +92,7 @@
                             <input type="text" id="commentInput" class="comment-input" placeholder="Enter your comment">
                             <button type="button" class="comment-btn" onclick="addComment()">Send</button>
                         </div>
+                        <span id="datePost" style="color: grey;"></span>
                         <script>
                             // Hàm để thêm bình luận mới
                             function addComment() {
@@ -126,9 +128,9 @@
                                 var commentElement = document.createElement('div');
                                 commentElement.className = 'comment';
                                 commentElement.innerHTML = `
-                                        <p>${comment.content}</p>
-                                        <span class="like" onclick="likeComment(this)">&hearts; <span class="like-count">${comment.likes}</span></span>
-                                    `;
+                                                                <p>${comment.content}</p>
+                                                                <span class="like" onclick="likeComment(this)">&hearts; <span class="like-count">${comment.likes}</span></span>
+                                                            `;
                                 if (comment.likes > 0) {
                                     commentElement.querySelector('.like').classList.add('liked');
                                 }
@@ -195,7 +197,7 @@
                             }
                             // Call the function to generate the star rating
                             generateStarRating();
-                           
+
 
                             $(document).ready(function () {
                                 // Lấy thông tin artworkId từ URL
@@ -223,7 +225,12 @@
                                     document.getElementById('artworkTitle').innerText = data.contentArtwork;
                                     // Thêm các thông tin khác tùy thuộc vào cấu trúc dữ liệu của API
                                     document.getElementById('artworkImage').src = 'data:image/jpeg;base64,' + data.pictureArtwork;
+                                    document.getElementById('artworkPrice').innerText = (data.priceArtwork).toLocaleString('vi-VN') + 'VNĐ';
+                                    var datePost = new Date(data.datePost);
+                                    var formattedDate = ('0' + datePost.getDate()).slice(-2) + '-' + ('0' + (datePost.getMonth() + 1)).slice(-2) + '-' + datePost.getFullYear();
+                                    document.getElementById('datePost').innerText = formattedDate;
                                 }
+
 
                                 // Hàm để lấy giá trị của tham số từ URL
                                 function getParameterByName(name, url) {
@@ -237,9 +244,9 @@
                                 }
                             });
 
-                               
+
                         </script>
-                       
+
                     </div>
                 </article>
             </div>

@@ -27,9 +27,34 @@
                 <a class="nav-link" href="">Premium</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="~/SuperAdmin/Manage/Profile_Admin"><img class="rounded-circle mr-2" src="~/Assets/template-pintereso-bootstrap-html-master/docs/assets/img/av.png" width="30">
-                <span class="align-middle"> user</span></a>
+                <a class="nav-link" href="~/Audience/Manage/Profile">
+                    <img class="rounded-circle mr-2" src="~/Assets/template-pintereso-bootstrap-html-master/docs/assets/img/av.png" width="30">
+                    <span id="userName" class="align-middle"></span>
+                </a>
+
+                <script>
+                    $(document).ready(function () {
+                        var storedUserEmail = sessionStorage.getItem('userEmail');
+                        console.log(storedUserEmail);
+                        $.ajax({
+                            type: 'GET',
+                            url: `https://localhost:7008/api/Person/email?email=${storedUserEmail}`,
+                            success: function (response) {
+                                // Hiển thị dữ liệu từ API lên trang
+                                displayUserData(response);
+                            },
+                            error: function (error) {
+                                console.error('Lỗi:', error);
+                            }
+                        });
+                    });
+                    function displayUserData(data) {
+                        document.getElementById('userName').innerText = data.fullName;
+                    }
+                </script>
+           
             </li>
+
             <li class="nav-item dropdown">
                 <a class="nav-link" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <svg style="margin-top:10px;" class="_3DJPT" version="1.1" viewbox="0 0 32 32" width="21" height="21" aria-hidden="false" data-reactid="71"><path d="M7 15.5c0 1.9-1.6 3.5-3.5 3.5s-3.5-1.6-3.5-3.5 1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5zm21.5-3.5c-1.9 0-3.5 1.6-3.5 3.5s1.6 3.5 3.5 3.5 3.5-1.6 3.5-3.5-1.6-3.5-3.5-3.5zm-12.5 0c-1.9 0-3.5 1.6-3.5 3.5s1.6 3.5 3.5 3.5 3.5-1.6 3.5-3.5-1.6-3.5-3.5-3.5z" data-reactid="22"></path></svg>
@@ -39,8 +64,18 @@
                     <div class="dropdown-divider">
                     </div>
                     <span class="dropdown-item"><a href="~/home/Logout" class="btn btn-primary d-block"> LogOut</a></span>
+                    <script>
+                        function logout() {
+                            // Xóa toàn bộ dữ liệu từ localStorage
+                            localStorage.clear();
+
+                            // Điều hướng hoặc thực hiện các bước khác sau khi đăng xuất
+                            // Ví dụ: window.location.href = '/login'; để chuyển hướng đến trang đăng nhập
+                        }
+                    </script>
                 </div>
             </li>
         </ul>
     </div>
+
 </nav>
