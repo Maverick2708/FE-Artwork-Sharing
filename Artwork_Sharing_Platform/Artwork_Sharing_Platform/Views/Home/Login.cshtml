@@ -118,6 +118,7 @@
         </div>
     </div>
     <script>
+
         $(document).ready(function () {
             // Attach an event listener to the form submission
             $('form').submit(function (e) {
@@ -147,12 +148,29 @@
                         var decodedToken = parseJwt(JwtToken);
                         var userEmail = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
                         sessionStorage.setItem('userEmail', userEmail);
+                        
 
                         // Truy xuất thông tin người dùng từ sessionStorage ở các trang HTML khác
                         var storedUserEmail = sessionStorage.getItem('userEmail');
                         console.log(storedUserEmail);
                         // Check the user's role
+                        $.ajax({
+                            type: 'GET',
+                            url: `https://localhost:7008/api/Person/email?email=${storedUserEmail}`,
+                            success: function (response) {
+                                // Hiển thị dữ liệu từ API lên trang
+                                var img = response.avatar;
+                                var userID = response.id;
+                                sessionStorage.setItem("avatar", img);
+                                sessionStorage.setItem('userId', userID);
+                                console.log(img)
+                                
 
+                            },
+                            error: function (error) {
+                                console.error('Lỗi:', error);
+                            }
+                        });
                         if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
                             decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'].includes('Audience')) {
                             // Redirect to page a
@@ -199,6 +217,8 @@
                 return JSON.parse(jsonPayload);
             }
         });
+       
+       
     </script>
 
     <div id="dropDownSelect1"></div>
