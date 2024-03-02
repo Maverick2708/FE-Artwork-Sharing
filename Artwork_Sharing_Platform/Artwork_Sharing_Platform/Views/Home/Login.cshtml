@@ -141,71 +141,84 @@
                     contentType: 'application/json',
                     data: JSON.stringify(loginData),
                     success: function (data) {
-                        // If login is successful, handle the JWT token
-                        var JwtToken = data.jwtToken;
-
-                        // Decode the JWT token to get user information, including roles
-                        var decodedToken = parseJwt(JwtToken);
-                        var userEmail = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
-                        sessionStorage.setItem('userEmail', userEmail);
-                        
-
-                        // Truy xuất thông tin người dùng từ sessionStorage ở các trang HTML khác
-                        var storedUserEmail = sessionStorage.getItem('userEmail');
-                        console.log(storedUserEmail);
-                        // Check the user's role
-                        $.ajax({
-                            type: 'GET',
-                            url: `https://localhost:7008/api/Person/email?email=${storedUserEmail}`,
-                            success: function (response) {
-                                // Hiển thị dữ liệu từ API lên trang
-                                var img = response.avatar;
-                                var userID = response.id;
-                                sessionStorage.setItem("avatar", img);
-                                sessionStorage.setItem('userId', userID);
-                                console.log(img)
-                                
-
-                            },
-                            error: function (error) {
-                                console.error('Lỗi:', error);
-                            }
-                        });
-                        if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
-                            decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'].includes('Audience')) {
-                            // Redirect to page a
-                            window.location.href = '/Audience/Manage/Manage'.replace('/Home', '');
-                        } else if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
-                            decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'].includes('Admin')) {
-
-                            window.location.href = '~/Admin/Manage/Manage'.replace('/Home', '');
-                        }
-                        else if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
-                            decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'].includes('SuperAdmin')) {
-
-                            window.location.href = '~/Admin/Manage/Manage'.replace('/Home', '');
-                        }
-
-                        else {
-                            // Handle other roles or scenarios
-                            console.log('Unknown role or scenario');
-                        }
+                        handleLoginSuccess(data);
                     },
                     error: function (xhr, status, error) {
-                        console.log('Login error: ', xhr.responseText);
-
-                        if (xhr.status === 401) {
-                            // Display an error message for incorrect username or password
-                            $('#error-message').text('Incorrect username or password. Please try again.').show();
-                            $('input[name="pass"]').val('');
-                        } else {
-                            // Handle other error scenarios
-                            $('#error-message').text('An error occurred during login. Please try again later.').show();
-                        }
+                        handleLoginError(xhr);
                     }
                 });
             });
 
+            // Function to handle the success of the login AJAX request
+            function handleLoginSuccess(data) {
+                // If login is successful, handle the JWT token
+                var JwtToken = data.jwtToken;
+
+                // Decode the JWT token to get user information, including roles
+                var decodedToken = parseJwt(JwtToken);
+                var userEmail = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+                sessionStorage.setItem('userEmail', userEmail);
+
+                // Truy xuất thông tin người dùng từ sessionStorage ở các trang HTML khác
+                var storedUserEmail = sessionStorage.getItem('userEmail');
+                console.log(storedUserEmail);
+
+                // Check the user's role with a separate AJAX request
+                checkUserRole(storedUserEmail, decodedToken);
+            }
+
+            // Function to handle the error of the login AJAX request
+            function handleLoginError(xhr) {
+                console.log('Login error: ', xhr.responseText);
+
+                if (xhr.status === 401) {
+                    // Display an error message for incorrect username or password
+                    $('#error-message').text('Incorrect username or password. Please try again.').show();
+                    $('input[name="pass"]').val('');
+                } else {
+                    // Handle other error scenarios
+                    $('#error-message').text('An error occurred during login. Please try again later.').show();
+                }
+            }
+
+            // Function to check the user's role with a separate AJAX request
+            function checkUserRole(storedUserEmail, decodedToken) {
+                $.ajax({
+                    type: 'GET',
+                    url: `https://localhost:7008/api/Person/email?email=${storedUserEmail}`,
+                    success: function (response) {
+                        // Hiển thị dữ liệu từ API lên trang
+                        var userID = response.id;
+                        sessionStorage.setItem('userId', userID);
+                        console.log(sessionStorage.getItem('userId'));
+                        sessionStorage.setItem('avatar', response.avatar);
+
+                        // Redirect based on user role
+                        redirectBasedOnUserRole(decodedToken);
+                    },
+                    error: function (error) {
+                        console.error('Lỗi:', error);
+                    }
+                });
+            }
+
+            // Function to redirect based on user role
+            function redirectBasedOnUserRole(decodedToken) {
+                if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
+                    decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'].includes('Audience')) {
+                    // Redirect to page a
+                    window.location.href = '/Audience/Manage/Manage'.replace('/Home', '');
+                } else if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
+                    decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'].includes('Admin')) {
+                    window.location.href = '/Admin/Manage/Manage'.replace('/Home', '');
+                } else if (decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] &&
+                    decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'].includes('SuperAdmin')) {
+                    window.location.href = '/Admin/Manage/Manage'.replace('/Home', '');
+                } else {
+                    // Handle other roles or scenarios
+                    console.log('Unknown role or scenario');
+                }
+            }
             // Function to parse the JWT token
             function parseJwt(token) {
                 var base64Url = token.split('.')[1];

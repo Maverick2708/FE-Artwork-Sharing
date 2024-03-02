@@ -30,14 +30,13 @@
 
 
                 <script>
-                    $(document).ready(function () {
-
+                    document.addEventListener('DOMContentLoaded', function () {
                         var storedUserEmail = sessionStorage.getItem('userEmail');
                         // Thực hiện đăng xuất sau 5 giây
                         var sessionTimeout = 3600000;
                         setTimeout(function () {
                             // Xóa thông tin phiên đăng nhập khi hết thời gian
-                            sessionStorage.removeItem("userEmail");
+                            sessionStorage.removeItem('userEmail');
 
                             // Chuyển hướng đến trang đăng nhập
                             window.location.href = 'https://localhost:44321/Home/Login';
@@ -55,20 +54,23 @@
                             success: function (response) {
                                 // Hiển thị dữ liệu từ API lên trang
                                 displayUserData(response);
-
                             },
                             error: function (error) {
                                 console.error('Lỗi:', error);
                             }
                         });
                     });
+
                     function displayUserData(data) {
                         document.getElementById('userName').innerText = data.fullName;
-
                         document.getElementById('avatarNav').src = 'data:image/jpeg;base64,' + sessionStorage.getItem('avatar');
                     }
+                    function goToProfilePage() {
+                        // Chuyển trang khi nút được nhấn
+                        window.location.href = '/Audience/Manage/Profile';
+                    }
                 </script>
-                <a class="nav-link" href="/Audience/Manage/Profile">
+                <a class="nav-link" onclick="goToProfilePage()">
                     <img id="avatarNav" src="" width="30" class="rounded-circle mr-2" alt="Card image">
                     <span id="userName" class="align-middle"></span>
                 </a>
