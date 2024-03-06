@@ -27,14 +27,26 @@
                 <a class="nav-link" href="">Premium</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="~/Audience/Manage/Profile">
-                    <img class="rounded-circle mr-2" src="~/Assets/template-pintereso-bootstrap-html-master/docs/assets/img/av.png" width="30">
-                    <span id="userName" class="align-middle"></span>
-                </a>
+
 
                 <script>
-                    $(document).ready(function () {
+                    document.addEventListener('DOMContentLoaded', function () {
                         var storedUserEmail = sessionStorage.getItem('userEmail');
+                        // Thực hiện đăng xuất sau 5 giây
+                        var sessionTimeout = 3600000;
+                        setTimeout(function () {
+                            // Xóa thông tin phiên đăng nhập khi hết thời gian
+                            sessionStorage.removeItem('userEmail');
+
+                            // Chuyển hướng đến trang đăng nhập
+                            window.location.href = 'https://localhost:44321/Home/Login';
+                        }, sessionTimeout);
+
+                        if (storedUserEmail === null) {
+                            // Chuyển hướng đến trang đăng nhập
+                            window.location.href = 'https://localhost:44321/Home/Login'; // Thay đổi đường dẫn tương ứng với trang đăng nhập của bạn
+                            return;
+                        }
                         console.log(storedUserEmail);
                         $.ajax({
                             type: 'GET',
@@ -48,11 +60,21 @@
                             }
                         });
                     });
+
                     function displayUserData(data) {
                         document.getElementById('userName').innerText = data.fullName;
+                        document.getElementById('avatarNav').src = 'data:image/jpeg;base64,' + sessionStorage.getItem('avatar');
+                    }
+                    function goToProfilePage() {
+                        // Chuyển trang khi nút được nhấn
+                        window.location.href = '/Audience/Manage/Profile';
                     }
                 </script>
-           
+                <a class="nav-link" onclick="goToProfilePage()">
+                    <img id="avatarNav" src="" width="30" class="rounded-circle mr-2" alt="Card image">
+                    <span id="userName" class="align-middle"></span>
+                </a>
+
             </li>
 
             <li class="nav-item dropdown">
@@ -63,14 +85,14 @@
                     <h4 class="dropdown-header display-4">Thank you for<br /> Use our platform</h4>
                     <div class="dropdown-divider">
                     </div>
-                    <span class="dropdown-item"><a href="~/home/Logout" class="btn btn-primary d-block"> LogOut</a></span>
+                    <span class="dropdown-item"><a href="javascript:void(0);" onclick="logout()" class="btn btn-primary d-block"> LogOut</a></span>
+
                     <script>
                         function logout() {
-                            // Xóa toàn bộ dữ liệu từ localStorage
                             localStorage.clear();
-
-                            // Điều hướng hoặc thực hiện các bước khác sau khi đăng xuất
-                            // Ví dụ: window.location.href = '/login'; để chuyển hướng đến trang đăng nhập
+                            sessionStorage.clear();
+                            // Điều hướng và ngăn chặn sử dụng nút "Back"
+                            window.location.replace('/Home/Login');
                         }
                     </script>
                 </div>

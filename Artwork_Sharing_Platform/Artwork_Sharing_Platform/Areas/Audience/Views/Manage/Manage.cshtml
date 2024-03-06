@@ -22,7 +22,53 @@
             padding: 10px;
             margin-bottom: 10px;
         }
+
+        .navbar-light button {
+            width: 40px; /* Đặt kích thước mong muốn */
+            height: 40px;
+            border-radius: 50%; /* Tạo hình tròn */
+            overflow: hidden; /* Đảm bảo hình tròn không bị tràn ra ngoài nếu có nội dung bên trong */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none; /* Loại bỏ đường viền */
+            background-color: transparent; /* Điều chỉnh màu nền tùy thuộc vào thiết kế của bạn */
+        }
+
+            /* Điều chỉnh kích thước của hình ảnh trong nút */
+            .navbar-light button img {
+                width: 100%; /* Hình ảnh chiếm toàn bộ kích thước của nút */
+                height: auto;
+                border-radius: 50%; /* Đảm bảo hình ảnh cũng là hình tròn */
+            }
+
+            /* Hiệu ứng khi di chuột vào nút */
+            .navbar-light button:hover {
+                background-color: #f8f9fa; /* Màu nền khi di chuột vào */
+                transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi */
+            }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        /* Styles for close button */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
     </style>
+
     <script type="text/javascript">
         (function () {
             var css = document.createElement('link');
@@ -39,6 +85,118 @@
     <main role="main">
 
 
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            function openArtPopup() {
+
+                // Create a Bootstrap modal for the popup
+                var modal = `
+                            <div class="modal" id="artPopup" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Add Your Art</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <label for="artName">Art Name:</label>
+                                            <input type="text" id="artName" class="form-control mb-2">
+
+                                            <label for="artDescription">Description:</label>
+                                             <input type="text" id="artDescription" class="form-control mb-2">
+
+                                            <label for="artPrice">Price:</label>
+                                            <input type="number" id="artPrice" class="form-control mb-2">
+                                             <label for="Quantity">Quantity:</label>
+                                             <input type="number" id="Quantity" class="form-control mb-2">
+
+                                            <label for="artImage">Select Image:</label>
+                                            <input type="file" id="artImage" accept="image/*,.png" class="form-control mb-2">
+                                        </div>
+                                         <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" onclick="saveArtwork()">Save</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                // Append the modal HTML to the body
+                $('body').append(modal);
+
+                // Show the modal
+                $('#artPopup').modal('show');
+
+                // Remove the modal from the DOM when it's closed
+                $('#artPopup').on('hidden.bs.modal', function () {
+                    $(this).remove();
+                });
+
+            }
+            function saveArtwork() {
+                // Get values from input fields
+                var ArtName1 = document.getElementById('artName').value;
+                var descriptionArt = document.getElementById('artDescription').value;
+                var quantityArt = document.getElementById('Quantity').value;
+                var price = $('#artPrice').val();
+                var userID = sessionStorage.getItem('userId'); // Replace this with your actual logic to get user ID
+                // Placeholder for base64-encoded image data, to be set later
+
+                // Read and encode the selected image
+                var fileInput = document.getElementById('artImage');
+                var selectedFile = fileInput.files[0];
+
+                if (selectedFile) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        // Base64-encoded image data
+                        var codePictureArtworkWithPrefix = e.target.result;
+
+                        // Xóa tiền tố "data:image/jpeg;base64,"
+                        var codePictureArtwork = codePictureArtworkWithPrefix.replace(/^data:image\/(png|jpeg);base64,/, '');
+                        // Call the API using AJAX
+                        $.ajax({
+                            type: 'POST',
+                            url: 'https://localhost:7008/api/Arwork/AddArtwork', // Replace with your actual API endpoint
+                            data: JSON.stringify({
+                                contentArtwork: ArtName1,
+                                description: descriptionArt,
+                                priceArtWork: price,
+                                genreId: 1,
+                                userId: userID,
+                                pictureArtwork: codePictureArtwork,
+                                quanity: quantityArt,
+                                status: true
+                            }),
+                            contentType: 'application/json',
+                            success: function (data) {
+                                // Handle success response from the API
+                                console.log('Artwork saved successfully:', data);
+                                // Optionally, close the modal after successful save
+                                location.reload();
+
+                                $('#artPopup').modal('hide');
+                            },
+                            error: function (error) {
+                                // Handle error response from the API
+                                console.error('Error saving artwork:', error);
+                            }
+                        });
+                    };
+
+                    // Read the image file as a data URL
+                    reader.readAsDataURL(selectedFile);
+                }
+            }
+        </script>
         <section class="mt-4 mb-5">
             <div class="container mb-4">
                 <h1 class="font-weight-bold title">Explore</h1>
@@ -46,6 +204,9 @@
                     <nav class="navbar navbar-expand-lg navbar-light bg-white pl-2 pr-2">
                         <button class="navbar-light navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExplore" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <button class="navbar-light button" type="button" onclick="openArtPopup()">
+                            <img src="https://img.icons8.com/ios/150/000000/plus-math.png" alt="Plus Icon">
                         </button>
                         <div class="collapse navbar-collapse" id="navbarsExplore">
                             <ul class="navbar-nav active">
@@ -76,7 +237,7 @@
                     </nav>
                 </div>
             </div>
-           <div class="container-fluid">
+            <div class="container-fluid">
                 <div class="row">
                     <div class="card-columns">
                         <div id="apiDataContainer"></div>
@@ -86,21 +247,23 @@
                                     type: 'GET',
                                     url: 'https://localhost:7008/api/Arwork/GetAllArtwork',
                                     success: function (response) {
+                                        console.log(response);
+                                        console.log(sessionStorage.getItem('userId'));
                                         if (response && Array.isArray(response) && response.length > 0) {
                                             // Iterate through each artwork in the response
                                             response.forEach(function (artwork) {
                                                 const strHTML = `
-                                                    <div class="card card-pin">
-                                                        <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
-                                                            <div class="overlay">
-                                                                <h2 class="card-title title">${artwork.contentArtwork}</h2>
-                                                                <div class="more">
-                                                                   <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
-                                                                        <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                    </div>`
+                                                                                                                            <div class="card card-pin">
+                                                                                                                                <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
+                                                                                                                                    <div class="overlay">
+                                                                                                                                        <h2 class="card-title title">${artwork.contentArtwork}</h2>
+                                                                                                                                        <div class="more">
+                                                                                                                                           <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
+                                                                                                                                                <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
+                                                                                                                                            </a>
+                                                                                                                                        </div>
+                                                                                                                                    </div>
+                                                                                                                            </div>`
                                                     ;
 
                                                 $('#apiDataContainer').append(strHTML);
@@ -108,10 +271,12 @@
                                                 $('.more-btn').click(function (e) {
                                                     e.preventDefault();
                                                     const artworkId = $(this).data('artworkid');
+                                                    sessionStorage.setItem('artworkID', artworkId);
                                                     // Chuyển đến trang Manage_Post với artworkId
                                                     window.location.href = `Manage_Post?artworkid=${artworkId}`;
                                                 });
                                             });
+                                           
                                         } else {
                                             console.error('Invalid or empty response from the API.');
                                         }
@@ -121,16 +286,16 @@
                                     }
                                 });
                             });
-                          
+
                         </script>
                     </div>
 
-                    </div>
                 </div>
+            </div>
         </section>
 
     </main>
-    
+
 
 </body>
 

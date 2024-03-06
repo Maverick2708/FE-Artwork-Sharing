@@ -64,6 +64,65 @@
     .comment-btn {
         flex-shrink: 0; /* Prevent button from shrinking */
     }
+    /* Style cho hình avatar bo tròn */
+    .avatar {
+        border-radius: 50%;
+        width: 20px; /* Điều chỉnh kích thước hình avatar */
+        height: 20px;
+        object-fit: cover; /* Hiển thị toàn bộ hình trong khung */
+        margin-right: 20px; /* Khoảng cách giữa avatar và văn bản */
+    }
+
+    /* Style cho ô chữ nhật dài chứa avatar và văn bản */
+    .profile-card {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        border: 1px solid #ccc; /* Viền ô chữ nhật */
+        margin-bottom: 20px; /* Khoảng cách giữa các ô chữ nhật */
+        border-radius: 10px;
+    }
+
+    /* Style cho phần văn bản */
+    .text-section {
+        flex: 1; /* Đảm bảo phần văn bản mở rộng để chiếm hết không gian còn trống */
+    }
+
+    /* Reset margin và padding cho body */
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        margin-bottom: 1px; /* Điều chỉnh giảm khoảng cách giữa các section */
+    }
+    .comment-date {
+        margin-top: 10px; /* Khoảng cách giữa comment và ngày */
+        color: #888; /* Màu chữ xám mờ */
+        font-size: 14px; /* Kích thước chữ */
+        text-align: right; /* Căn phải */
+    }
+    .comment-content {
+        margin-bottom: 10px; /* Khoảng cách giữa comment và ngày */
+    }
+    .rectangle-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .rectangle {
+        display: inline-block;
+        background-color: #4caf50; /* Your desired background color */
+        color: white;
+        padding: 5px 20px;
+        border-radius: 5px;
+    }
+
+    .comments-text {
+        font-size: 18px; /* Your desired font size */
+        font-weight: bold;
+    }
 </style>
 
 <section class="bg-gray200 pt-5 pb-5">
@@ -71,20 +130,22 @@
         <div class="row justify-content-center">
             <div class="col-md-7">
                 <article class="card">
-                  
+
                     <img id="artworkImage" class="card-img-top mb-2" src="" alt="Card image">
                     <div class="card-body">
                         <h1 id="artworkTitle">
                         </h1>
-                        <h3 id="artworkPrice">
-                        </h3>
+                        <h4 id="artDescription">
+                        </h4>
+                        <h6 id="artworkPrice">
+                        </h6>
 
                         <div id="ratingContainer" class="d-flex align-items-center">
                             <div id="starRatingContainer"></div>
                             <span id="likeCount" class="ml-2" onclick="addLike()"><i id="heartIcon" class="fa fa-heart text-danger"></i> <span id="likeCountValue">0</span></span>
                         </div>
                         <!-- Begin Comments -replace demowebsite with your own id
-    <!-- Bình luận -->
+                        <!-- Bình luận -->
                         <div id="comments" class="mt-4">
                             <!-- Hiển thị danh sách bình luận từ cơ sở dữ liệu -->
                         </div>
@@ -94,68 +155,8 @@
                         </div>
                         <span id="datePost" style="color: grey;"></span>
                         <script>
-                            // Hàm để thêm bình luận mới
-                            function addComment() {
-                                var commentInput = document.getElementById('commentInput').value;
-
-                                // Kiểm tra xem có nội dung bình luận hay không
-                                if (commentInput.trim() === '') {
-                                    alert('Vui lòng nhập nội dung bình luận.');
-                                    return;
-                                }
-
-                                // Tạo một đối tượng bình luận (có thể có thêm thông tin như user_id, timestamp, ...)
-                                var comment = {
-                                    content: commentInput,
-                                    likes: 0 // Số lượng thả tim ban đầu
-                                };
-
-                                // Thêm bình luận vào danh sách hiển thị
-                                displayComment(comment);
-
-                                // Đồng thời, bạn cũng có thể gửi dữ liệu lên máy chủ để lưu vào cơ sở dữ liệu
-                                // Sử dụng AJAX hoặc Fetch API để gửi dữ liệu
-
-                                // Reset input sau khi thêm bình luận
-                                document.getElementById('commentInput').value = '';
-                            }
-
-                            // Hàm để hiển thị bình luận
-                            function displayComment(comment) {
-                                var commentsContainer = document.getElementById('comments');
-
-                                // Tạo một phần tử HTML để hiển thị bình luận
-                                var commentElement = document.createElement('div');
-                                commentElement.className = 'comment';
-                                commentElement.innerHTML = `
-                                                                <p>${comment.content}</p>
-                                                                <span class="like" onclick="likeComment(this)">&hearts; <span class="like-count">${comment.likes}</span></span>
-                                                            `;
-                                if (comment.likes > 0) {
-                                    commentElement.querySelector('.like').classList.add('liked');
-                                }
-                                // Thêm phần tử vào container
-                                commentsContainer.appendChild(commentElement);
-                            }
-
-                            // Hàm để thả tim cho bình luận
-                            function likeComment(span) {
-                                var likeCountElement = span.querySelector('.like-count');
-                                var likeCount = parseInt(likeCountElement.innerText, 10);
-
-                                // Kiểm tra xem đã thả tim chưa
-                                if (span.classList.contains('liked')) {
-                                    likeCount--;
-                                    span.classList.remove('liked');
-                                } else {
-                                    likeCount++;
-                                    span.classList.add('liked');
-                                }
-
-                                likeCountElement.innerText = likeCount;
-
-                                // Bạn cũng có thể gửi yêu cầu lên máy chủ để cập nhật số lượng thả tim trong cơ sở dữ liệu
-                            }
+                          
+                          
                             var starRating = 3; // Replace with the actual database value
                             var likeCountValue = 0;
 
@@ -176,6 +177,7 @@
                                 // You can add half stars or empty stars based on your requirements
                             }
                             function addLike() {
+
                                 if (isLiked) {
                                     // Nếu đã thả tim, ẩn tim và giảm số lượng người thả tim
                                     isLiked = false;
@@ -219,6 +221,7 @@
                                     });
                                 }
 
+
                                 // Hàm để hiển thị dữ liệu từ API lên trang
                                 function displayArtworkData(data) {
                                     // Thực hiện các thay đổi cần thiết để hiển thị dữ liệu
@@ -229,6 +232,8 @@
                                     var datePost = new Date(data.datePost);
                                     var formattedDate = ('0' + datePost.getDate()).slice(-2) + '-' + ('0' + (datePost.getMonth() + 1)).slice(-2) + '-' + datePost.getFullYear();
                                     document.getElementById('datePost').innerText = formattedDate;
+                                    document.getElementById('artDescription').innerText = data.description;
+
                                 }
 
 
@@ -243,6 +248,48 @@
                                     return decodeURIComponent(results[2].replace(/\+/g, ' '));
                                 }
                             });
+                            function addComment() {
+                                var commentInput = document.getElementById('commentInput').value;
+
+                                // Check if the comment input is not empty
+                              
+
+                                // Get userId and artworkPId from session
+                                var userId = sessionStorage.getItem('userId');
+                                var artworkPId = sessionStorage.getItem('artworkID');
+
+                                // Create a comment object with necessary values
+                                var commentData = {
+                                    contentComment: commentInput,
+                                    userId: userId,
+                                    artworkPId: artworkPId
+                                };
+                                
+                                // Call the function to send the comment to the server
+                                postComment(commentData);
+                            }
+
+                            // Function to send a comment to the server
+                            function postComment(commentData) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'https://localhost:7008/api/Comment/CreateComment', // Replace with your actual API endpoint
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(commentData),
+                                    success: function (response) {
+                                        // Handle the success response
+                                        console.log('Comment added successfully:', response);
+
+                                        // If needed, update the UI to display the new comment immediately
+                                        // You can call a function to refresh the comments or append the new comment to the existing ones
+                                        location.reload();
+                                    },
+                                    error: function (error) {
+                                        // Handle the error response
+                                        console.error('Error adding comment:', error);
+                                    }
+                                });
+                            }
 
 
                         </script>
@@ -252,10 +299,64 @@
             </div>
         </div>
     </div>
-    
-    
-    
-    <div class="container-fluid mt-5">
-        
+</section>
+
+<!-- HTML structure -->
+<section class="bg-gray200 pt-5 pb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <article class="card">
+                    <div class="card-body">
+                         <div id="apiDataContainer"></div>
+                            <script>
+                             $(document).ready(function () {
+                                 var artworkId = sessionStorage.getItem("artworkID");
+                                 $.ajax({
+                                     type: 'GET',
+                                     url: `https://localhost:7008/api/Comment/GetCommentForPost?artworkId=${artworkId}`,
+                                     success: function (response) {
+                                         console.log(response);
+                                         if (response && response.status === "Success" && response.dataObject && response.dataObject.length > 0) {
+                                             response.dataObject.forEach(function (comment) {
+                                                 // Check if the element with ID 'apiDataContainer' exists
+                                                 var apiDataContainer = $('#apiDataContainer');
+                                                 if (apiDataContainer.length) {
+                                                     apiDataContainer.append(`
+                                                         <div class="profile-card">
+                                                             <div class="text-section">
+                                                                 <div>${comment.accountMail}</div>
+                                                                  <div class="comment-content-date">
+                                                                    <div class="comment-content">${comment.contentComment}</div>
+                                                                    <div class="comment-date">${formatDate(comment.dateSub)}</div>
+                                                                  </div>
+                                                             </div>
+                                                         </div>`
+                                                     );
+                                                 } else {
+                                                     console.log('Element with ID "apiDataContainer" not found.');
+                                                 }
+                                             });
+                                         }
+                                         else {
+                                             console.log("ERROR HTML")
+                                         }
+                                     },
+                                     error: function (error) {
+                                         console.error('Lỗi:', error);
+                                     }
+                                 });
+                             });
+                                function formatDate(dateString) {
+                                    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+                                    const formattedDate = new Date(dateString).toLocaleDateString('vi-VN', options);
+                                    return `<div class="comment-date">${formattedDate}</div>`;
+                                }
+                         </script>
+
+                    </div>
+                </article>
+            </div>
+        </div>
     </div>
 </section>
