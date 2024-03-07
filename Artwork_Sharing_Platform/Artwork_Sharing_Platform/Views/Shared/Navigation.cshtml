@@ -54,6 +54,8 @@
                             success: function (response) {
                                 // Hiển thị dữ liệu từ API lên trang
                                 displayUserData(response);
+                                document.getElementById('userName').innerText = response.fullName;
+                                document.getElementById('avatarNav').src = 'data:image/jpeg;base64,' + response.avatar
                             },
                             error: function (error) {
                                 console.error('Lỗi:', error);
@@ -63,16 +65,18 @@
 
                     function displayUserData(data) {
                         document.getElementById('userName').innerText = data.fullName;
-                        document.getElementById('avatarNav').src = 'data:image/jpeg;base64,' + sessionStorage.getItem('avatar');
+                        document.getElementById('avatarNav').src = 'data:image/jpeg;base64,' + data.avatar;
                     }
                     function goToProfilePage() {
                         // Chuyển trang khi nút được nhấn
                         window.location.href = '/Audience/Manage/Profile';
+                        
                     }
                 </script>
                 <a class="nav-link" onclick="goToProfilePage()">
                     <img id="avatarNav" src="" width="30" class="rounded-circle mr-2" alt="Card image">
                     <span id="userName" class="align-middle"></span>
+                    
                 </a>
 
             </li>
