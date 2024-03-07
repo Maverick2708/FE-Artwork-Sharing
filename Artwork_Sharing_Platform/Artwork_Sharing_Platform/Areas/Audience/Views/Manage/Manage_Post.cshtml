@@ -157,14 +157,13 @@
                         <script>
                           
                           
-                            var starRating = 3; // Replace with the actual database value
+                            var starRating = 5; // Replace with the actual database value
                             var likeCountValue = 0;
 
-                            var isLiked = false; // Trạng thái ban đầu là chưa thả tim
+                          // Trạng thái ban đầu là chưa thả tim
                             var likeCountValue = 0;
                             // Function to generate the star rating
                             function generateStarRating() {
-                                var starRatingContainer = document.getElementById('starRatingContainer');
                                 starRatingContainer.innerHTML = ''; // Clear previous content
 
                                 // Create a star for each rating
@@ -176,15 +175,109 @@
 
                                 // You can add half stars or empty stars based on your requirements
                             }
-                            function addLike() {
+                            function getAverageStarRating() {
+                                var artworkId = getParameterByName('artworkid');
+                                $.ajax({
+                                    type: 'GET',
+                                    url: `https://localhost:7008/api/RateStar/GetAverageRateStar?artworkID=${artworkId}`,
+                                    success: function (data) {
+                                        starRating = data.dataObject;
+                                        generateStarRating();
+                                    },
+                                    error: function (error) {
+                                        console.error('Lỗi:', error);
+                                    }
+                                });
+                            }
+                            $(document).ready(function () {
+                                getAverageStarRating();
 
+                            });
+                            function getParameterByName(name, url) {
+                                if (!url) url = window.location.href;
+                                name = name.replace(/[[]]/g, "\$&");
+                                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                                    results = regex.exec(url);
+                                if (!results) return null;
+                                if (!results[2]) return '';
+                                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                            }
+                            var isLiked = false; // Trạng thái ban đầu là chưa thả tim
+                            var likeCountValue = 0;
+
+                            $(document).ready(function () {
+                                loadLikeStatus();
+                                loadLikeCount();
+                            });
+
+                            function loadLikeStatus() {
+                                // Lấy artworkId từ session hoặc từ nơi bạn lưu trữ
+                                var artworkId = getParameterByName('artworkid');
+
+                                // Lấy userId từ sessionStorage
+                                var userId = sessionStorage.getItem('userId');
+
+                                // Gọi API để kiểm tra trạng thái like của người dùng
+                                $.ajax({
+                                    type: 'GET',
+                                    url: `https://localhost:7008/api/Comment/GetUseLikerOrNotLike?userId=${userId}&artworkId=${artworkId}`,
+                                    success: function (response) {
+                                        if (response.status === "Success") {
+                                            // Cập nhật trạng thái isLiked dựa trên dữ liệu từ API
+                                            isLiked = response.dataObject.likeOrNotLike;
+
+                                            // Cập nhật trạng thái trái tim (đỏ hoặc đen)
+                                            var heartIcon = document.getElementById('heartIcon');
+                                            heartIcon.classList.toggle('text-danger', isLiked);
+                                            console.log("like");
+                                        }
+                                        else if(response.status === "Error") {
+                                    // Cập nhật trạng thái isLiked dựa trên dữ liệu từ API
+                                        isLiked = response.dataObject.likeOrNotLike;
+
+                                    // Cập nhật trạng thái trái tim (đỏ hoặc đen)
+                                        var heartIcon = document.getElementById('heartIcon');
+                                            heartIcon.classList.toggle('', isLiked);
+                                            console.log("Unlike");
+                                    }
+                                     else {
+                                            console.error('Lỗi khi kiểm tra trạng thái like:', response.message);
+                                    }
+                                    },
+                                    
+                                });
+                            }
+
+                            function loadLikeCount() {
+                                // Lấy artworkId từ session hoặc từ nơi bạn lưu trữ
+                                var artworkId = getParameterByName('artworkid');
+
+                                // Gọi API để lấy số lượng thả tim
+                                $.ajax({
+                                    type: 'GET',
+                                    url: `https://localhost:7008/api/Comment/CountInteractByArtworkId?artworkId=${artworkId}`,
+                                    success: function (data) {
+                                        // Cập nhật giá trị count từ dữ liệu trả về
+                                        likeCountValue = data.dataObject;
+
+                                        // Cập nhật số lượng người thả tim
+                                        document.getElementById('likeCountValue').innerText = likeCountValue;
+                                    },
+                                    error: function (error) {
+                                        console.error('Lỗi khi gọi API:', error);
+                                    }
+                                });
+                            }
+
+                            function addLike() {
+                                var heartIcon = document.getElementById('heartIcon');
+
+                                // Thực hiện thay đổi trạng thái thả tim
                                 if (isLiked) {
-                                    // Nếu đã thả tim, ẩn tim và giảm số lượng người thả tim
-                                    isLiked = false;
+                                    // Nếu đã thả tim, giảm số lượng người thả tim
                                     likeCountValue--;
                                 } else {
-                                    // Nếu chưa thả tim, hiển thị tim và tăng số lượng người thả tim
-                                    isLiked = true;
+                                    // Nếu chưa thả tim, tăng số lượng người thả tim
                                     likeCountValue++;
                                 }
 
@@ -192,10 +285,23 @@
                                 document.getElementById('likeCountValue').innerText = likeCountValue;
 
                                 // Thay đổi trạng thái trái tim (đỏ hoặc đen)
-                                var heartIcon = document.getElementById('heartIcon');
                                 heartIcon.classList.toggle('text-danger', isLiked);
 
+                                // Cập nhật trạng thái isLiked
+                                isLiked = !isLiked;
+
                                 // Bạn cũng có thể gửi yêu cầu lên máy chủ để cập nhật số lượng thả tim trong cơ sở dữ liệu
+                            }
+                            
+
+                            // Function to get URL parameter by name
+                            function getParameterByName(name, url = window.location.href) {
+                                name = name.replace(/[\[\]]/g, '\\$&');
+                                const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
+                                const results = regex.exec(url);
+                                if (!results) return null;
+                                if (!results[2]) return '';
+                                return decodeURIComponent(results[2].replace(/\+/g, ' '));
                             }
                             // Call the function to generate the star rating
                             generateStarRating();
@@ -213,7 +319,7 @@
                                         url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkId}`,
                                         success: function (response) {
                                             // Hiển thị dữ liệu từ API lên trang
-                                            displayArtworkData(response);
+                                            displayArtworkData(response.dataObject);
                                         },
                                         error: function (error) {
                                             console.error('Lỗi:', error);
