@@ -123,6 +123,49 @@
         font-size: 18px; /* Your desired font size */
         font-weight: bold;
     }
+    .popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+    }
+
+/* The actual popup (appears on top) */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s
+}
+
+/* Add animation (fade in the popup) */
+  
 </style>
 
 <section class="bg-gray200 pt-5 pb-5">
@@ -154,7 +197,9 @@
                         <div class="comment-input-container">
                             <input type="text" id="commentInput" class="comment-input" placeholder="Enter your comment">
                             <button type="button" class="comment-btn" onclick="addComment()">Send</button>
-                            <button type="button" class="comment-btn" onclick="addCart()">Add to card</button>
+                            <button type="button" class="comment-btn popup" onclick="addCart()">Add to card
+                                <span class="popuptext" id="myPopup">Add to cart done!</span>
+                            </button>
                         </div>
                         <span id="datePost" style="color: grey;"></span>
                         <script>
@@ -179,6 +224,11 @@
                                 // Call the function to send the comment to the server
                                 addToCart(art);
                             }
+                            function myFunction() {
+                                var popup = document.getElementById("myPopup");
+                                popup.classList.toggle("show");
+                            }
+
                             function addToCart(obj) {
                                 $.ajax({
                                     type: 'POST',
@@ -188,7 +238,8 @@
                                     success: function (response) {
                                         // Handle the success response
                                         console.log('Added Cart successfully:', response);
-
+                                        //myFunction();
+                                     
                                         // If needed, update the UI to display the new comment immediately
                                         // You can call a function to refresh the comments or append the new comment to the existing ones
                                         
