@@ -426,6 +426,9 @@
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\Admin\Views\Manage\AdminPage.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_LayoutAdminPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\UserPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\RequestPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\UserPageBySuperAdmin.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

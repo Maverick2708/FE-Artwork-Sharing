@@ -13,6 +13,17 @@ namespace Artwork_Sharing_Platform.Areas.Admin.Controllers
         {
             return View();
         }
-
+        public ActionResult UserPage()
+        {
+            return View();
+        }
+        public ActionResult RequestPage()
+        {
+            return View();
+        }
+        public ActionResult UserPageBySuperAdmin()
+        {
+            return View();
+        }
     }
 }

@@ -25,7 +25,7 @@
                                         <i class="fa fa-comments fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge">26</div>
+                                        <div id="count-request" class="huge">26</div>
                                         <div>New Comments!</div>
                                     </div>
                                 </div>
@@ -348,7 +348,40 @@
             <!-- /.container-fluid -->
         </div>
         <!-- /#page-wrapper -->
+<script>
+    async function countRequests() {
+        const apiUrl = 'https://localhost:7008/api/Request/CountRequest'; // Replace with your API base URL
 
+        try {
+            const response = await fetch(apiUrl, { method: 'GET' });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.status === 'Success') {
+                displayCount(data.dataObject);
+            } else {
+                console.error(data.message);
+            }
+        } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error.message);
+        }
+    }
+    function displayCount(count) {
+        const countElement = document.getElementById('count-request');
+        if (countElement) {
+            countElement.textContent = count;
+        } else {
+            console.error('.huge element not found');
+        }
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        countRequests();
+    });
+</script>
   
     
 

@@ -80,7 +80,7 @@ $(function() {
         element: 'morris-bar-chart',
         data: [{
             y: '2006',
-            a: 100,
+            a: 130,
             b: 90
         }, {
             y: '2007',

@@ -48,7 +48,7 @@
             </button>
 
             <ul class="nav navbar-nav navbar-left navbar-top-links">
-                <li><a href="~/Admin/Manage/AdminPage"><i class="fa fa-home fa-fw"></i> Website</a></li>
+                <li><a href="/Admin/Manage/AdminPage"><i class="fa fa-home fa-fw"></i> Artwork Sharing</a></li>
             </ul>
 
             <ul class="nav navbar-right navbar-top-links">
@@ -108,14 +108,14 @@
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i> Super Admin <b class="caret"></b>
+                        <i  class="fa fa-user fa-fw"></i><span id="userEmail"></span>  <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li>
+                        @*<li>
                             <a href="#"><i class="fa fa-user fa-fw"></i> Profile</a>
                         </li>
                         
-                        <li class="divider"></li>
+                        <li class="divider"></li>*@
                         <li>
                             <a href="~/home/Logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
@@ -139,16 +139,16 @@
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="~/Admin/Manage/AdminPage" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="/Admin/Manage/AdminPage" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="flot.html">Flot Charts</a>
+                                    <a href="RequestPage">RequestPage</a>
                                 </li>
                                 <li>
-                                    <a href="morris.html">Morris.js Charts</a>
+                                    <a href="UserPage">UserPage</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -156,7 +156,7 @@
                         <li>
                             <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
                         </li>
-                        <li>
+                        <!--<li>
                             <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
                         </li>
                         <li>
@@ -180,9 +180,9 @@
                                 <li>
                                     <a href="grid.html">Grid</a>
                                 </li>
-                            </ul>
+                            </ul>-->
                             <!-- /.nav-second-level -->
-                        </li>
+                        <!--</li>
                         <li>
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -207,12 +207,12 @@
                                         <li>
                                             <a href="#">Third Level Item</a>
                                         </li>
-                                    </ul>
+                                    </ul>-->
                                     <!-- /.nav-third-level -->
-                                </li>
-                            </ul>
+                                <!--</li>
+                            </ul>-->
                             <!-- /.nav-second-level -->
-                        </li>
+                        <!--</li>
                         <li>
                             <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -222,15 +222,56 @@
                                 <li>
                                     <a href="login.html">Login Page</a>
                                 </li>
-                            </ul>
+                            </ul>-->
                             <!-- /.nav-second-level -->
-                        </li>
+                        <!--</li>-->
                     </ul>
                 </div>
             </div>
         </nav>
         @RenderBody()
     </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var storedUserEmail = sessionStorage.getItem('userEmail');
+            // Thực hiện đăng xuất sau 5 giây
+            var sessionTimeout = 3600000;
+            setTimeout(function () {
+                // Xóa thông tin phiên đăng nhập khi hết thời gian
+                sessionStorage.removeItem('userEmail');
+
+                // Chuyển hướng đến trang đăng nhập
+                window.location.href = 'https://localhost:44321/Home/Login';
+            }, sessionTimeout);
+
+            if (storedUserEmail === null) {
+                // Chuyển hướng đến trang đăng nhập
+                window.location.href = 'https://localhost:44321/Home/Login'; // Thay đổi đường dẫn tương ứng với trang đăng nhập của bạn
+                return;
+            }
+            console.log(storedUserEmail);
+            $.ajax({
+                type: 'GET',
+                url: `https://localhost:7008/api/Person/email?email=${storedUserEmail}`,
+                success: function (response) {
+                    // Hiển thị dữ liệu từ API lên trang
+                    displayUserData(response);
+
+                },
+                error: function (error) {
+                    console.error('Lỗi:', error);
+                }
+            });
+        });
+
+        function displayUserData(data) {
+            document.getElementById('userEmail').innerText = data.fullName;
+
+
+        }
+    </script>
 
         <script src="~/Assets/startmin-master/js/jquery.min.js"></script>
 
