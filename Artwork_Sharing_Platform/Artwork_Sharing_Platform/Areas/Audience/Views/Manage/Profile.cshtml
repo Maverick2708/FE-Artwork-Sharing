@@ -3,14 +3,207 @@
     Layout = "~/Views/Shared/defaultAuthor.cshtml";
 }
 
-<div class="jumbotron border-round-0 min-50vh" id="backgroundProfile" style="background-image:src();" alt="IMG">
-</div>
-<div class="container mb-4">
+<div class="jumbotron border-round-0 min-50vh" id="backgroundProfile" style="background-image: url();"></div>
+@*<div class="container mb-4">
     <img id="avatarProfile" src="" class="mt-neg100 mb-4 rounded-circle" width="128">
-    <h1 id="userNameProfile" class="font-weight-bold title"></h1>
-    
+    <button id="circleButton" onclick="openArtPopup()" style="opacity: 0.5">   
+    <img src="https://img.icons8.com/?size=256&id=364&format=png" alt="Setting icon">
+    </button>
+    <h1 id="userNameProfile" class="font-weight-bold title">
+     
+    </h1>
+    <div>------------</div>
+    <h4 class="your-art">Your art</h4>
+
+</div>*@
+
+<style>
+    .profile {
+        position: relative;
+        display: inline-block;
+        margin-left: 50px;
+    }
+
+    #circleButton {
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        top: -20px;
+        left: 50%; /* Center the button horizontally */
+        transform: translateX(-50%); /* Adjust for centering */
+        background-color: white;
+        border: none;
+        cursor: pointer;
+        z-index: 1; /* Ensure the button is above the avatar */
+    }
+
+    #circleButton img {
+        width: 24px;
+        height: 24px;
+    } 
+          
+</style>
+
+<div class="profile mb-4">
+    <img id="avatarProfile" src="" class="mt-neg100 mb-4 rounded-circle" width="128">
+    <button id="circleButton" onclick="openArtPopup()">
+        <img src="https://img.icons8.com/?size=256&id=364&format=png" alt="Setting icon">
+    </button>
+    <h1 id="userNameProfile" class="font-weight-bold title">
+    </h1>
+    <div>------------</div>
+    <h4 class="your-art">Your art</h4>
 </div>
+
 <script>
+    
+    function openArtPopup() {
+
+        // Create a Bootstrap modal for the popup
+        var modal = `
+                                <div class="modal" id="artPopup" tabindex="-1" role="dialog">
+                                    <div class="modal-dialogg" role="document" style="display: flex; align-item: center; justify-content: center">
+                                        <div class="modal-content" style="width: 70%">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Information</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div style="display: flex">
+                                                    <label for="Fullname">Full name:</label>
+                                                    <input type="text" id="Fullname" class="form-control mb-2">
+                                                     <label>  </label>
+                                                    <label for="Phone">Phone number:</label>
+                                                    <input type="text" id="Phone" class="form-control mb-2">
+                                                </div>
+                                                <div style="display: flex">
+                                                    <label for="Address">Address:</label>
+                                                    <input type="text" id="Address" class="form-control mb-2">
+                                                    <label for="Birth">Brith Day:</label>
+                                                    <input type="date" id="Birth" class="form-control mb-2">
+                                                </div>
+                                                
+                                                    <label for="CurrentAvatar">Avatar:</label>
+                                                    <img src="" id="CurrentAvatar" class="form-control mb-2" style="width: 200px; height: 200px;">
+                                                    <label for="Avatar">Select Image:</label>
+                                                    <input type="file" id="Avatar" accept="image/*,.png" class="form-control mb-2" onchange="checkFileSelection()">
+                                                  
+                                                  <label for="CurrentBackground">Background:</label>
+                                                   <img src="" id="CurrentBackground" class="form-control mb-2" style="object-fit: cover; width: 200px; height: 200px;">
+                                                 <label for="Background">Select Background:</label>
+                                                <input type="file" id="Background" accept="image/*,.png" class="form-control mb-2" onchange="checkFileSelection()">
+                                                
+                                            </div>
+                                             <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" onclick="Editinfo()">Save</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+
+        // Append the modal HTML to the body
+        $('body').append(modal);
+
+        // Show the modal
+        $('#artPopup').modal('show');
+
+        // Remove the modal from the DOM when it's closed
+        $('#artPopup').on('hidden.bs.modal', function () {
+            $(this).remove();
+        });
+        var storedUserEmail = sessionStorage.getItem('userEmail');
+        $.ajax({
+            type: 'GET',
+            url: `https://localhost:7008/api/Person/email?email=${storedUserEmail}`,
+            success: function (response) {
+                // Hiển thị dữ liệu từ API lên trang
+                document.getElementById('Fullname').value = response.fullName;
+                document.getElementById('Phone').value = response.phoneNumber;
+                document.getElementById('Address').value = response.address;
+                document.getElementById('Birth').value = formatDateToDatePickerFormat(response.dob);
+                document.getElementById('CurrentAvatar').src = 'data:image/jpeg;base64,' + response.avatar;
+                document.getElementById('CurrentBackground').src = 'data:image/jpeg;base64,' + response.backgroundImg;
+               
+            },
+            error: function (error) {
+                console.error('Lỗi:', error);
+            }
+        });
+
+    }
+    function Editinfo() {
+        // Get values from input fields
+        var Fullname = document.getElementById('Fullname').value;
+        var Phone = document.getElementById('Phone').value;
+        var Address = document.getElementById('Address').value;
+        var Birth = $('#Birth').val();
+        var userID = sessionStorage.getItem('userId');
+          // Replace this with your actual logic to get user ID
+        // Placeholder for base64-encoded image data, to be set later
+
+        // Read and encode the selected image
+        var fileInputAvatar = document.getElementById('Avatar');
+        var fileInputBackground = document.getElementById('Background');
+        var selectedFile = fileInputAvatar.files[0];
+        var selectedFileBack = fileInputBackground.files[0];
+
+        if (selectedFile) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                // Base64-encoded image data
+                var codePictureArtworkWithPrefix = e.target.result;
+
+                // Xóa tiền tố "data:image/jpeg;base64,"
+                var codePictureAvatar = codePictureArtworkWithPrefix.replace(/^data:image\/(png|jpeg);base64,/, '');
+                var codePictureBAckground = codePictureArtworkWithPrefix.replace(/^data:image\/(png|jpeg);base64,/, '');
+
+                // Call the API using AJAX
+                $.ajax({
+                    type: 'PUT',
+                    url: `https://localhost:7008/api/Person/UpdateAccount?userId=${userID}`, // Replace with your actual API endpoint
+                    data: JSON.stringify({
+                        fullName: Fullname,
+                        birthDate: Birth,
+                        phoneNumber: Phone,
+                        address: Address,
+                        avatar: codePictureAvatar
+                        
+                    }),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        // Handle success response from the API
+                        alert("Update information successfully!");
+
+                        // Optionally, close the modal after successful save
+                        location.reload();
+
+                        $('#artPopup').modal('hide');
+                    },
+                    error: function (error) {
+                        // Handle error response from the API
+                        console.error('Error saving info:', error);
+                    }
+                });
+            };
+
+            // Read the image file as a data URL
+            reader.readAsDataURL(selectedFile);
+        }
+    }
+    function formatDateToDatePickerFormat(inputDate) {
+        const dateObject = new Date(inputDate);
+        const year = dateObject.getFullYear();
+        const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+        const day = dateObject.getDate().toString().padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
+
     $(document).ready(function () {
         var storedUserEmail = sessionStorage.getItem('userEmail');
         console.log(storedUserEmail);
@@ -27,12 +220,63 @@
             }
         });
     });
+
     function displayUserData(data) {
         document.getElementById('userNameProfile').innerText = data.fullName;
         document.getElementById('avatarProfile').src = 'data:image/jpeg;base64,' + data.avatar;
-        document.getElementById('backgroundProfile').src = 'data:image/jpeg;base64,' + data.backgroundImg;
-
+        document.getElementById('backgroundProfile').style.backgroundImage = 'url(data:image/jpeg;base64,' + data.backgroundImg + ')';
     }
 </script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="card-columns">
+            <div id="apiDataContainer"></div>
+            <script>
+                $(document).ready(function () {
+                    var userId = sessionStorage.getItem('userId');
+                    $.ajax({
+                        type: 'GET',
+                        url: `https://localhost:7008/api/Arwork/GetArtworkByUserid?userID=${userId}`,
+                        success: function (response) {
+                            if (response.dataObject && Array.isArray(response.dataObject) && response.dataObject.length > 0) {
+                                // Iterate through each artwork in the response
+                                response.dataObject.forEach(function (artwork) {
+                                    const strHTML = `
+                                                    <div class="card card-pin">
+                                                        <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
+                                                        <div class="overlay">
+                                                            <h2 class="card-title title">${artwork.contentArtwork}</h2>
+                                                            <div class="more">
+                                                                <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
+                                                                    <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                `;
 
+                                    $('#apiDataContainer').append(strHTML);
+                                    $('.more-btn').click(function (e) {
+                                        e.preventDefault();
+                                        const artworkId = $(this).data('artworkid');
+                                        sessionStorage.setItem('artworkID', artworkId);
+                                        // Chuyển đến trang Manage_Post với artworkId
+                                        window.location.href = `Manage_Post?artworkid=${artworkId}`;
+                                    });
+                                    // Thêm sự kiện click cho nút "More"
 
+                                });
+                            } else {
+                                console.error('Invalid or empty response from the API.');
+                            }
+                        },
+                        error: function (error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                });
+            </script>
+        </div>
+
+    </div>
+</div>

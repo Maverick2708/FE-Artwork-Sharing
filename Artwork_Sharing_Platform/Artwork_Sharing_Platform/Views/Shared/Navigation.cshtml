@@ -1,18 +1,12 @@
 ﻿
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
-    <a class="navbar-brand font-weight-bolder mr-3" href="~/SuperAdmin/Manage/Manage"><img src="~/Assets/template-pintereso-bootstrap-html-master/docs/assets/img/logo.png"></a>
+    <a class="navbar-brand font-weight-bolder mr-3" href="~/Audience/Manage/Manage"><img src="~/Assets/template-pintereso-bootstrap-html-master/docs/assets/img/logo.png"></a>
     <button class="navbar-light navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarsDefault">
-        <ul class="navbar-nav mr-auto align-items-center">
-            <form class="bd-search hidden-sm-down">
-                <input type="text" class="form-control bg-graylight border-0 font-weight-bold" id="search-input" placeholder="Search..." autocomplete="off">
-                <div class="dropdown-menu bd-search-results" id="search-results">
-                </div>
-            </form>
-        </ul>
+        
         <ul class="navbar-nav ml-auto align-items-center">
 
             <li class="nav-item"  > 
@@ -30,6 +24,9 @@
 
 
                 <script>
+                  
+                    
+
                     document.addEventListener('DOMContentLoaded', function () {
                         var storedUserEmail = sessionStorage.getItem('userEmail');
                         // Thực hiện đăng xuất sau 5 giây
@@ -54,6 +51,8 @@
                             success: function (response) {
                                 // Hiển thị dữ liệu từ API lên trang
                                 displayUserData(response);
+                                document.getElementById('userName').innerText = response.fullName;
+                                document.getElementById('avatarNav').src = 'data:image/jpeg;base64,' + response.avatar
                             },
                             error: function (error) {
                                 console.error('Lỗi:', error);
@@ -63,16 +62,18 @@
 
                     function displayUserData(data) {
                         document.getElementById('userName').innerText = data.fullName;
-                        document.getElementById('avatarNav').src = 'data:image/jpeg;base64,' + sessionStorage.getItem('avatar');
+                        document.getElementById('avatarNav').src = 'data:image/jpeg;base64,' + data.avatar;
                     }
                     function goToProfilePage() {
                         // Chuyển trang khi nút được nhấn
                         window.location.href = '/Audience/Manage/Profile';
+                        
                     }
                 </script>
                 <a class="nav-link" onclick="goToProfilePage()">
                     <img id="avatarNav" src="" width="30" class="rounded-circle mr-2" alt="Card image">
                     <span id="userName" class="align-middle"></span>
+                    
                 </a>
 
             </li>

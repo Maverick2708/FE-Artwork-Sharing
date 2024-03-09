@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = "~/Views/Shared/defaultAuthor.cshtml";
 }
 
@@ -12,11 +11,25 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home - Pintereso Bootstrap Template</title>
     <script type="text/javascript">(function () { var css = document.createElement('link'); css.href = 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'; css.rel = 'stylesheet'; css.type = 'text/css'; document.getElementsByTagName('head')[0].appendChild(css); })();</script>
-    <link rel="stylesheet" href="~/Assets/template-pintereso-bootstrap-html-master/docs/assets/css/app.css">
-    <link rel="stylesheet" href="~/Assets/template-pintereso-bootstrap-html-master/docs/assets/css/theme.css">
+    <link href="~/Assets/template-pintereso-bootstrap-html-master/docs/assets/css/app.css" rel="stylesheet" />
+    <link href="~/Assets/template-pintereso-bootstrap-html-master/docs/assets/css/theme.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <style>
+        .search-button {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+            .search-button img {
+                width: 24px;
+                height: 24px;
+            }
         .product {
             border: 1px solid #ccc;
             padding: 10px;
@@ -68,7 +81,7 @@
             cursor: pointer;
         }
     </style>
-
+   
     <script type="text/javascript">
         (function () {
             var css = document.createElement('link');
@@ -81,7 +94,7 @@
 </head>
 
 <body>
-
+   
     <main role="main">
 
 
@@ -91,43 +104,56 @@
 
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script>
+          
+           
+
+
             function openArtPopup() {
 
                 // Create a Bootstrap modal for the popup
                 var modal = `
-                            <div class="modal" id="artPopup" tabindex="-1" role="dialog">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Add Your Art</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
+                                            <div class="modal" id="artPopup" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Add Your Art</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
 
-                                            <label for="artName">Art Name:</label>
-                                            <input type="text" id="artName" class="form-control mb-2">
+                                                            <label for="artName">Art Name:</label>
+                                                            <input type="text" id="artName" class="form-control mb-2">
 
-                                            <label for="artDescription">Description:</label>
-                                             <input type="text" id="artDescription" class="form-control mb-2">
+                                                            <label for="artDescription">Description:</label>
+                                                             <input type="text" id="artDescription" class="form-control mb-2">
 
-                                            <label for="artPrice">Price:</label>
-                                            <input type="number" id="artPrice" class="form-control mb-2">
-                                             <label for="Quantity">Quantity:</label>
-                                             <input type="number" id="Quantity" class="form-control mb-2">
+                                                            <label for="artPrice">Price:</label>
+                                                            <input type="number" id="artPrice" class="form-control mb-2">
+                                                             <label for="Quantity">Quantity:</label>
+                                                             <input type="number" id="Quantity" class="form-control mb-2">
 
-                                            <label for="artImage">Select Image:</label>
-                                            <input type="file" id="artImage" accept="image/*,.png" class="form-control mb-2">
-                                        </div>
-                                         <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" onclick="saveArtwork()">Save</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                                                            <label for="artImage">Select Image:</label>
+                                                            <input type="file" id="artImage" accept="image/*,.png" class="form-control mb-2">
+                                                            <label for="artGenre">Art Genre:</label>
+                                                            <select id="artGenre" class="form-control mb-2">
+                                                                <option value="1">Landscape</option>
+                                                                <option value="4">Lifestyle</option>
+                                                                <option value="5">Animation</option>
+                                                                <option value="6">Portrait</option>
+                                                                <option value="7">Scenery</option>
+                                                             </select>
+
+                                                        </div>
+                                                         <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" onclick="saveArtwork()">Save</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
 
                 // Append the modal HTML to the body
                 $('body').append(modal);
@@ -149,7 +175,8 @@
                 var price = $('#artPrice').val();
                 var userID = sessionStorage.getItem('userId'); // Replace this with your actual logic to get user ID
                 // Placeholder for base64-encoded image data, to be set later
-
+                var artGenreSelect = document.getElementById('artGenre');
+                var artGenre = artGenreSelect.options[artGenreSelect.selectedIndex].value;
                 // Read and encode the selected image
                 var fileInput = document.getElementById('artImage');
                 var selectedFile = fileInput.files[0];
@@ -170,7 +197,7 @@
                                 contentArtwork: ArtName1,
                                 description: descriptionArt,
                                 priceArtWork: price,
-                                genreId: 1,
+                                genreId: artGenre,
                                 userId: userID,
                                 pictureArtwork: codePictureArtwork,
                                 quanity: quantityArt,
@@ -211,27 +238,42 @@
                         <div class="collapse navbar-collapse" id="navbarsExplore">
                             <ul class="navbar-nav active">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Lifestyle</a>
+                                    <a class="nav-link" onclick="SortType('Lifestyle')" href="#">Lifestyle</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Animation</a>
+                                    <a class="nav-link" onclick="SortType('Animation')" href="#">Animation</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Portrait</a>
+                                    <a class="nav-link" onclick="SortType('Portrait')" href="#">Portrait</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Scenery</a>
+                                    <a class="nav-link" onclick="SortType('Scenery')" href="#">Scenery</a>
                                 </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
-                                    <div class="dropdown-menu shadow-lg" aria-labelledby="dropdown01">
-                                        <a class="dropdown-item" href="#">Monumental</a>
-                                        <a class="dropdown-item" href="#">Folk</a>
-                                        <a class="dropdown-item" href="#">Promote</a>
-                                        <a class="dropdown-item" href="#">Religious</a>
-                                        <a class="dropdown-item" href="#">Shui</a>
-                                    </div>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="SortType('Monumental')" href="#">Monumental</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="SortType('Folk')" href="#">Folk</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="SortType('Promote')" href="#">Promote</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="SortType('Religious')" href="#">Religious</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="SortType('Shui')" href="#">Shui</a>
+                                </li>
+                                <ul class="navbar-nav mr-auto align-items-center">
+                                    <form class="bd-search hidden-sm-down">
+                                        <input type="text" class="form-control bg-graylight border-0 font-weight-bold" id="search-input" placeholder="Search..." autocomplete="off">
+
+                                        <button type="button" onclick="search()" class="search-button">
+                                            <img src="https://img.icons8.com/?size=24&id=1649&format=png" alt="Search Icon">
+                                        </button>
+                                    </form>
+
+                                </ul>
                             </ul>
                         </div>
                     </nav>
@@ -242,6 +284,107 @@
                     <div class="card-columns">
                         <div id="apiDataContainer"></div>
                         <script>
+                            function SortType(genre) {
+                                $.ajax({
+                                    type: 'GET',
+                                    url: `https://localhost:7008/api/Arwork/GetArtworkByGenre?genre=${genre}`,
+                                    success: function (response) {
+                                        $('#apiDataContainer').empty();
+                                        // Hiển thị dữ liệu từ API lên trang
+                                        if (response && Array.isArray(response) && response.length > 0) {
+                                            // Iterate through each artwork in the response
+                                            response.forEach(function (artwork) {
+                                                const strHTML = `
+                                                <div class="card card-pin">
+                                                    <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
+                                                        <div class="overlay">
+                                                            <h2 class="card-title title">${artwork.contentArtwork}</h2>
+                                                                <div class="more">
+                                                                    <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
+                                                                        <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                `;
+
+                                                $('#apiDataContainer').append(strHTML);
+                                                // Thêm sự kiện click cho nút "More"
+                                                $('.more-btn').click(function (e) {
+                                                    e.preventDefault();
+                                                    const artworkId = $(this).data('artworkid');
+                                                    sessionStorage.setItem('artworkID', artworkId);
+                                                    // Chuyển đến trang Manage_Post với artworkId
+                                                    window.location.href = `Manage_Post?artworkid=${artworkId}`;
+                                                });
+                                            });
+                                        } else {
+                                            console.error('Invalid or empty response from the API.');
+                                        }
+                                    },
+                                    error: function (error) {
+                                        console.error('Lỗi:', error);
+                                    }
+                                });
+                            }
+                            function search() {
+                                // Kiểm tra nếu phím được nhấn là Enter (mã phím 13)
+
+                                // Lấy truy vấn tìm kiếm từ trường nhập liệu
+                                var searchQuery = $('#search-input').val();
+
+                                // Kiểm tra nếu truy vấn tìm kiếm không rỗng
+                                if (searchQuery !== '') {
+
+                                    // Gọi API của bạn sử dụng AJAX
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: `https://localhost:7008/api/Arwork/SearchContenArtwork?content=${searchQuery}`,
+                                        success: function (response) {
+                                            $('#apiDataContainer').empty();
+                                            alert(searchQuery);
+                                            console.log(response.dataObject);
+                                            // Hiển thị dữ liệu từ API lên trang
+                                            if (response.dataObject && Array.isArray(response.dataObject) && response.dataObject.length > 0) {
+                                                // Duyệt qua mỗi tác phẩm nghệ thuật trong phản hồi
+                                                response.dataObject.forEach(function (artwork) {  // Thay đổi từ SearchArtwork thành artwork
+                                                    const strHTML = `
+<div class="card card-pin">
+    <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
+    <div class="overlay">
+        <h2 class="card-title title">${artwork.contentArtwork}</h2>
+        <div class="more">
+            <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
+                <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
+            </a>
+        </div>
+    </div>
+</div>
+`;
+
+                                                    $('#apiDataContainer').append(strHTML);
+                                                    // Thêm sự kiện click cho nút "More"
+                                                    $('.more-btn').click(function (e) {
+                                                        e.preventDefault();
+                                                        const artworkId = $(this).data('artworkid');
+                                                        sessionStorage.setItem('artworkID', artworkId);
+                                                        // Chuyển đến trang Manage_Post với artworkId
+                                                        window.location.href = `Manage_Post?artworkid=${artworkId}`;
+                                                    });
+                                                });
+                                            } else {
+                                                console.error('Phản hồi từ API không hợp lệ hoặc trống.');
+                                            }
+                                        },
+                                        error: function (error) {
+                                            console.error('Lỗi:', error);
+                                        }
+                                    });
+                                }
+                                else if (searchQuery == '') {
+                                    location.reload();
+                                }
+                            }
                             $(document).ready(function () {
                                 $.ajax({
                                     type: 'GET',
@@ -253,17 +396,17 @@
                                             // Iterate through each artwork in the response
                                             response.forEach(function (artwork) {
                                                 const strHTML = `
-                                                                                                                            <div class="card card-pin">
-                                                                                                                                <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
-                                                                                                                                    <div class="overlay">
-                                                                                                                                        <h2 class="card-title title">${artwork.contentArtwork}</h2>
-                                                                                                                                        <div class="more">
-                                                                                                                                           <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
-                                                                                                                                                <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
-                                                                                                                                            </a>
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                            </div>`
+                                                   <div class="card card-pin">
+                                                        <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
+                                                             <div class="overlay">
+                                                                <h2 class="card-title title">${artwork.contentArtwork}</h2>
+                                                                    <div class="more">
+                                                                        <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
+                                                                    <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
+                                                                        </a>
+                 </div>
+             </div>
+         </div>`
                                                     ;
 
                                                 $('#apiDataContainer').append(strHTML);
@@ -276,7 +419,7 @@
                                                     window.location.href = `Manage_Post?artworkid=${artworkId}`;
                                                 });
                                             });
-                                           
+
                                         } else {
                                             console.error('Invalid or empty response from the API.');
                                         }
@@ -300,4 +443,3 @@
 </body>
 
 </html>
-
