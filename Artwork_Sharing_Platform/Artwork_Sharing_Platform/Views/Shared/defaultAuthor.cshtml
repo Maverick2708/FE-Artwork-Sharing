@@ -21,6 +21,31 @@
     <!-- Link đến Bootstrap JavaScript và các plugin cần thiết -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <style>
+        .notification {
+            background-color: #555;
+            color: white;
+            text-decoration: none;
+            padding: 10px 7px;
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+            background-color: transparent;
+        }
+
+            .notification:hover {
+               background: transparent;
+                
+            }
+
+            .notification .badge {
+                position: absolute;
+               
+                right: -3px;
+              
+                border-radius: 50%;
+                background-color: red;
+                color: white;
+            }
         #backgroundProfile {
             background-position: center;
             background-size: cover; /* This ensures the image covers the entire element */

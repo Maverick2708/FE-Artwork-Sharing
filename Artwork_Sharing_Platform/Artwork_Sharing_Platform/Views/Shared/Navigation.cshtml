@@ -14,7 +14,8 @@
                 Home</a>
             </li>
            
-            <li class="nav-item">
+            <li class="notification">
+                <span class="badge" id="badgeNum" ></span>
                 <a class="nav-link" href="~/Audience/Manage/Cart">Cart</a>
             </li>
             <li class="nav-item">
@@ -24,8 +25,24 @@
 
 
                 <script>
-                   
-
+                    var userId = sessionStorage.getItem('userId');
+                    $(document).ready(function () {
+                        $.ajax({
+                            type: 'GET',
+                            url: `https://localhost:7008/api/ShoppingCart/user/${userId}`,
+                            success: function (response) {
+                                if (response && Array.isArray(response) && response.length > 0) {
+                                    // Iterate through each artwork in the response
+                                    document.getElementById('badgeNum').innerText = response.length;
+                                } else {
+                                    console.error('Invalid or empty response from the API.');
+                                }
+                            },
+                            error: function (error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
                     document.addEventListener('DOMContentLoaded', function () {
                         var storedUserEmail = sessionStorage.getItem('userEmail');
                         // Thực hiện đăng xuất sau 5 giây

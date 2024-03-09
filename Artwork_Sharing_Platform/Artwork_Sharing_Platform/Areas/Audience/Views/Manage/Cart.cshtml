@@ -24,6 +24,7 @@
 
     <!-- Link đến Bootstrap JavaScript và các plugin cần thiết -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    
     <style>
         .payment-info {
             background: #1818b1;
@@ -130,6 +131,22 @@
         .spec {
             font-size: 11px;
         }
+
+        .fit-image {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+        }
+        
+        .transparent-button {
+            border: 1px solid transparent;
+            background-color: transparent;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 
 </head>
@@ -153,34 +170,86 @@
                             <div class="price ml-2"><span class="mr-1">price</span><i class="fa fa-angle-down"></i></div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded">
-                        <div class="d-flex flex-row">
-                            <img class="rounded" src="https://i.imgur.com/QRwjbm5.jpg" width="40">
-                            <div class="ml-2"><span class="font-weight-bold d-block">Iphone 11 pro</span><span class="spec">256GB, Navy Blue</span></div>
-                        </div>
-                        <div class="d-flex flex-row align-items-center"><span class="d-block">2</span><span class="d-block ml-5 font-weight-bold">$900</span><i class="fa fa-trash-o ml-3 text-black-50"></i></div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded">
-                        <div class="d-flex flex-row">
-                            <img class="rounded" src="https://i.imgur.com/GQnIUfs.jpg" width="40">
-                            <div class="ml-2"><span class="font-weight-bold d-block">One pro 7T</span><span class="spec">256GB, Navy Blue</span></div>
-                        </div>
-                        <div class="d-flex flex-row align-items-center"><span class="d-block">2</span><span class="d-block ml-5 font-weight-bold">$900</span><i class="fa fa-trash-o ml-3 text-black-50"></i></div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded">
-                        <div class="d-flex flex-row">
-                            <img class="rounded" src="https://i.imgur.com/o2fKskJ.jpg" width="40">
-                            <div class="ml-2"><span class="font-weight-bold d-block">Google pixel 4 XL</span><span class="spec">256GB, Axe black</span></div>
-                        </div>
-                        <div class="d-flex flex-row align-items-center"><span class="d-block">1</span><span class="d-block ml-5 font-weight-bold">$800</span><i class="fa fa-trash-o ml-3 text-black-50"></i></div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded">
-                        <div class="d-flex flex-row">
-                            <img class="rounded" src="https://i.imgur.com/Tja5H1c.jpg" width="40">
-                            <div class="ml-2"><span class="font-weight-bold d-block">Samsung galaxy Note 10&nbsp;</span><span class="spec">256GB, Navy Blue</span></div>
-                        </div>
-                        <div class="d-flex flex-row align-items-center"><span class="d-block">1</span><span class="d-block ml-5 font-weight-bold">$999</span><i class="fa fa-trash-o ml-3 text-black-50"></i></div>
-                    </div>
+                    <div id="apiDataContainer"></div>
+                    <script>
+                        var userId = sessionStorage.getItem("userId");
+                        $(document).ready(function () {
+                            $.ajax({
+                                type: 'GET',
+                                url: `https://localhost:7008/api/ShoppingCart/user/${userId}`,
+                                success: function (response) {
+                                    if (response && Array.isArray(response) && response.length > 0) {
+                                        // Iterate through each artwork in the response
+                                        response.forEach(function (items) {
+                                            console.log(items);
+                                            (function (items) {
+                                                $.ajax({
+                                                    type: 'GET',
+                                                    url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${items.artworkPId}`,
+                                                    success: function (responseName) {
+                                                        if (responseName.dataObject) {
+                                                            console.log(responseName.dataObject);
+                                                            
+                                                            const strHTML = `
+                                        <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded">
+                                            <div class="d-flex flex-row">
+                                                <img class="rounded" src="data:image/png;base64, ${items.pictureArtwork}" width="40">
+                                                <div class="ml-2"><span class="font-weight-bold d-block">${responseName.dataObject.contentArtwork}</span>
+                                                <span class="spec">${responseName.dataObject.description}</span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center">
+                                                <span class="d-block">${items.quanity}</span>
+                                                <span class="d-block ml-5 font-weight-bold">${(items.priceArtwork).toLocaleString('vi-VN') + 'VNĐ'}</span>
+                                                <button class="transparent-button" class="btn-icon" onclick="deleteItems('${items.shoppingCartId}')">
+                                                    <i class="fa fa-trash-o ml-3 text-black-50"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    `;
+                                                            $('#apiDataContainer').append(strHTML);
+                                                        } else {
+                                                            console.error('Invalid or empty response from the API.');
+                                                        }
+                                                    }
+                                                });
+                                            })(items); // Pass items to the closure
+                                        });
+                                    } else {
+                                        console.error('Invalid or empty response from the API.');
+                                    }
+                                },
+                                error: function (error) {
+                                    console.error('Error:', error);
+                                }
+                            });
+                        });
+                        function deleteItems(cartId) {
+                           
+                                    $.ajax({
+                                        type: 'DELETE',
+                                        url: `https://localhost:7008/api/ShoppingCart/${cartId}`, // Replace with your actual API endpoint
+                                        success: function (deleteResponse) {
+                                            // Xử lý thành công từ phản hồi của API
+                                            alert("DELETED!");
+                                            // Tuỳ chọn: Đóng modal sau khi lưu thành công
+                                            location.reload();
+                                            
+                                        },
+                                        error: function (deleteError) {
+                                            // Xử lý lỗi khi xóa
+                                            alert(`Error deleting item with cartId ${cartId}:`, deleteError);
+
+                                            // Hiển thị thông báo lỗi
+                                           
+                                        }
+                                    });
+                                }
+                           
+                    </script>
+
+
+
                 </div>
             </div>
             <div class="col-md-4">
