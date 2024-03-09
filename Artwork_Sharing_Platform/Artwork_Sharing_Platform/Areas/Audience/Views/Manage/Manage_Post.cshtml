@@ -138,7 +138,9 @@
                         <h4 id="artDescription">
                         </h4>
                         <h6 id="artworkPrice">
+
                         </h6>
+                        <input type="hidden" id="artPirce"/>
 
                         <div id="ratingContainer" class="d-flex align-items-center">
                             <div id="starRatingContainer"></div>
@@ -152,11 +154,51 @@
                         <div class="comment-input-container">
                             <input type="text" id="commentInput" class="comment-input" placeholder="Enter your comment">
                             <button type="button" class="comment-btn" onclick="addComment()">Send</button>
+                            <button type="button" class="comment-btn" onclick="addCart()">Add to card</button>
                         </div>
                         <span id="datePost" style="color: grey;"></span>
                         <script>
-                          
-                          
+                            function addCart() {
+                                var priceArt = document.getElementById('artPirce').value;
+                                var ArtImg = document.getElementById('artworkImage').src.replace(/^data:image\/\w+;base64,/, '');
+                                
+
+                                // Get userId and artworkPId from session
+                                var userId = sessionStorage.getItem('userId');
+                                var artworkPId = sessionStorage.getItem('artworkID');
+
+                                // Create a comment object with necessary values
+                                var art = {
+                                    artworkPId: artworkPId,
+                                    userId: userId,
+                                    quanity: 1,
+                                    priceArtwork: priceArt,
+                                    pictureArtwork: ArtImg
+                                };
+                                console.log(art);
+                                // Call the function to send the comment to the server
+                                addToCart(art);
+                            }
+                            function addToCart(obj) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'https://localhost:7008/api/ShoppingCart', // Replace with your actual API endpoint
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(obj),
+                                    success: function (response) {
+                                        // Handle the success response
+                                        console.log('Added Cart successfully:', response);
+
+                                        // If needed, update the UI to display the new comment immediately
+                                        // You can call a function to refresh the comments or append the new comment to the existing ones
+                                        
+                                    },
+                                    error: function (error) {
+                                        // Handle the error response
+                                        console.error('Error Cart:', error);
+                                    }
+                                });
+                            }
                             var starRating = 5; // Replace with the actual database value
                             var likeCountValue = 0;
 
@@ -334,7 +376,8 @@
                                     document.getElementById('artworkTitle').innerText = data.contentArtwork;
                                     // Thêm các thông tin khác tùy thuộc vào cấu trúc dữ liệu của API
                                     document.getElementById('artworkImage').src = 'data:image/jpeg;base64,' + data.pictureArtwork;
-                                    document.getElementById('artworkPrice').innerText = (data.priceArtwork).toLocaleString('vi-VN') + 'VNĐ';
+                                    document.getElementById('artworkPrice').innerText = (data.priceArtwork).toLocaleString('vi-VN') + 'VNĐ'; 
+                                    document.getElementById('artPirce').value = (data.priceArtwork);
                                     var datePost = new Date(data.datePost);
                                     var formattedDate = ('0' + datePost.getDate()).slice(-2) + '-' + ('0' + (datePost.getMonth() + 1)).slice(-2) + '-' + datePost.getFullYear();
                                     document.getElementById('datePost').innerText = formattedDate;
