@@ -9,18 +9,40 @@
         
         <ul class="navbar-nav ml-auto align-items-center">
 
-            <li class="nav-item"  > 
+            <li class="nav-item">
                 <a class="nav-link" href="~/SuperAdmin/Manage/Manage">
-                Home</a>
+                    Home
+                </a>
             </li>
-           
+
             <li class="notification">
-                <span class="badge" id="badgeNum" ></span>
+                <span class="badge" id="badgeNum"></span>
                 <a class="nav-link" href="~/Audience/Manage/Cart">Cart</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Premium</a>
             </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="glyphicon glyphicon-bell"></i>
+                    <span class="badge" id="badgeNum"></span>
+                </a>
+
+                <div class="dropdown-menu notifications" aria-labelledby="navbarDropdown">
+                    <div class="notification-heading">
+                        <h4 class="menu-title">Notifications</h4>
+                        <h4 class="menu-title pull-right">View all <i class="glyphicon glyphicon-circle-arrow-right"></i></h4>
+                    </div>
+                    <div class="notifications-wrapper">
+                        <!-- Your notification items go here -->
+                    </div>
+                    <div class="notification-footer">
+                        <h4 class="menu-title">View all <i class="glyphicon glyphicon-circle-arrow-right"></i></h4>
+                    </div>
+                </div>
+            </li>
+            </li>
+            
             <li class="nav-item">
 
 
@@ -83,13 +105,13 @@
                     function goToProfilePage() {
                         // Chuyển trang khi nút được nhấn
                         window.location.href = '/Audience/Manage/Profile';
-                        
+
                     }
                 </script>
                 <a class="nav-link" onclick="goToProfilePage()">
                     <img id="avatarNav" src="" width="30" class="rounded-circle mr-2" alt="Card image">
                     <span id="userName" class="align-middle"></span>
-                    
+
                 </a>
 
             </li>
