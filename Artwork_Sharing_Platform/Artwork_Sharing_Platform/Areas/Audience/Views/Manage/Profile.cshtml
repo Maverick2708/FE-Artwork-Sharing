@@ -2,26 +2,19 @@
 @{
     Layout = "~/Views/Shared/defaultAuthor.cshtml";
 }
-
-<div class="jumbotron border-round-0 min-50vh" id="backgroundProfile" style="background-image: url();"></div>
-@*<div class="container mb-4">
-    <img id="avatarProfile" src="" class="mt-neg100 mb-4 rounded-circle" width="128">
-    <button id="circleButton" onclick="openArtPopup()" style="opacity: 0.5">   
-    <img src="https://img.icons8.com/?size=256&id=364&format=png" alt="Setting icon">
-    </button>
-    <h1 id="userNameProfile" class="font-weight-bold title">
-     
-    </h1>
-    <div>------------</div>
-    <h4 class="your-art">Your art</h4>
-
-</div>*@
+<script src="https://kit.fontawesome.com/6208ee92db.js" crossorigin="anonymous"></script>
 
 <style>
     .profile {
         position: relative;
         display: inline-block;
         margin-left: 50px;
+    }
+
+    .avatar {
+        width: 128px;
+        height: 128px;
+        object-fit: cover; /* để hình ảnh tự động điều chỉnh kích thước và giữ nguyên tỉ lệ */
     }
 
     #circleButton {
@@ -31,24 +24,63 @@
         top: -20px;
         left: 50%; /* Center the button horizontally */
         transform: translateX(-50%); /* Adjust for centering */
-        background-color: white;
+        background-color: dimgray;
         border: none;
         cursor: pointer;
         z-index: 1; /* Ensure the button is above the avatar */
     }
 
-    #circleButton img {
-        width: 24px;
-        height: 24px;
-    } 
-          
+        #circleButton img {
+            width: 24px;
+            height: 24px;
+        }
+
+
+    .jumbotron {
+        position: relative;
+    }
+
+    .update-background-button {
+        position: absolute;
+        bottom: 20px;
+        right: 30px;
+        padding: 10px 10px;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .update-profile-button {
+        position: absolute;
+        bottom: -60px;
+        right: 30px;
+        padding: 10px 10px;
+        background-color: dimgray;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
 </style>
 
+<div class="jumbotron border-round-0 min-50vh" id="backgroundProfile" style="background-image: url();">
+    <button class="update-background-button" id="update-background" onclick="" style="display: flex; justify-content: space-between; align-items: center;">
+        <i class="fa-solid fa-camera" style="margin-right: 10px"></i>
+        <h4 style="font-size: 15px; margin: 0 auto;">Cập nhật ảnh bìa</h4>
+    </button>
+    <button class="update-profile-button" id="update-profile" onclick="" style="display: flex; justify-content: space-between; align-items: center;">
+        <i class="fa-solid fa-pen" style="margin-right: 10px; color: white"></i>
+        <h4 style="color: white; font-size: 15px; margin: 0 auto;">Chỉnh sửa hồ sơ người dùng</h4>
+    </button>
+</div>
+
 <div class="profile mb-4">
-    <img id="avatarProfile" src="" class="mt-neg100 mb-4 rounded-circle" width="128">
+    <img id="avatarProfile" src="" class="avatar mt-neg100 mb-4 rounded-circle">
 
     <button id="circleButton" onclick="openArtPopup()">
-        <img src="https://img.icons8.com/?size=256&id=364&format=png" alt="Setting icon">
+        <i class="fa-solid fa-camera"></i>
+        @*<img src="https://img.icons8.com/?size=256&id=364&format=png" alt="Setting icon">*@
     </button>
 
 
@@ -65,7 +97,7 @@
 </div>
 
 <script>
-    
+
     function openArtPopup() {
 
         // Create a Bootstrap modal for the popup
@@ -93,17 +125,17 @@
                                                     <label for="Birth">Brith Day:</label>
                                                     <input type="date" id="Birth" class="form-control mb-2">
                                                 </div>
-                                                
+
                                                     <label for="CurrentAvatar">Avatar:</label>
                                                     <img src="" id="CurrentAvatar" class="form-control mb-2" style="width: 200px; height: 200px;">
                                                     <label for="Avatar">Select Image:</label>
                                                     <input type="file" id="Avatar" accept="image/*,.png" class="form-control mb-2" onchange="checkFileSelection()">
-                                                  
+
                                                   <label for="CurrentBackground">Background:</label>
                                                    <img src="" id="CurrentBackground" class="form-control mb-2" style="object-fit: cover; width: 200px; height: 200px;">
                                                  <label for="Background">Select Background:</label>
                                                 <input type="file" id="Background" accept="image/*,.png" class="form-control mb-2" onchange="checkFileSelection()">
-                                                
+
                                             </div>
                                              <div class="modal-footer">
                                         <button type="button" class="btn btn-primary" onclick="Editinfo()">Save</button>
@@ -136,7 +168,7 @@
                 document.getElementById('Birth').value = formatDateToDatePickerFormat(response.dob);
                 document.getElementById('CurrentAvatar').src = 'data:image/jpeg;base64,' + response.avatar;
                 document.getElementById('CurrentBackground').src = 'data:image/jpeg;base64,' + response.backgroundImg;
-               
+
             },
             error: function (error) {
                 console.error('Lỗi:', error);
@@ -151,7 +183,7 @@
         var Address = document.getElementById('Address').value;
         var Birth = $('#Birth').val();
         var userID = sessionStorage.getItem('userId');
-          // Replace this with your actual logic to get user ID
+        // Replace this with your actual logic to get user ID
         // Placeholder for base64-encoded image data, to be set later
 
         // Read and encode the selected image
@@ -180,7 +212,7 @@
                         phoneNumber: Phone,
                         address: Address,
                         avatar: codePictureAvatar
-                        
+
                     }),
                     contentType: 'application/json',
                     success: function (data) {
@@ -257,18 +289,18 @@
                                 // Iterate through each artwork in the response
                                 response.dataObject.forEach(function (artwork) {
                                     const strHTML = `
-                                                    <div class="card card-pin">
-                                                        <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
-                                                        <div class="overlay">
-                                                            <h2 class="card-title title">${artwork.contentArtwork}</h2>
-                                                            <div class="more">
-                                                                <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
-                                                                    <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                `;
+                                                                                        <div class="card card-pin">
+                                                                                            <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
+                                                                                            <div class="overlay">
+                                                                                                <h2 class="card-title title">${artwork.contentArtwork}</h2>
+                                                                                                <div class="more">
+                                                                                                    <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
+                                                                                                        <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
+                                                                                                    </a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    `;
 
                                     $('#apiDataContainer').append(strHTML);
                                     $('.more-btn').click(function (e) {
