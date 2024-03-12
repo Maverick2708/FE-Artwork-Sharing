@@ -210,6 +210,75 @@
         .spec {
             font-size: 11px;
         }
+        /* Style cho thanh thông báo */
+        /* Style cho thanh thông báo */
+        .notification-manageUser {
+            position: relative;
+            display: inline-block;
+        }
+
+        .badge-manageUser {
+            position: absolute;
+            right: -3px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
+        }
+
+        /* Style cho dropdown thông báo */
+        .dropdown-manageUser {
+            display: none;
+            position: absolute;
+            min-width: 300px; /* Điều chỉnh độ rộng của dropdown */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: left; /* Căn lề sang trái */
+        }
+
+        .dropdown-content-manageUser {
+            padding: 15px;
+        }
+
+        /* Hiển thị dropdown khi hover hoặc click */
+        .notification-manageUser:hover .dropdown-manageUser {
+            display: block;
+        }
+
+        /* Style cho hình chữ nhật bo góc */
+        .notification-item-manageUser {
+            border: 2px solid #333; /* Đổi màu và đậm hơn so với viền trước đó */
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+        }
+
+            .notification-item-manageUser img {
+                border-radius: 50%; /* Đặt border-radius là 50% để tạo hình tròn */
+                width: 30px; /* Kích thước ảnh */
+                height: 30px;
+                float: left;
+                margin-right: 10px;
+                object-fit: cover; /* Đảm bảo hình ảnh sẽ chứa đầy đủ vào khu vực bo tròn */
+            }
+            .notification-item-manageUser .date-manageUser {
+                position: absolute;
+                top: 0;
+                right: 0;
+                color: #999;
+                font-size: 12px;
+                line-height: 1;
+            }
+
+
+            .notification-item-manageUser .name-manageUser,
+            .notification-item-manageUser .message-manageUser {
+                display: block;
+                margin-bottom: 5px;
+            }
     </style>
 </head>
 

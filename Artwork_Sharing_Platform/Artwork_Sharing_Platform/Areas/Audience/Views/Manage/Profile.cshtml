@@ -223,6 +223,12 @@
             success: function (response) {
                 // Hiển thị dữ liệu từ API lên trang
                 displayUserData(response);
+                if (response.isVerifiedPage == true) {
+                    $('.right-child').show();
+                }
+                else {
+                    $('.right-child').hide();
+                }
             },
             error: function (error) {
                 console.error('Lỗi:', error);
