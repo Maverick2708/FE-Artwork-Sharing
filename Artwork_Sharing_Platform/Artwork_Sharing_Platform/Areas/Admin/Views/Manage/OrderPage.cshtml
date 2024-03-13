@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "OrderPage";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdminPage.cshtml";
+}
+
+<h2>OrderPage</h2>
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">UserPage</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="input-group custom-search-form col-lg-8">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button" onclick="searchTable()">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="transactionTable" class="table table-bordered table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>OrderId</th>
+                                    <th>UserId</th>
+                                    <th>TotalBill</th>
+                                    
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    fetch('https://localhost:7008/api/Order')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#transactionTable tbody');
+            for (const item of data) {
+                const row = document.createElement('tr');
+                const orderIdCell = document.createElement('td');
+                orderIdCell.textContent = item.billOrderId;
+                row.appendChild(orderIdCell);
+                const userIdCell = document.createElement('td');
+                userIdCell.textContent = item.userId;
+                row.appendChild(userIdCell);
+                const totalBillCell = document.createElement('td');
+                totalBillCell.textContent = item.totalBill;
+                row.appendChild(totalBillCell);
+                tbody.appendChild(row);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+</script>
