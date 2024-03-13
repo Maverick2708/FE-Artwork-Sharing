@@ -11,30 +11,33 @@
         margin-left: 50px;
     }
 
+    .avatar-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .avatar-wrapper {
+        position: relative;
+    }
+
     .avatar {
         width: 128px;
         height: 128px;
-        object-fit: cover; /* để hình ảnh tự động điều chỉnh kích thước và giữ nguyên tỉ lệ */
+        object-fit: cover; /*để hình ảnh tự động điều chỉnh kích thước và giữ nguyên tỉ lệ */
     }
 
     #circleButton {
-        width: 35px;
-        height: 35px;
         position: absolute;
-        top: -20px;
-        left: 50%; /* Center the button horizontally */
-        transform: translateX(-50%); /* Adjust for centering */
+        bottom: 40px;
+        right: -5px;
+        width: 30px;
+        height: 30px;
         background-color: dimgray;
         border: none;
         cursor: pointer;
-        z-index: 1; /* Ensure the button is above the avatar */
+        border-radius: 50%;
     }
-
-        #circleButton img {
-            width: 24px;
-            height: 24px;
-        }
-
 
     .jumbotron {
         position: relative;
@@ -80,12 +83,14 @@
 </div>
 
 <div class="profile mb-4">
-    <img id="avatarProfile" src="" class="avatar mt-neg100 mb-4 rounded-circle">
-
-    <button class="update-avatar-button" id="circleButton" onclick="changeAvatarPopup()">
-        <i class="fa-solid fa-camera"></i>
-        @*<img src="https://img.icons8.com/?size=256&id=364&format=png" alt="Setting icon">*@
-    </button>
+    <div class="avatar-container">
+        <div class="avatar-wrapper">
+            <img id="avatarProfile" src="" class="avatar mt-neg100 mb-4 rounded-circle">
+            <button class="update-avatar-button" id="circleButton" onclick="changeAvatarPopup()">
+                <i class="fa-solid fa-camera"></i>
+            </button>
+        </div>
+    </div>
 
 
     <div style="display: flex; justify-content: space-between;">
