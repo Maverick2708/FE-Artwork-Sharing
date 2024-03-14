@@ -107,7 +107,7 @@
 
             row.append($("<td>").text(item.fullName));
             row.append($("<td>").text(item.phoneNumber));
-            row.append($("<td>").text(item.dateUserRe));
+            row.append($("<td>").text(formatDate(item.dateUserRe)));
             row.append(
                 $("<td>").append(
                     $("<button>").text("View Detail").addClass("btn btn-primary").on("click", function () {
@@ -118,6 +118,24 @@
             
             row.append($("<td>").text(item.status ? "Active" : "Inactive"));
             row.append($("<td>").text(item.roles.join(", ")));
+
+            const actionTd = $("<td>");
+
+            if (item.status) {
+                const banButton = $("<button>").text("Ban").addClass("btn btn-danger").on("click", function () {
+                    banUser(item.id);
+                });
+
+                actionTd.append(banButton);
+            } else {
+                const unbanButton = $("<button>").text("Unban").addClass("btn btn-success").on("click", function () {
+                    unbanUser(item.id);
+                });
+
+                actionTd.append(unbanButton);
+            }
+
+            row.append(actionTd);
 
             tbody.append(row);
         });
@@ -236,6 +254,45 @@
         }
     }
 
+    async function banUser(userId) {
+        try {
+            const response = await fetch(`https://localhost:7008/api/Person/BanAccount?userId=${userId}`);
+
+            if (!response.ok) {
+                throw new Error("Error banning the user");
+            }
+
+            // Optionally, you can handle the response here if needed
+            console.log("User banned successfully");
+
+            // Refresh the table or update the UI as needed
+            location.reload();
+        } catch (error) {
+            // Handle the error, e.g., show an error message
+            console.error(error);
+            alert("Error banning the user");
+        }
+    }
+
+    async function unbanUser(userId) {
+        try {
+            const response = await fetch(`https://localhost:7008/api/Person/UnBanAccount?userId=${userId}`);
+
+            if (!response.ok) {
+                throw new Error("Error banning the user");
+            }
+
+            // Optionally, you can handle the response here if needed
+            console.log("User banned successfully");
+
+            // Refresh the table or update the UI as needed
+            location.reload();
+        } catch (error) {
+            // Handle the error, e.g., show an error message
+            console.error(error);
+            alert("Error banning the user");
+        }
+    }
 
     
 </script>
