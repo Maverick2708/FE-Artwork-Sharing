@@ -25,5 +25,17 @@ namespace Artwork_Sharing_Platform.Areas.Admin.Controllers
         {
             return View();
         }
+        public ActionResult ReportPage()
+        {
+            return View();
+        }
+        public ActionResult OrderPage()
+        {
+            return View();
+        }
+        public ActionResult ArtWorkPage()
+        {
+            return View();
+        }
     }
 }

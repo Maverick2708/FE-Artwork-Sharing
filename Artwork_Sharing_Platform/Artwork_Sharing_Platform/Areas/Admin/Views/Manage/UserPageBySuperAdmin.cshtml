@@ -21,12 +21,13 @@
                         <table id="transactionTable" class="table table-bordered table-hover table-striped">
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Full Name</th>
-                                    <th>Gender</th>
-                                    <th>Email</th>
                                     <th>Phone Number</th>
-                                    <th>Update Role</th>
+                                    <th>Date Created</th>
+                                    <th>View Detail</th>
+                                    <th>Status</th>
+                                    <th>Role</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -34,6 +35,19 @@
                         </table>
                     </div>
                     <!-- /.table-responsive -->
+                    <div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="userDetailModalLabel">User Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- User details will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -41,45 +55,175 @@
 </div>
 <script>
 
-    fetch('https://localhost:7008/api/Person/GetAllAccountBySuperAdmin')
-        .then(response => response.json())
-        .then(data => {
-            const tbody = document.querySelector('#transactionTable tbody');
+    //fetch('https://localhost:7008/api/Person/GetAllAccountBySuperAdmin')
+    //    .then(response => response.json())
+    //    .then(data => {
+    //        const tbody = document.querySelector('#transactionTable tbody');
 
-            data.dataObject.forEach((transaction, index) => {
-                const row = document.createElement('tr');
+    //        data.dataObject.forEach((transaction, index) => {
+    //            const row = document.createElement('tr');
 
-                const idCell = document.createElement('td');
-                idCell.textContent = index + 1;
-                row.appendChild(idCell);
+    //            const idCell = document.createElement('td');
+    //            idCell.textContent = index + 1;
+    //            row.appendChild(idCell);
 
-                const userIdCell = document.createElement('td');
-                userIdCell.textContent = transaction.fullName;
-                row.appendChild(userIdCell);
+    //            const userIdCell = document.createElement('td');
+    //            userIdCell.textContent = transaction.fullName;
+    //            row.appendChild(userIdCell);
 
-                const descriptionCell = document.createElement('td');
-                descriptionCell.textContent = transaction.gender ? "Male" : "Female";
-                row.appendChild(descriptionCell);
+    //            const descriptionCell = document.createElement('td');
+    //            descriptionCell.textContent = transaction.gender ? "Male" : "Female";
+    //            row.appendChild(descriptionCell);
 
-                const statusCell = document.createElement('td');
-                statusCell.textContent = transaction.email;
-                row.appendChild(statusCell);
+    //            const statusCell = document.createElement('td');
+    //            statusCell.textContent = transaction.email;
+    //            row.appendChild(statusCell);
 
-                const actionCell = document.createElement('td');
-
-
-
-                actionCell.textContent = transaction.phoneNumber;
+    //            const actionCell = document.createElement('td');
 
 
-                row.appendChild(actionCell);
-                tbody.appendChild(row);
+
+    //            actionCell.textContent = transaction.phoneNumber;
+
+
+    //            row.appendChild(actionCell);
+    //            tbody.appendChild(row);
+    //        });
+    //    })
+    //    .catch(error => console.error('Error fetching transactions:', error));
+    window.addEventListener('load', (event) => {
+        fetchDataAndShowInTable();
+    });
+
+    function displayDataInTable(data) {
+        const tbody = $("#transactionTable tbody");
+
+        data.forEach((item) => {
+            const row = $("<tr>");
+
+            row.append($("<td>").text(item.fullName));
+            row.append($("<td>").text(item.phoneNumber));
+            row.append($("<td>").text(item.dateUserRe));
+            row.append(
+                $("<td>").append(
+                    $("<button>").text("View Detail").addClass("btn btn-primary").on("click", function () {
+                        viewDetail(item);
+                    })
+                )
+            );
+
+            row.append($("<td>").text(item.status ? "Active" : "Inactive"));
+            const roleSelect = $("<select>").addClass("form-select").on("change", function () {
+                updateUserRole(item.id, $(this).val());
             });
+
+            ["Audience", "Admin"].forEach((role) => {
+                roleSelect.append($("<option>").text(role).val(role));
+            });
+
+            row.append($("<td>").append(roleSelect.val(item.roles[0])));
+
+            tbody.append(row);
+        });
+    }
+
+    async function fetchDataAndShowInTable() {
+        try {
+            const response = await fetch("https://localhost:7008/api/Person/GetAllAccountBySuperAdmin");
+            const data = await response.json();
+
+            if (response.ok) {
+                displayDataInTable(data.dataObject);
+            } else {
+                console.error("Error fetching data:", data);
+
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    function updateUserRole(userId, selectedRole) {
+        const url = `https://localhost:7008/api/Person/UpdateUserRole`;
+
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: userId,
+                selectedRole: selectedRole
+            })
         })
-        .catch(error => console.error('Error fetching transactions:', error));
+            .then(response => response.json())
+            .then(data => {
+                console.log(userId);
+                console.log(selectedRole);
+                if (data.status === 'Success') {
+                    console.log('User role updated successfully');
+                } else {
+                    console.error('Error updating user role:', data.message);
+                }
+            })
+            .catch(error => console.error('Error updating user role:', error));
+    }
 
+    function viewDetail(user) {
+        showUserDetailModal(user);
+    }
 
+    function showUserDetailModal(user) {
+        const modalBody = $("#userDetailModal .modal-body");
 
+        modalBody.empty();
+
+        const userDetailElement = $("<dl>");
+
+        userDetailElement.append($("<dt>").text("ID:"));
+        userDetailElement.append($("<dd>").text(user.id));
+
+        userDetailElement.append($("<dt>").text("User Name:"));
+        userDetailElement.append($("<dd>").text(user.userName));
+
+        userDetailElement.append($("<dt>").text("Email:"));
+        userDetailElement.append($("<dd>").text(user.email));
+
+        userDetailElement.append($("<dt>").text("Address:"));
+        userDetailElement.append($("<dd>").text(user.address));
+
+        userDetailElement.append($("<dt>").text("Gender:"));
+        userDetailElement.append(
+            user.gender
+                ? $("<dd>").text("Male")
+                : $("<dd>").text("Female")
+        );
+
+        userDetailElement.append($("<dt>").text("Phone Number:"));
+        userDetailElement.append($("<dd>").text(user.phoneNumber));
+
+        userDetailElement.append($("<dt>").text("Date of Birth:"));
+        userDetailElement.append($("<dd>").text(formatDate(user.dob)));
+
+        userDetailElement.append($("<dt>").text("Full Name:"));
+        userDetailElement.append($("<dd>").text(user.fullName));
+
+        userDetailElement.append($("<dt>").text("Date User Re:"));
+        userDetailElement.append($("<dd>").text(formatDate(user.dateUserRe)));
+
+        userDetailElement.append($("<dt>").text("Roles:"));
+        userDetailElement.append($("<dd>").text(user.roles.join(", ")));
+
+        modalBody.append(userDetailElement);
+
+        // Show the modal
+        $("#userDetailModal").modal("show");
+    }
+
+    // Helper function to format the date
+    function formatDate(date) {
+        return new Date(date).toLocaleDateString();
+    }
 
 
 </script>
