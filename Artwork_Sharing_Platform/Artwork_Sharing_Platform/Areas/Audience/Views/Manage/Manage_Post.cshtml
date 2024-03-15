@@ -1,670 +1,510 @@
 ﻿@{
     Layout = "~/Views/Shared/defaultAuthor.cshtml";
 }
-<style>
-
-    #comments {
-        max-width: 600px;
-        margin: 20px auto;
-        font-family: 'Arial', sans-serif;
-    }
-
-    .comment {
-        background-color: #f8f8f8;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-        position: relative;
-    }
-
-    .like {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        cursor: pointer;
-        color: #e44d26; /* Màu sắc mặc định của trái tim */
-    }
-
-    
-
-    .like:hover {
-        color: #e44d26; /* Màu sắc khi hover (có thể giữ nguyên màu đỏ) */
-    }
-
-    .comment-input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
-
-    .comment-btn {
-        background-color: #4caf50;
-        color: white;
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .comment-input-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .comment-input {
-        flex: 1;
-        margin-right: 10px; /* Adjust the spacing between input and button as needed */
-    }
-
-    .comment-btn {
-        flex-shrink: 0; /* Prevent button from shrinking */
-    }
-    /* Style cho hình avatar bo tròn */
-    .avatar {
-        border-radius: 50%;
-        width: 20px; /* Điều chỉnh kích thước hình avatar */
-        height: 20px;
-        object-fit: cover; /* Hiển thị toàn bộ hình trong khung */
-        margin-right: 20px; /* Khoảng cách giữa avatar và văn bản */
-    }
-
-    /* Style cho ô chữ nhật dài chứa avatar và văn bản */
-    .profile-card {
-        display: flex;
-        align-items: center;
-        padding: 20px;
-        border: 1px solid #ccc; /* Viền ô chữ nhật */
-        margin-bottom: 20px; /* Khoảng cách giữa các ô chữ nhật */
-        border-radius: 10px;
-    }
-
-    /* Style cho phần văn bản */
-    .text-section {
-        flex: 1; /* Đảm bảo phần văn bản mở rộng để chiếm hết không gian còn trống */
-    }
-
-    /* Reset margin và padding cho body */
-    body {
-        margin: 0;
-        padding: 0;
-    }
-
-    .card {
-        margin-bottom: 1px; /* Điều chỉnh giảm khoảng cách giữa các section */
-    }
-
-    .comment-date {
-        margin-top: 10px; /* Khoảng cách giữa comment và ngày */
-        color: #888; /* Màu chữ xám mờ */
-        font-size: 14px; /* Kích thước chữ */
-        text-align: right; /* Căn phải */
-    }
-
-    .comment-content {
-        margin-bottom: 10px; /* Khoảng cách giữa comment và ngày */
-    }
-
-    .rectangle-container {
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    .rectangle {
-        display: inline-block;
-        background-color: #4caf50; /* Your desired background color */
-        color: white;
-        padding: 5px 20px;
-        border-radius: 5px;
-    }
-
-    .comments-text {
-        font-size: 18px; /* Your desired font size */
-        font-weight: bold;
-    }
-
-    .success-msg {
-        display: none;
-        margin: 10px 0;
-        padding: 10px;
-        border-radius: 3px;
-        color: #270;
-        background-color: #DFF2BF;
-    }
-    .artist-info {
-        display: flex;
-        align-items: center;
-    }
-    #followButton {
-        padding: 10px 20px;
-        font-size: 10px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        color: #000;
-        outline: none;
-        transition: background-color 0.3s;
-    }
-
-        #followButton.following {
-            background-color: #2ecc71; /* Màu xanh lục cho trạng thái "Following" */
-        }
-    #BlueTick {
-        display: none; /* Ẩn mặc định */
-        margin-left: 10px;
-    }
-    .like-button {
-        cursor: pointer;
-        background-color: transparent;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        position: relative;
-    }
-
-        .like-button.liked i {
-            color: #4CAF50; /* Màu xanh khi đã like */
-        }
-
-        .like-button.liked:before {
-            content: '\2665'; /* Unicode của biểu tượng trái tim */
-            font-size: 24px;
-            left: 0;
-        }
-        .like-button i {
-            font-size: 24px; /* Kích thước icon */
-        }
-
-        .like-button:not(.liked):before {
-            content: '\2661'; /* Unicode của biểu tượng trái tim trống */
-            font-size: 24px;
-            left: 0;
-            color: #ccc; /* Màu xám khi chưa like */
-        }
-
-
-    /* Add animation (fade in the popup) */
-
-</style>
 
 <section class="bg-gray200 pt-5 pb-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-7">
-                
-                <article class="card">
-
-                    <img id="artworkImage" class="card-img-top mb-2" src="" alt="Card image">
-                    <div class="card-body">
-                        <div class="artist-info">
-                            <img id="AvataArtist" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" style="display: inline; margin-left: 10px;">
-                            <div id="NameArtist" style="display: inline; margin-left: 10px;"></div>
-                            <p id="BlueTickContainer">
-                                <span id="BlueTickSpan">
-                                    <!-- Sử dụng span để bao quanh nếu bạn muốn định dạng khác -->
-                                    <img id="BlueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="12" style="display: inline;">
-                                </span>
-
-                            </p>
-                            <button id="followButton" onclick="toggleFollow()" style="display: inline; margin-left: 10px;">+ Follow</button>
+            <div class="col-md-12">
+                <article class="card" style="border-radius: 30px;">
+                    <div class="row">
+                        <div class="col-md-6" style="overflow: hidden; display: flex;">
+                            <img id="artworkImage" class="card-img-top" src="" alt="Card image" style="object-fit: cover; flex-grow: 1; border-radius: 30px; padding: 10px;">
                         </div>
 
-
-
-                        <h1 id="artworkTitle">
-                        </h1>
-                        <h4 id="artDescription">
-                        </h4>
-                        <h6 id="artworkPrice">
-                        </h6>
-                        <input type="hidden" id="artPirce" />
-                        <div class="artist-info">
-                            <div id="ratingContainer" class="d-flex align-items-center">
-                                <div id="starRatingContainer"></div>
-                                <button id="likeButton" class="like-button">
-                                    <div id="likeCount"></div>
-                                </button>
-
-                            </div>
-                            </div>
-
-                            <div id="comments" class="mt-4">
-
-                            </div>
-
-                            <div class="comment-input-container">
-                                <input type="text" id="commentInput" class="comment-input" placeholder="Enter your comment">
-                                <button type="button" class="comment-btn" onclick="addComment()">Send</button>
-                                <button type="button" class="comment-btn" onclick="addCart()">
-
-                                    Add to card
-
-                                </button>
-                                <div class="success-msg">
-                                    <i class="fa fa-check"></i>
-                                    <span id="successMessage"></span>
+                        <div class="col-md-6" style="">
+                            <div class="description" style="padding: 10px 20px">
+                                <h1 id="artworkTitle" style="font-size: 25px; font-weight: bold; color: #2c2b2b;"></h1>
+                                <div style="height: 4px; width: 10%; background-color: #E0E0E0;"></div>
+                                <div style="margin: 5px 0; display: flex; justify-content: space-between; align-items: center">
+                                    <span id="artworkPrice" style="font-weight: 700; color: #c41818"></span>
+                                    <input type="hidden" id="artPirce">
+                                    <button type="button" class="comment-btn" onclick="addCart()" style="border: none; border-radius: 50%; width: 30px; height: 30px">
+                                        <i class="fa-solid fa-cart-plus"></i>
+                                    </button>
                                 </div>
-                            </div>
-                            <span id="datePost" style="color: grey;"></span>
-                            <script>
+                                <p id="artDescription" style="font-size: 18px; max-height: 200px; overflow: auto"></p>
 
-                                // Lấy tham số userId và artworkPId từ sessionStorage
-                                var userId = sessionStorage.getItem('userId');
-                                var artworkPId = sessionStorage.getItem('artworkID');
+                                <div class="artist-info" style="margin-top: 10px; display: flex; justify-content: space-between">
+                                    <div style="display: flex;">
+                                        <img id="AvataArtist" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="45" ; height="45" style="display: inline; border-radius: 50%;">
+                                        <div style="margin-left: 10px">
+                                            <div style="display: flex;">
+                                                <div id="NameArtist" style="font-weight: 600; "></div>
+                                                <div id="BlueTickSpan" style="display: flex; justify-content: center; align-items: center; margin-left: 5px;">
+                                                    <img id="BlueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="12">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span id="follower">333</span>
+                                                <span>followers</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                        <button id="followButton" onclick="toggleFollow()" style="border: none; padding: 10px; border-radius: 20px; font-weight: 500">+ Follow</button>
+                                    </div>
+                                </div>
 
-                                // Lấy trạng thái like khi trang được tải
-                                checkLikeStatus();
-                                function countlike() {
-                                    // Gửi yêu cầu API GET để kiểm tra trạng thái like
-                                    $.ajax({
-                                        url: `https://localhost:7008/api/Comment/CountInteractByArtworkId?artworkId=${artworkPId}`,
-                                        type: 'GET',
-                                        success: function (data) {
-                                            document.getElementById('likeCount').innerText = data.dataObject;
-                                        },
-                                        error: function (error) {
-                                            console.error('Error checking like status:', error);
-                                        }
-                                    });
-                                }
-                                // Thêm sự kiện click cho nút like
-                                $('#likeButton').click(function () {
-                                    if ($(this).hasClass('liked')) {
-                                        // Nếu đã like, gửi yêu cầu API để xóa like
-                                        deleteLike();
-                                        location.reload();
-                                    } else {
-                                        // Nếu chưa like, gửi yêu cầu API để thêm like
-                                        addLike();
-                                        location.reload();
-                                    }
-                                });
+                                <div style="margin: 30px 0 10px;">
+                                    <span style="font-weight: 500">Comments</span>
+                                </div>
 
-                                // Hàm kiểm tra trạng thái like khi trang được tải
-                                function checkLikeStatus() {
-                                    // Gửi yêu cầu API GET để kiểm tra trạng thái like
-                                    $.ajax({
-                                        url: `https://localhost:7008/api/Comment/GetUseLikerOrNotLike?userId=${userId}&artworkId=${artworkPId}`,
-                                        type: 'GET',
-                                        success: function (data) {
-                                            if (data.message === 'Interact found') {
-                                                const isLiked = data.dataObject.likeOrNotLike;
-                                                const likeButton = $('#likeButton');
-                                                sessionStorage.setItem('likeId', data.dataObject.id);
+                                <div style="margin: 10px 0;">
+                                    <section class="">
+                                        <div class="">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <article class="">
+                                                        <div class="comment-container" style="max-height: 250px; overflow: auto">
+                                                            <div id="apiDataContainer"></div>
+                                                            <script>
+                                                                $(document).ready(function () {
+                                                                    var artworkId = sessionStorage.getItem("artworkID");
+                                                                    $.ajax({
+                                                                        type: 'GET',
+                                                                        url: `https://localhost:7008/api/Comment/GetCommentForPost?artworkId=${artworkId}`,
+                                                                        success: function (response) {
+                                                                            console.log(response);
+                                                                            if (response && response.status === "Success" && response.dataObject && response.dataObject.length > 0) {
+                                                                                response.dataObject.forEach(function (comment) {
+                                                                                    // Check if the element with ID 'apiDataContainer' exists
+                                                                                    var apiDataContainer = $('#apiDataContainer');
+                                                                                    if (apiDataContainer.length) {
+                                                                                        apiDataContainer.append(
+                                                                                            `
+                                                                                                                                                                                                         <div class="profile-card" style="margin: 10px 0 20px;">
+                                                                                                                                                                                                             <div class="text-section">
+                                                                                                                                                                                                                  <div style="display: flex;">
+                                                                                                                                                                                                                    
+                                                                                                                                                                                                                    <img id="AvataArtist" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="30" ; height="30" style="display: inline; border-radius: 50%;">
+                                                                                                                                                                                                                    <div style="margin-left: 8px">
+                                                                                                                                                                                                                        <div style="font-weight: 500;">${comment.accountMail}</div>
+                                                                                                                                                                                                                        <div class="comment-content-date">
+                                                                                                                                                                                                                            <div class="comment-content" style="word-break: break-word; color: #646363 ">${comment.contentComment}</div>
+                                                                                                                                                                                                                            <div class="comment-date" style="font-size: 10px; margin-top: 3px; color: #6d6c6c">${formatDate(comment.dateSub)}</div>
+                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                    
+                                                                                                                                                                                                                  </div>
+                                                                                                                                                                                                                  
+                                                                                                                                                                                                                  
+                                                                                                                                                                                                             </div>
+                                                                                                                                                                                                         </div>`
+                                                                                        );
+                                                                                    } else {
+                                                                                        console.log('Element with ID "apiDataContainer" not found.');
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                            else {
+                                                                                console.log("ERROR HTML")
+                                                                            }
+                                                                        },
+                                                                        error: function (error) {
+                                                                            console.error('Lỗi:', error);
+                                                                        }
+                                                                    });
+                                                                });
+                                                                function formatDate(dateString) {
+                                                                    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+                                                                    const formattedDate = new Date(dateString).toLocaleDateString('vi-VN', options);
+                                                                    return `<div class="comment-date">${formattedDate}</div>`;
+                                                                }
+                                                            </script>
 
-                                                if (isLiked) {
-                                                    likeButton.addClass('liked');
-                                                } else {
-                                                    likeButton.removeClass('liked');
-                                                }
-                                            } else {
-                                                console.error('Error checking like status:', data.message);
+                                                        </div>
+                                                    </article>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                </div>
+
+                                <div class="artist-info" style="margin: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="font-weight: 600;">
+                                        <span id="count-comment">13</span>
+                                        <span>Comments</span>
+                                    </div>
+                                    <div id="ratingContainer" class="d-flex justify-content-end align-items-center">
+                                        <div id="starRatingContainer"></div>
+                                        <div style="margin-right: 5px; font-weight: 500">
+                                            <span id="count-like">56</span>
+                                        </div>
+                                        <button id="likeButton" class="like-button" style="border: none; border-radius: 50%">
+                                            <div id="likeCount">
+                                                <i class="fa-regular fa-heart"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="comment-input-container">
+                                    <div style="position: relative;">
+                                        <input type="text" id="commentInput" class="" placeholder="Enter your comment" style="border-radius: 20px; border: 2px solid #7b7b7b; padding: 10px 15px; margin: 0">
+                                        <button type="button" class="comment-btn" onclick="addComment()" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px; border: none; border-radius: 50%;">
+                                            <i class="fa-solid fa-arrow-right"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    
+                                    @*<div class="success-msg">
+                                        <i class="fa fa-check"></i>
+                                        <span id="successMessage"></span>
+                                    </div>*@
+                                </div>
+
+                                <span  id="datePost" style="color: grey; display: none"></span>
+                                    
+                                <script>
+
+                                    // Lấy tham số userId và artworkPId từ sessionStorage
+                                    var userId = sessionStorage.getItem('userId');
+                                    var artworkPId = sessionStorage.getItem('artworkID');
+
+                                    // Lấy trạng thái like khi trang được tải
+                                    checkLikeStatus();
+                                    function countlike() {
+                                        // Gửi yêu cầu API GET để kiểm tra trạng thái like
+                                        $.ajax({
+                                            url: `https://localhost:7008/api/Comment/CountInteractByArtworkId?artworkId=${artworkPId}`,
+                                            type: 'GET',
+                                            success: function (data) {
+                                                document.getElementById('likeCount').innerText = data.dataObject;
+                                            },
+                                            error: function (error) {
+                                                console.error('Error checking like status:', error);
                                             }
-                                        },
-                                        error: function (error) {
-                                            console.error('Error checking like status:', error);
-                                        }
-                                    });
-                                }
-
-                                // Hàm gửi yêu cầu API POST để thêm like
-                                function addLike() {
-                                    const data = {
-                                        userId: userId,
-                                        artworkPId: artworkPId
-                                    };
-
-                                    // Gửi yêu cầu API POST để thêm like
-                                    $.ajax({
-                                        url: 'https://localhost:7008/api/Comment/CreateInteract',
-                                        type: 'POST',
-                                        data: JSON.stringify(data),
-                                        contentType: 'application/json',
-                                        success: function (data) {
-                                            $('#likeButton').addClass('liked');
-
-                                        },
-                                        error: function (error) {
-                                            console.error('Error adding like:', error);
-                                        }
-                                    });
-                                }
-
-                                // Hàm gửi yêu cầu API DELETE để xóa like
-                                function deleteLike() {
-                                    const likeId = sessionStorage.getItem('likeId') || 'yourLikeId';
-
-                                    // Gửi yêu cầu API DELETE để xóa like
-                                    $.ajax({
-                                        url: `https://localhost:7008/api/Comment/DisLike?commentId=${likeId}`,
-                                        type: 'DELETE',
-                                        success: function (data) {
-                                            $('#likeButton').removeClass('liked');
-                                        },
-                                        error: function (error) {
-                                            console.error('Error deleting like:', error);
-                                        }
-                                    });
-                                }
-                            </script>
-                            <script>
-                                $(document).ready(function () {
-                                    checkFollowing();
-                                });
-
-
-
-
-                                function checkFollowing() {
-                                    var userId = sessionStorage.getItem('userId');
-                                    var artworkPId = sessionStorage.getItem('artworkID');
-                                    $.ajax({
-                                        type: 'GET',
-                                        url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkPId}`,
-                                        success: function (respone) {
-
-                                            $.ajax({
-                                                type: 'GET',
-                                                url: `https://localhost:7008/api/Follow/GetFollow?userId=${userId}&userIdFollow=${respone.dataObject.userId}`,
-                                                success: function (data) {
-                                                    checkFollowStatus(data.message);
-                                                    console.log(data);
-                                                    console.log(respone.dataObject.userId);
-                                                    console.log(userId);
-                                                },
-                                                error: function (error) {
-                                                    console.error('Lỗi:', error);
-                                                }
-                                            });
-                                        },
-                                    })
-
-                                }
-                                function checkFollowStatus(response) {
-                                    var button = document.getElementById("followButton");
-                                    if (response === "Follow found") {
-                                        // Toggle the "following" class
-                                        button.classList.add("following");
-
-                                        // Update button text to "Following"
-                                        button.innerHTML = "Following";
-
-                                    } else {
-                                        // Remove the "following" class
-                                        button.classList.remove("following");
-
-                                        // Update button text to "+ Follow"
-                                        button.innerHTML = "+ Follow";
+                                        });
                                     }
+                                    // Thêm sự kiện click cho nút like
+                                    $('#likeButton').click(function () {
+                                        if ($(this).hasClass('liked')) {
+                                            // Nếu đã like, gửi yêu cầu API để xóa like
+                                            deleteLike();
+                                            location.reload();
+                                        } else {
+                                            // Nếu chưa like, gửi yêu cầu API để thêm like
+                                            addLike();
+                                            location.reload();
+                                        }
+                                    });
 
-                                }
-                                function postFollow() {
-                                    var userId = sessionStorage.getItem('userId');
-                                    var artworkPId = sessionStorage.getItem('artworkID');
-                                    $.ajax({
-                                        type: 'GET',
-                                        url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkPId}`,
-                                        success: function (respone) {
-                                            var userIdFollow = respone.dataObject.userId;
-                                            $.ajax({
-                                                type: 'POST',
-                                                url: 'https://localhost:7008/api/Follow/CreateFollow',
-                                                data: JSON.stringify({
-                                                    userId: userId,
-                                                    userIdFollow: userIdFollow
-                                                }),
-                                                contentType: 'application/json',
-                                                success: function (data) {
-                                                    // Handle success response from the API
-                                                    console.log('Follow successfully:', data);
-                                                    if (!button.classList.contains("following")) {
-                                                        //toggleFollow("Follow found");
+                                    // Hàm kiểm tra trạng thái like khi trang được tải
+                                    function checkLikeStatus() {
+                                        // Gửi yêu cầu API GET để kiểm tra trạng thái like
+                                        $.ajax({
+                                            url: `https://localhost:7008/api/Comment/GetUseLikerOrNotLike?userId=${userId}&artworkId=${artworkPId}`,
+                                            type: 'GET',
+                                            success: function (data) {
+                                                if (data.message === 'Interact found') {
+                                                    const isLiked = data.dataObject.likeOrNotLike;
+                                                    const likeButton = $('#likeButton');
+                                                    sessionStorage.setItem('likeId', data.dataObject.id);
+
+                                                    if (isLiked) {
+                                                        likeButton.addClass('liked');
+                                                    } else {
+                                                        likeButton.removeClass('liked');
                                                     }
-                                                    // Optionally, close the modal after successful save
-                                                    location.reload();
-
-
-                                                },
-                                                error: function (error) {
-                                                    console.error('Lỗi:', error);
+                                                } else {
+                                                    console.error('Error checking like status:', data.message);
                                                 }
-                                            });
-                                        },
-                                    })
-
-                                }
-                                function deleteFollow() {
-                                    var userId = sessionStorage.getItem('userId');
-                                    var artworkPId = sessionStorage.getItem('artworkID');
-                                    $.ajax({
-                                        type: 'GET',
-                                        url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkPId}`,
-                                        success: function (respone) {
-                                            var userIdFollow = respone.dataObject.userId;
-                                            $.ajax({
-                                                type: 'DELETE',
-                                                url: `https://localhost:7008/api/Follow/UnFollow?userId=${userId}&userIdFollow=${respone.dataObject.userId}`,
-
-                                                contentType: 'application/json',
-                                                success: function (data) {
-                                                    // Handle success response from the API
-                                                    console.log('Follow delete successfully:', data);
-                                                    if (button.classList.contains("following")) {
-                                                        //toggleFollow("Follow not found");
-                                                    }
-                                                    // Optionally, close the modal after successful save
-                                                    location.reload();
-
-
-                                                },
-                                                error: function (error) {
-                                                    console.error('Lỗi:', error);
-                                                }
-                                            });
-                                        },
-                                    })
-
-                                }
-
-                                var button = document.getElementById("followButton");
-                                button.addEventListener("click", function () {
-                                    // Call the toggleFollow function when the button is clicked
-                                    //toggleFollow();
-                                });
-
-                                function toggleFollow(response) {
-                                    var button = document.getElementById("followButton");
-                                    if (response === "Follow found") {
-                                        // Toggle the "following" class
-                                        button.classList.add("following");
-
-                                        // Update button text to "Following"
-                                        button.innerHTML = "Following";
-
-                                    } else if (response === "Follow not found") {
-                                        // Remove the "following" class
-                                        button.classList.remove("following");
-
-                                        // Update button text to "+ Follow"
-                                        button.innerHTML = "+ Follow";
+                                            },
+                                            error: function (error) {
+                                                console.error('Error checking like status:', error);
+                                            }
+                                        });
                                     }
-                                    else {
 
+                                    // Hàm gửi yêu cầu API POST để thêm like
+                                    function addLike() {
+                                        const data = {
+                                            userId: userId,
+                                            artworkPId: artworkPId
+                                        };
+
+                                        // Gửi yêu cầu API POST để thêm like
+                                        $.ajax({
+                                            url: 'https://localhost:7008/api/Comment/CreateInteract',
+                                            type: 'POST',
+                                            data: JSON.stringify(data),
+                                            contentType: 'application/json',
+                                            success: function (data) {
+                                                $('#likeButton').addClass('liked');
+
+                                            },
+                                            error: function (error) {
+                                                console.error('Error adding like:', error);
+                                            }
+                                        });
                                     }
-                                    var isFollowing = button.classList.contains("following");
-                                    if (!isFollowing) {
-                                        // If not following, make a POST request to create follow
-                                        postFollow();
-                                    } else if (isFollowing) {
-                                        // If following, make a DELETE request to remove follow
-                                        deleteFollow();
+
+                                    // Hàm gửi yêu cầu API DELETE để xóa like
+                                    function deleteLike() {
+                                        const likeId = sessionStorage.getItem('likeId') || 'yourLikeId';
+
+                                        // Gửi yêu cầu API DELETE để xóa like
+                                        $.ajax({
+                                            url: `https://localhost:7008/api/Comment/DisLike?commentId=${likeId}`,
+                                            type: 'DELETE',
+                                            success: function (data) {
+                                                $('#likeButton').removeClass('liked');
+                                            },
+                                            error: function (error) {
+                                                console.error('Error deleting like:', error);
+                                            }
+                                        });
                                     }
-                                    else {
-
-                                    }
-                                }
-                                function addCart() {
-                                    var priceArt = document.getElementById('artPirce').value;
-                                    var ArtImg = document.getElementById('artworkImage').src.replace(/^data:image\/\w+;base64,/, '');
-
-
-                                    // Get userId and artworkPId from session
-                                    var userId = sessionStorage.getItem('userId');
-                                    var artworkPId = sessionStorage.getItem('artworkID');
-
-                                    // Create a comment object with necessary values
-                                    var art = {
-                                        artworkPId: artworkPId,
-                                        userId: userId,
-                                        quanity: 1,
-                                        priceArtwork: priceArt,
-                                        pictureArtwork: ArtImg
-                                    };
-                                    console.log(art);
-                                    // Call the function to send the comment to the server
-                                    addToCart(art);
-                                }
-
-                                function showSuccessMessage(message) {
-                                    // Hiển thị message
-                                    $(".success-msg").fadeIn();
-                                    $("#successMessage").html(message);
-                                    console.log(message);
-                                    // Ẩn message sau một khoảng thời gian (ví dụ: 3 giây)
-                                    setTimeout(function () {
-                                        $(".success-msg").fadeOut();
-                                    }, 3000); // 3000 milliseconds = 3 seconds
-                                }
-
-
-                                function addToCart(obj) {
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: 'https://localhost:7008/api/ShoppingCart', // Replace with your actual API endpoint
-                                        contentType: 'application/json',
-                                        data: JSON.stringify(obj),
-                                        success: function (response) {
-                                            // Handle the success response
-                                            console.log('Added Cart successfully:', response);
-                                            showSuccessMessage("Add item to cart successfully.");
-
-                                            // If needed, update the UI to display the new comment immediately
-                                            // You can call a function to refresh the comments or append the new comment to the existing ones
-
-                                        },
-                                        error: function (error) {
-                                            // Handle the error response
-                                            console.error('Error Cart:', error);
-                                        }
+                                </script>
+                                <script>
+                                    $(document).ready(function () {
+                                        checkFollowing();
                                     });
-                                }
-                                var starRating = 5; // Replace with the actual database value
-
-
-                                // Trạng thái ban đầu là chưa thả tim
-
-                                // Function to generate the star rating
-                                function generateStarRating() {
-                                    starRatingContainer.innerHTML = ''; // Clear previous content
-
-                                    // Create a star for each rating
-                                    for (var i = 0; i < starRating; i++) {
-                                        var star = document.createElement('i');
-                                        star.className = 'fa fa-star text-warning'; // Assuming FontAwesome for stars
-                                        starRatingContainer.appendChild(star);
-                                    }
-
-                                    // You can add half stars or empty stars based on your requirements
-                                }
-                                function getAverageStarRating() {
-                                    var artworkId = getParameterByName('artworkid');
-                                    $.ajax({
-                                        type: 'GET',
-                                        url: `https://localhost:7008/api/RateStar/GetAverageRateStar?artworkID=${artworkId}`,
-                                        success: function (data) {
-                                            starRating = data.dataObject;
-                                            generateStarRating();
-                                        },
-                                        error: function (error) {
-                                            console.error('Lỗi:', error);
-                                        }
-                                    });
-                                }
-                                $(document).ready(function () {
-                                    getAverageStarRating();
-
-                                });
-                                function getParameterByName(name, url) {
-                                    if (!url) url = window.location.href;
-                                    name = name.replace(/[[]]/g, "\$&");
-                                    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                                        results = regex.exec(url);
-                                    if (!results) return null;
-                                    if (!results[2]) return '';
-                                    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-                                }
-                                var isLiked = false; // Trạng thái ban đầu là chưa thả tim
-                                var likeCountValue = 0;
 
 
 
 
-
-
-                                // Function to get URL parameter by name
-                                function getParameterByName(name, url = window.location.href) {
-                                    name = name.replace(/[\[\]]/g, '\\$&');
-                                    const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
-                                    const results = regex.exec(url);
-                                    if (!results) return null;
-                                    if (!results[2]) return '';
-                                    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-                                }
-                                // Call the function to generate the star rating
-                                generateStarRating();
-
-
-                                $(document).ready(function () {
-                                    // Lấy thông tin artworkId từ URL
-                                    var artworkId = getParameterByName('artworkid');
-
-                                    // Kiểm tra xem artworkId có tồn tại không
-                                    if (artworkId) {
-                                        // Gọi API GetArtworkById với artworkId
+                                    function checkFollowing() {
+                                        var userId = sessionStorage.getItem('userId');
+                                        var artworkPId = sessionStorage.getItem('artworkID');
                                         $.ajax({
                                             type: 'GET',
-                                            url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkId}`,
+                                            url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkPId}`,
+                                            success: function (respone) {
+
+                                                $.ajax({
+                                                    type: 'GET',
+                                                    url: `https://localhost:7008/api/Follow/GetFollow?userId=${userId}&userIdFollow=${respone.dataObject.userId}`,
+                                                    success: function (data) {
+                                                        checkFollowStatus(data.message);
+                                                        console.log(data);
+                                                        console.log(respone.dataObject.userId);
+                                                        console.log(userId);
+                                                    },
+                                                    error: function (error) {
+                                                        console.error('Lỗi:', error);
+                                                    }
+                                                });
+                                            },
+                                        })
+
+                                    }
+                                    function checkFollowStatus(response) {
+                                        var button = document.getElementById("followButton");
+                                        if (response === "Follow found") {
+                                            // Toggle the "following" class
+                                            button.classList.add("following");
+
+                                            // Update button text to "Following"
+                                            button.innerHTML = "Following";
+
+                                        } else {
+                                            // Remove the "following" class
+                                            button.classList.remove("following");
+
+                                            // Update button text to "+ Follow"
+                                            button.innerHTML = "+ Follow";
+                                        }
+
+                                    }
+                                    function postFollow() {
+                                        var userId = sessionStorage.getItem('userId');
+                                        var artworkPId = sessionStorage.getItem('artworkID');
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkPId}`,
+                                            success: function (respone) {
+                                                var userIdFollow = respone.dataObject.userId;
+                                                $.ajax({
+                                                    type: 'POST',
+                                                    url: 'https://localhost:7008/api/Follow/CreateFollow',
+                                                    data: JSON.stringify({
+                                                        userId: userId,
+                                                        userIdFollow: userIdFollow
+                                                    }),
+                                                    contentType: 'application/json',
+                                                    success: function (data) {
+                                                        // Handle success response from the API
+                                                        console.log('Follow successfully:', data);
+                                                        if (!button.classList.contains("following")) {
+                                                            //toggleFollow("Follow found");
+                                                        }
+                                                        // Optionally, close the modal after successful save
+                                                        location.reload();
+
+
+                                                    },
+                                                    error: function (error) {
+                                                        console.error('Lỗi:', error);
+                                                    }
+                                                });
+                                            },
+                                        })
+
+                                    }
+                                    function deleteFollow() {
+                                        var userId = sessionStorage.getItem('userId');
+                                        var artworkPId = sessionStorage.getItem('artworkID');
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkPId}`,
+                                            success: function (respone) {
+                                                var userIdFollow = respone.dataObject.userId;
+                                                $.ajax({
+                                                    type: 'DELETE',
+                                                    url: `https://localhost:7008/api/Follow/UnFollow?userId=${userId}&userIdFollow=${respone.dataObject.userId}`,
+
+                                                    contentType: 'application/json',
+                                                    success: function (data) {
+                                                        // Handle success response from the API
+                                                        console.log('Follow delete successfully:', data);
+                                                        if (button.classList.contains("following")) {
+                                                            //toggleFollow("Follow not found");
+                                                        }
+                                                        // Optionally, close the modal after successful save
+                                                        location.reload();
+
+
+                                                    },
+                                                    error: function (error) {
+                                                        console.error('Lỗi:', error);
+                                                    }
+                                                });
+                                            },
+                                        })
+
+                                    }
+
+                                    var button = document.getElementById("followButton");
+                                    button.addEventListener("click", function () {
+                                        // Call the toggleFollow function when the button is clicked
+                                        //toggleFollow();
+                                    });
+
+                                    function toggleFollow(response) {
+                                        var button = document.getElementById("followButton");
+                                        if (response === "Follow found") {
+                                            // Toggle the "following" class
+                                            button.classList.add("following");
+
+                                            // Update button text to "Following"
+                                            button.innerHTML = "Following";
+
+                                        } else if (response === "Follow not found") {
+                                            // Remove the "following" class
+                                            button.classList.remove("following");
+
+                                            // Update button text to "+ Follow"
+                                            button.innerHTML = "+ Follow";
+                                        }
+                                        else {
+
+                                        }
+                                        var isFollowing = button.classList.contains("following");
+                                        if (!isFollowing) {
+                                            // If not following, make a POST request to create follow
+                                            postFollow();
+                                        } else if (isFollowing) {
+                                            // If following, make a DELETE request to remove follow
+                                            deleteFollow();
+                                        }
+                                        else {
+
+                                        }
+                                    }
+                                    function addCart() {
+                                        var priceArt = document.getElementById('artPirce').value;
+                                        var ArtImg = document.getElementById('artworkImage').src.replace(/^data:image\/\w+;base64,/, '');
+
+
+                                        // Get userId and artworkPId from session
+                                        var userId = sessionStorage.getItem('userId');
+                                        var artworkPId = sessionStorage.getItem('artworkID');
+
+                                        // Create a comment object with necessary values
+                                        var art = {
+                                            artworkPId: artworkPId,
+                                            userId: userId,
+                                            quanity: 1,
+                                            priceArtwork: priceArt,
+                                            pictureArtwork: ArtImg
+                                        };
+                                        console.log(art);
+                                        // Call the function to send the comment to the server
+                                        addToCart(art);
+                                    }
+
+                                    function showSuccessMessage(message) {
+                                        // Hiển thị message
+                                        $(".success-msg").fadeIn();
+                                        $("#successMessage").html(message);
+                                        console.log(message);
+                                        // Ẩn message sau một khoảng thời gian (ví dụ: 3 giây)
+                                        setTimeout(function () {
+                                            $(".success-msg").fadeOut();
+                                        }, 3000); // 3000 milliseconds = 3 seconds
+                                    }
+
+
+                                    function addToCart(obj) {
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: 'https://localhost:7008/api/ShoppingCart', // Replace with your actual API endpoint
+                                            contentType: 'application/json',
+                                            data: JSON.stringify(obj),
                                             success: function (response) {
-                                                // Hiển thị dữ liệu từ API lên trang
-                                                displayArtworkData(response.dataObject);
+                                                // Handle the success response
+                                                console.log('Added Cart successfully:', response);
+                                                showSuccessMessage("Add item to cart successfully.");
+
+                                                // If needed, update the UI to display the new comment immediately
+                                                // You can call a function to refresh the comments or append the new comment to the existing ones
+
+                                            },
+                                            error: function (error) {
+                                                // Handle the error response
+                                                console.error('Error Cart:', error);
+                                            }
+                                        });
+                                    }
+                                    var starRating = 5; // Replace with the actual database value
+
+
+                                    // Trạng thái ban đầu là chưa thả tim
+
+                                    // Function to generate the star rating
+                                    function generateStarRating() {
+                                        starRatingContainer.innerHTML = ''; // Clear previous content
+
+                                        // Create a star for each rating
+                                        for (var i = 0; i < starRating; i++) {
+                                            var star = document.createElement('i');
+                                            star.className = 'fa fa-star text-warning'; // Assuming FontAwesome for stars
+                                            starRatingContainer.appendChild(star);
+                                        }
+
+                                        // You can add half stars or empty stars based on your requirements
+                                    }
+                                    function getAverageStarRating() {
+                                        var artworkId = getParameterByName('artworkid');
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: `https://localhost:7008/api/RateStar/GetAverageRateStar?artworkID=${artworkId}`,
+                                            success: function (data) {
+                                                starRating = data.dataObject;
+                                                generateStarRating();
                                             },
                                             error: function (error) {
                                                 console.error('Lỗi:', error);
                                             }
                                         });
                                     }
+                                    $(document).ready(function () {
+                                        getAverageStarRating();
 
-
-                                    // Hàm để hiển thị dữ liệu từ API lên trang
-                                    function displayArtworkData(data) {
-                                        // Thực hiện các thay đổi cần thiết để hiển thị dữ liệu
-                                        document.getElementById('artworkTitle').innerText = data.contentArtwork;
-                                        // Thêm các thông tin khác tùy thuộc vào cấu trúc dữ liệu của API
-                                        document.getElementById('artworkImage').src = 'data:image/jpeg;base64,' + data.pictureArtwork;
-                                        document.getElementById('artworkPrice').innerText = (data.priceArtwork).toLocaleString('vi-VN') + 'VNĐ';
-                                        document.getElementById('artPirce').value = (data.priceArtwork);
-                                        var datePost = new Date(data.datePost);
-                                        var formattedDate = ('0' + datePost.getDate()).slice(-2) + '-' + ('0' + (datePost.getMonth() + 1)).slice(-2) + '-' + datePost.getFullYear();
-                                        document.getElementById('datePost').innerText = formattedDate;
-                                        document.getElementById('artDescription').innerText = data.description;
-
-                                    }
-
-
-                                    // Hàm để lấy giá trị của tham số từ URL
+                                    });
                                     function getParameterByName(name, url) {
                                         if (!url) url = window.location.href;
                                         name = name.replace(/[[]]/g, "\$&");
@@ -674,161 +514,173 @@
                                         if (!results[2]) return '';
                                         return decodeURIComponent(results[2].replace(/\+/g, ' '));
                                     }
-                                });
-                                function addComment() {
-                                    var commentInput = document.getElementById('commentInput').value;
-
-                                    // Check if the comment input is not empty
-
-
-                                    // Get userId and artworkPId from session
-                                    var userId = sessionStorage.getItem('userId');
-                                    var artworkPId = sessionStorage.getItem('artworkID');
-
-                                    // Create a comment object with necessary values
-                                    var commentData = {
-                                        contentComment: commentInput,
-                                        userId: userId,
-                                        artworkPId: artworkPId
-                                    };
-
-                                    // Call the function to send the comment to the server
-                                    postComment(commentData);
-                                }
-
-                                // Function to send a comment to the server
-                                function postComment(commentData) {
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: 'https://localhost:7008/api/Comment/CreateComment', // Replace with your actual API endpoint
-                                        contentType: 'application/json',
-                                        data: JSON.stringify(commentData),
-                                        success: function (response) {
-                                            // Handle the success response
-                                            console.log('Comment added successfully:', response);
-                                            showSuccessMessage("Comment succesfully");
-                                            // If needed, update the UI to display the new comment immediately
-                                            // You can call a function to refresh the comments or append the new comment to the existing ones
-                                            location.reload();
-                                        },
-                                        error: function (error) {
-                                            // Handle the error response
-                                            console.error('Error adding comment:', error);
-                                        }
-                                    });
-                                }
-
-
-                            </script>
-                            <script>
+                                    var isLiked = false; // Trạng thái ban đầu là chưa thả tim
+                                    var likeCountValue = 0;
 
 
 
 
 
-                                function getParameterByName(name, url) {
-                                    if (!url) url = window.location.href;
-                                    name = name.replace(/[[]]/g, "\$&");
-                                    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                                        results = regex.exec(url);
-                                    if (!results) return null;
-                                    if (!results[2]) return '';
-                                    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-                                }
-                                $(document).ready(function () {
-                                    // Lấy thông tin artworkId từ URL
-                                    var artworkId = getParameterByName('artworkid');
 
-                                    // Kiểm tra xem artworkId có tồn tại không
-                                    if (artworkId) {
-                                        // Gọi API GetArtworkById với artworkId
-                                        $.ajax({
-                                            type: 'GET',
-                                            url: `https://localhost:7008/api/Arwork/GetArtistByArtworkId?artworkid=${artworkId}`,
-                                            success: function (response) {
-                                                document.getElementById('NameArtist').innerText = response.dataObject.fullName;
-                                                // Thêm các thông tin khác tùy thuộc vào cấu trúc dữ liệu của API
-                                                document.getElementById('AvataArtist').src = 'data:image/jpeg;base64,' + response.dataObject.avatar;
-                                                if (response.dataObject.isVerifiedPage === true) {
-                                                    // Nếu điều kiện đúng, hiển thị đoạn HTML
-                                                    document.getElementById("BlueTickContainer").style.display = "block";
-                                                } else {
-                                                    // Nếu điều kiện sai, ẩn đoạn HTML
-                                                    document.getElementById("BlueTickContainer").style.display = "none";
-                                                }
-                                            },
-                                            error: function (error) {
-                                                console.error('Lỗi:', error);
-                                            }
-                                        });
+                                    // Function to get URL parameter by name
+                                    function getParameterByName(name, url = window.location.href) {
+                                        name = name.replace(/[\[\]]/g, '\\$&');
+                                        const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
+                                        const results = regex.exec(url);
+                                        if (!results) return null;
+                                        if (!results[2]) return '';
+                                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
                                     }
-                                });
+                                    // Call the function to generate the star rating
+                                    generateStarRating();
 
-                            </script>
-                        </div>
-</article>
-            </div>
-        </div>
-    </div>
-</section>
 
-<!-- HTML structure -->
-<section class="bg-gray200 pt-5 pb-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-7">
-                <article class="card">
-                    <div class="card-body">
-                        <div id="apiDataContainer"></div>
-                        <script>
-                            $(document).ready(function () {
-                                var artworkId = sessionStorage.getItem("artworkID");
-                                $.ajax({
-                                    type: 'GET',
-                                    url: `https://localhost:7008/api/Comment/GetCommentForPost?artworkId=${artworkId}`,
-                                    success: function (response) {
-                                        console.log(response);
-                                        if (response && response.status === "Success" && response.dataObject && response.dataObject.length > 0) {
-                                            response.dataObject.forEach(function (comment) {
-                                                // Check if the element with ID 'apiDataContainer' exists
-                                                var apiDataContainer = $('#apiDataContainer');
-                                                if (apiDataContainer.length) {
-                                                    apiDataContainer.append(
-                                                        `
-                                                                                 <div class="profile-card">
-                                                                                     <div class="text-section">
-                                                                                         <div>${comment.accountMail}</div>
-                                                                                          <div class="comment-content-date">
-                                                                                            <div class="comment-content">${comment.contentComment}</div>
-                                                                                            <div class="comment-date">${formatDate(comment.dateSub)}</div>
-                                                                                          </div>
-                                                                                     </div>
-                                                                                 </div>`
-                                                    );
-                                                } else {
-                                                    console.log('Element with ID "apiDataContainer" not found.');
+                                    $(document).ready(function () {
+                                        // Lấy thông tin artworkId từ URL
+                                        var artworkId = getParameterByName('artworkid');
+
+                                        // Kiểm tra xem artworkId có tồn tại không
+                                        if (artworkId) {
+                                            // Gọi API GetArtworkById với artworkId
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkId}`,
+                                                success: function (response) {
+                                                    // Hiển thị dữ liệu từ API lên trang
+                                                    displayArtworkData(response.dataObject);
+                                                },
+                                                error: function (error) {
+                                                    console.error('Lỗi:', error);
                                                 }
                                             });
                                         }
-                                        else {
-                                            console.log("ERROR HTML")
-                                        }
-                                    },
-                                    error: function (error) {
-                                        console.error('Lỗi:', error);
-                                    }
-                                });
-                            });
-                            function formatDate(dateString) {
-                                const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-                                const formattedDate = new Date(dateString).toLocaleDateString('vi-VN', options);
-                                return `<div class="comment-date">${formattedDate}</div>`;
-                            }
-                        </script>
 
+
+                                        // Hàm để hiển thị dữ liệu từ API lên trang
+                                        function displayArtworkData(data) {
+                                            // Thực hiện các thay đổi cần thiết để hiển thị dữ liệu
+                                            document.getElementById('artworkTitle').innerText = data.contentArtwork;
+                                            // Thêm các thông tin khác tùy thuộc vào cấu trúc dữ liệu của API
+                                            document.getElementById('artworkImage').src = 'data:image/jpeg;base64,' + data.pictureArtwork;
+                                            document.getElementById('artworkPrice').innerText = (data.priceArtwork).toLocaleString('vi-VN') + 'VNĐ';
+                                            document.getElementById('artPirce').value = (data.priceArtwork);
+                                            var datePost = new Date(data.datePost);
+                                            var formattedDate = ('0' + datePost.getDate()).slice(-2) + '-' + ('0' + (datePost.getMonth() + 1)).slice(-2) + '-' + datePost.getFullYear();
+                                            document.getElementById('datePost').innerText = formattedDate;
+                                            document.getElementById('artDescription').innerText = data.description;
+
+                                        }
+
+
+                                        // Hàm để lấy giá trị của tham số từ URL
+                                        function getParameterByName(name, url) {
+                                            if (!url) url = window.location.href;
+                                            name = name.replace(/[[]]/g, "\$&");
+                                            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                                                results = regex.exec(url);
+                                            if (!results) return null;
+                                            if (!results[2]) return '';
+                                            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                                        }
+                                    });
+                                    function addComment() {
+                                        var commentInput = document.getElementById('commentInput').value;
+
+                                        // Check if the comment input is not empty
+
+
+                                        // Get userId and artworkPId from session
+                                        var userId = sessionStorage.getItem('userId');
+                                        var artworkPId = sessionStorage.getItem('artworkID');
+
+                                        // Create a comment object with necessary values
+                                        var commentData = {
+                                            contentComment: commentInput,
+                                            userId: userId,
+                                            artworkPId: artworkPId
+                                        };
+
+                                        // Call the function to send the comment to the server
+                                        postComment(commentData);
+                                    }
+
+                                    // Function to send a comment to the server
+                                    function postComment(commentData) {
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: 'https://localhost:7008/api/Comment/CreateComment', // Replace with your actual API endpoint
+                                            contentType: 'application/json',
+                                            data: JSON.stringify(commentData),
+                                            success: function (response) {
+                                                // Handle the success response
+                                                console.log('Comment added successfully:', response);
+                                                showSuccessMessage("Comment succesfully");
+                                                // If needed, update the UI to display the new comment immediately
+                                                // You can call a function to refresh the comments or append the new comment to the existing ones
+                                                location.reload();
+                                            },
+                                            error: function (error) {
+                                                // Handle the error response
+                                                console.error('Error adding comment:', error);
+                                            }
+                                        });
+                                    }
+
+
+                                </script>
+                                <script>
+
+
+
+
+
+                                    function getParameterByName(name, url) {
+                                        if (!url) url = window.location.href;
+                                        name = name.replace(/[[]]/g, "\$&");
+                                        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                                            results = regex.exec(url);
+                                        if (!results) return null;
+                                        if (!results[2]) return '';
+                                        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                                    }
+                                    $(document).ready(function () {
+                                        // Lấy thông tin artworkId từ URL
+                                        var artworkId = getParameterByName('artworkid');
+
+                                        // Kiểm tra xem artworkId có tồn tại không
+                                        if (artworkId) {
+                                            // Gọi API GetArtworkById với artworkId
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: `https://localhost:7008/api/Arwork/GetArtistByArtworkId?artworkid=${artworkId}`,
+                                                success: function (response) {
+                                                    document.getElementById('NameArtist').innerText = response.dataObject.fullName;
+                                                    // Thêm các thông tin khác tùy thuộc vào cấu trúc dữ liệu của API
+                                                    document.getElementById('AvataArtist').src = 'data:image/jpeg;base64,' + response.dataObject.avatar;
+                                                    if (response.dataObject.isVerifiedPage === true) {
+                                                        // Nếu điều kiện đúng, hiển thị đoạn HTML
+                                                        document.getElementById("BlueTickContainer").style.display = "block";
+                                                    } else {
+                                                        // Nếu điều kiện sai, ẩn đoạn HTML
+                                                        document.getElementById("BlueTickContainer").style.display = "none";
+                                                    }
+                                                },
+                                                error: function (error) {
+                                                    console.error('Lỗi:', error);
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                </script>
+                            </div>
+                        </div>
                     </div>
                 </article>
             </div>
         </div>
     </div>
 </section>
+
+    <!-- HTML structure -->
+    
