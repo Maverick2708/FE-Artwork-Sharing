@@ -37,5 +37,9 @@ namespace Artwork_Sharing_Platform.Areas.Admin.Controllers
         {
             return View();
         }
+        public ActionResult GenrePage()
+        {
+            return View();
+        }
     }
 }
