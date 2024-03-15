@@ -59,6 +59,51 @@
         cursor: pointer;
     }
 
+    .req-profile-button {
+        position: absolute;
+        bottom: -110px;
+        right: 30px;
+        padding: 10px 10px;
+        background-color: #2152E0;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .reqed-profile-button {
+        position: absolute;
+        bottom: -110px;
+        right: 30px;
+        padding: 10px 10px;
+        background-color: #FFF000;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .conf-profile-button {
+        position: absolute;
+        bottom: -110px;
+        right: 30px;
+        padding: 10px 10px;
+        background-color: #33F100;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .n-req-profile-button {
+        position: absolute;
+        bottom: -110px;
+        right: 30px;
+        padding: 10px 10px;
+        background-color: #F16300;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+
     .update-profile-button:hover, .update-background-button:hover {
         background-color: #A0A0A0;
     }
@@ -74,6 +119,23 @@
         <i class="fa-solid fa-pen" style="margin-right: 10px; color: white"></i>
         <h4 style="color: white; font-size: 15px; margin: 0 auto;">Chỉnh sửa hồ sơ người dùng</h4>
     </button>
+    <button class="req-profile-button" id="Request" onclick="RequestConfirm()" style="display: none; justify-content: space-between; align-items: center;">
+        <i class="fa-regular fa-circle-check" style="margin-right: 10px; color: white"></i>
+        <h4 style="color: white; font-size: 15px; margin: 0 auto;">Yêu cầu xác nhận</h4>
+    </button>
+    <button class="reqed-profile-button" id="Confirming" style="display: none; justify-content: space-between; align-items: center;">
+        <i class="fa-solid fa-circle-xmark" style="margin-right: 10px; color: white"></i>
+        <h4 style="color: black; font-size: 15px; margin: 0 auto;">Đợi xác nhận</h4>
+    </button>
+    <button class="conf-profile-button" id="Confirmed" style="display: none; justify-content: space-between; align-items: center;">
+        <i class="fa-solid fa-circle-check" style="margin-right: 10px; color: white"></i>
+        <h4 style="color: white; font-size: 15px; margin: 0 auto;">Đã xác nhận</h4>
+    </button>
+    <button class="n-req-profile-button" id="NoCofirm" style="display: none; justify-content: space-between; align-items: center;">
+        <i class="fa-regular fa-circle-check" style="margin-right: 10px; color: white"></i>
+        <h4 style="color: white; font-size: 15px; margin: 0 auto;">Bạn cần 10 follower để gửi yêu cầu xác nhận tài khoản</h4>
+    </button>
+
 </div>
 
 <div class="profile mb-4">
@@ -93,11 +155,110 @@
             <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" />
         </div>
     </div>
+    <h6 class="your-art" id="followNumber"></h6>
+
     <div>------------</div>
     <h4 class="your-art">Your art</h4>
 </div>
 
 <script>
+    $(document).ready(function () {
+        var Userid = sessionStorage.getItem('userId');
+
+        $.ajax({
+            type: 'GET',
+            url: `https://localhost:7008/api/Follow/CountFollow?userIdFollow=${Userid}`,
+            success: function (response) {
+                // Hiển thị dữ liệu từ API lên trang
+               
+                if (response.message == 'Follow found') {
+                    document.getElementById('followNumber').innerText = response.dataObject + " Follower(s)";
+                }
+                else if (response.message == 'Follow not found') {
+                    document.getElementById('followNumber').innerText = 0;
+                }
+            },
+            error: function (error) {
+                console.error('Lỗi:', error);
+            }
+        });
+    });
+
+    function RequestConfirm() {
+        var Userid = sessionStorage.getItem('userId');
+        $.ajax({
+            type: 'POST',
+            url: 'https://localhost:7008/api/Request/CreateRequest', // Replace with your actual API endpoint
+            data: JSON.stringify({
+                userId: Userid
+
+
+            }),
+            contentType: 'application/json',
+            success: function (data) {
+                // Handle success response from the API
+                alert('Đã gửi yêu cầu xác nhận');
+                // Optionally, close the modal after successful save
+                location.reload();
+
+              
+            },
+            error: function (error) {
+                // Handle error response from the API
+                console.error('Lỗi khi gửi yêu cầu', error);
+            }
+        });
+    }
+      
+      
+    $(document).ready(function () {
+        var Userid = sessionStorage.getItem('userId');
+        var email = sessionStorage.getItem('userEmail');
+        $.ajax({
+            type: 'GET',
+            url: `https://localhost:7008/api/Person/email?email=${email}`,
+            success: function (response1) {
+                if (response1.isVerifiedPage == true) {
+                    document.getElementById('Confirmed').style.display = "flex";
+                }
+                else {
+                    $.ajax({
+                        type: 'GET',
+                        url: `https://localhost:7008/api/Request/GetAllRequestByUserID?userID=${Userid}`,
+                        success: function (response) {
+                            // Hiển thị dữ liệu từ API lên trang
+
+                            if (response.message == 'Found Request') {
+                                document.getElementById('Confirming').style.display = "flex";
+                            }
+                            else if (response.message == 'Request not found') {
+                                $.ajax({
+                                    type: 'GET',
+                                    url: `https://localhost:7008/api/Follow/CountFollow?userIdFollow=${Userid}`,
+                                    success: function (response2) {
+                                        // Hiển thị dữ liệu từ API lên trang
+
+                                        if (response2.dataObject < 10 || response2.message == 'Follow not found') {
+                                            document.getElementById('NoCofirm').style.display = "flex";
+                                        }
+                                        else if (response2.dataObject >= 10) {
+                                            document.getElementById('Request').style.display = "flex";
+                                        }
+                                    },
+                                    error: function (error) {
+                                        console.error('Lỗi:', error);
+                                    }
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            console.error('Lỗi:', error);
+                        }
+                    });
+                }
+            }
+        });
+    });
     function checkAvatarFileSelection() {
         const fileInput = document.getElementById('Avatar');
         const previewImage = document.getElementById('previewImage');

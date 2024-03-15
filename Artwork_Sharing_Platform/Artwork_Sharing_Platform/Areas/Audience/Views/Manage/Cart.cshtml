@@ -173,6 +173,7 @@
                     <div id="apiDataContainer"></div>
                     <script>
                         var userId = sessionStorage.getItem("userId");
+                        var totalPrice = 0;
                         $(document).ready(function () {
                             $.ajax({
                                 type: 'GET',
@@ -189,6 +190,7 @@
                                                     success: function (responseName) {
                                                         if (responseName.dataObject) {
                                                             console.log(responseName.dataObject);
+                                                            
                                                             
                                                             const strHTML = `
                                         <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded">
@@ -208,6 +210,12 @@
                                         </div>
                                     `;
                                                             $('#apiDataContainer').append(strHTML);
+                                                            totalPrice += items.priceArtwork;
+                                                            $('#priceOrder').text(totalPrice.toLocaleString('vi-VN') + 'VNĐ');
+                                                            var totalPricePlus = totalPrice + 20000;
+                                                            $('#totalPrice').text(totalPricePlus.toLocaleString('vi-VN') + 'VNĐ');
+                                                            $('#totalPrice2').text(totalPricePlus.toLocaleString('vi-VN') + 'VNĐ');
+                                                            sessionStorage.setItem('totalPriceOrder', totalPricePlus);
                                                         } else {
                                                             console.error('Invalid or empty response from the API.');
                                                         }
@@ -254,26 +262,89 @@
             </div>
             <div class="col-md-4">
                 <div class="payment-info">
-                    <div class="d-flex justify-content-between align-items-center"><span>Card details</span><img class="rounded" src="https://i.imgur.com/WU501C8.jpg" width="30"></div><span class="type d-block mt-3 mb-1">Card type</span><label class="radio"> <input type="radio" name="card" value="payment" checked> <span><img width="30" src="https://img.icons8.com/color/48/000000/mastercard.png" /></span> </label>
+                    <label>Thông tin đặt hàng:</label>
+                    <br>
+                    <label for="Fullname">Tên:</label>
+                    <input type="text" id="Fullname" class="form-control mb-2">
+                    <label>  </label>
+                    <label for="Phone">Số điện thoại:</label>
+                    <input type="text" id="Phone" class="form-control mb-2">
 
-                    <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/officel/48/000000/visa.png" /></span> </label>
 
-                    <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/ultraviolet/48/000000/amex.png" /></span> </label>
-
-
-                    <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/officel/48/000000/paypal.png" /></span> </label>
-                    <div><label class="credit-card-label">Name on card</label><input type="text" class="form-control credit-inputs" placeholder="Name"></div>
-                    <div><label class="credit-card-label">Card number</label><input type="text" class="form-control credit-inputs" placeholder="0000 0000 0000 0000"></div>
-                    <div class="row">
-                        <div class="col-md-6"><label class="credit-card-label">Date</label><input type="text" class="form-control credit-inputs" placeholder="12/24"></div>
-                        <div class="col-md-6"><label class="credit-card-label">CVV</label><input type="text" class="form-control credit-inputs" placeholder="342"></div>
-                    </div>
+                    <label for="Address">Địa chỉ nhận hàngg:</label>
+                    <input type="text" id="Address" class="form-control mb-2">
                     <hr class="line">
-                    <div class="d-flex justify-content-between information"><span>Subtotal</span><span>$3000.00</span></div>
-                    <div class="d-flex justify-content-between information"><span>Shipping</span><span>$20.00</span></div>
-                    <div class="d-flex justify-content-between information"><span>Total(Incl. taxes)</span><span>$3020.00</span></div><button class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="button"><span>$3020.00</span><span>Checkout<i class="fa fa-long-arrow-right ml-1"></i></span></button>
+                    <div class="d-flex justify-content-between information"><span>Tạm tính</span><span id="priceOrder"></span></div>
+                    <div class="d-flex justify-content-between information"><span>Phí vận chuyển</span><span>30.000VNĐ</span></div>
+                    <div class="d-flex justify-content-between information"><span>Tổng</span><span id="totalPrice"></span></div>
+                    <button onclick="Checkout()" class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="button"><span id="totalPrice2"></span><span>Checkout<i class="fa fa-long-arrow-right ml-1"></i></span></button>
+
                 </div>
             </div>
+            <script>
+               
+                    function Checkout() {
+                        var fullname = document.getElementById("Fullname").value;
+                        var phone = document.getElementById("Phone").value;
+                        var address = document.getElementById("Address").value;
+                        var userId = sessionStorage.getItem("userId");
+
+                        // Kiểm tra xem bất kỳ ô textbox nào có rỗng không
+                        if (fullname === '' || phone === '' || address === '') {
+                            // Nếu có một trong các ô textbox rỗng, hiển thị thông báo lỗi
+                            alert('Vui lòng điền đầy đủ thông tin đặt hàng.');
+                            return false; // Không thực hiện hàm tiếp theo
+                        }
+
+                        $.ajax({
+                            type: 'GET',
+                            url: `https://localhost:7008/api/ShoppingCart/user/${userId}`,
+                            success: function (response) {
+                                var orderDetailsArray = [];
+                                var totalBill = 0;
+                                // Lặp qua các phần tử trong mảng response để lấy thông tin và thêm vào mảng orderDetailsArray
+                                response.forEach(function (item) {
+                                    var orderDetail = {
+                                        priceOrder: item.priceArtwork, // Giá đặt hàng
+                                        artworkPId: item.artworkPId, // ID của sản phẩm
+                                        quanity: item.quanity, // Số lượng
+                                        address: address,
+                                        phone: phone,
+                                        fullName: fullname
+                                    };
+                                    orderDetailsArray.push(orderDetail);
+                                    totalBill += item.priceArtwork;
+                                });
+
+                                // Tạo đối tượng dữ liệu theo định dạng JSON
+                                var orderData = {
+                                    orderDetails: orderDetailsArray,
+                                    totalBill: totalBill + 30000,
+                                    status: true
+                                };
+
+                                // Gửi dữ liệu qua API POST
+                                $.ajax({
+                                    type: 'POST',
+                                    url: `https://localhost:7008/api/Order/CreateOrderV2?userid=${userId}`,
+                                    data: JSON.stringify(orderData), // Chuyển đối tượng dữ liệu thành chuỗi JSON
+                                    contentType: 'application/json', // Xác định loại nội dung gửi đi
+                                    success: function (response2) {
+                                        // Xử lý kết quả trả về nếu cần
+                                        alert('DONE!');
+                                    },
+                                    error: function (error) {
+                                        console.error('Error:', error);
+                                    }
+                                });
+                            },
+                            error: function (error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    }
+                
+            </script>
         </div>
     </div>
 </body>
