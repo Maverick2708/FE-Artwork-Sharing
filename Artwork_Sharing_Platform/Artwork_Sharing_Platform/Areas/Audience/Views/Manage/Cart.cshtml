@@ -164,7 +164,7 @@
                     <hr>
                     <h6 class="mb-0">Shopping cart</h6>
                     <div class="d-flex justify-content-between">
-                        <span>You have 4 items in your cart</span>
+                        <span id="count-items"></span>
                         <div class="d-flex flex-row align-items-center">
                             <span class="text-black-50">Sort by:</span>
                             <div class="price ml-2"><span class="mr-1">price</span><i class="fa fa-angle-down"></i></div>
@@ -261,7 +261,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="payment-info">
+                <div class="payment-info" id="payment-info">
                     <label>Thông tin đặt hàng:</label>
                     <br>
                     <label for="Fullname">Tên:</label>
@@ -282,6 +282,21 @@
                 </div>
             </div>
             <script>
+                $(document).ready(function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: `https://localhost:7008/api/ShoppingCart/user/${userId}`,
+                        
+                        contentType: 'application/json', // Xác định loại nội dung gửi đi
+                        success: function (response) {
+                            // Xử lý kết quả trả về nếu cần
+                            document.getElementById('count-items').innerText = "You have " + response.length + " items in your cart!";
+                        },
+                        error: function (error) {
+                            document.getElementById('payment-info').style.display = 'none';
+                        }
+                    });
+                });
                
                     function Checkout() {
                         var fullname = document.getElementById("Fullname").value;

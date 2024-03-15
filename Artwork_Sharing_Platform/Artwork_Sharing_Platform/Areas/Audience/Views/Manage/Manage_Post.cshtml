@@ -22,6 +22,10 @@
                                     <button type="button" class="comment-btn" onclick="addCart()" style="border: none; border-radius: 50%; width: 30px; height: 30px">
                                         <i class="fa-solid fa-cart-plus"></i>
                                     </button>
+                                    <div class="success-msg" id="success-msg" style ="display:none">
+                                        <i class="fa fa-check"></i>
+                                        <span id="successMessage"></span>
+                                    </div>
                                 </div>
                                 <p id="artDescription" style="font-size: 18px; max-height: 200px; overflow: auto"></p>
 
@@ -36,7 +40,7 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <span id="follower">333</span>
+                                                <span id="follower"></span>
                                                 <span>followers</span>
                                             </div>
                                         </div>
@@ -76,8 +80,8 @@
                                                                                                                                                                                                          <div class="profile-card" style="margin: 10px 0 20px;">
                                                                                                                                                                                                              <div class="text-section">
                                                                                                                                                                                                                   <div style="display: flex;">
-                                                                                                                                                                                                                    
-                                                                                                                                                                                                                    <img id="AvataArtist" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="30" ; height="30" style="display: inline; border-radius: 50%;">
+
+                                                                                                                                                                                                                    <img id="AvataArtist" src="data:image/jpeg;base64,${comment.avatar}" width="30" ; height="30" style="display: inline; border-radius: 50%;">
                                                                                                                                                                                                                     <div style="margin-left: 8px">
                                                                                                                                                                                                                         <div style="font-weight: 500;">${comment.accountMail}</div>
                                                                                                                                                                                                                         <div class="comment-content-date">
@@ -111,6 +115,7 @@
                                                                     const formattedDate = new Date(dateString).toLocaleDateString('vi-VN', options);
                                                                     return `<div class="comment-date">${formattedDate}</div>`;
                                                                 }
+
                                                             </script>
 
                                                         </div>
@@ -124,17 +129,19 @@
 
                                 <div class="artist-info" style="margin: 20px 0; display: flex; justify-content: space-between; align-items: center;">
                                     <div style="font-weight: 600;">
-                                        <span id="count-comment">13</span>
+                                        <span id="count-comment"></span>
                                         <span>Comments</span>
                                     </div>
                                     <div id="ratingContainer" class="d-flex justify-content-end align-items-center">
                                         <div id="starRatingContainer"></div>
                                         <div style="margin-right: 5px; font-weight: 500">
-                                            <span id="count-like">56</span>
+                                            <span id="count-like"></span>
                                         </div>
                                         <button id="likeButton" class="like-button" style="border: none; border-radius: 50%">
-                                            <div id="likeCount">
-                                                <i class="fa-regular fa-heart"></i>
+                                            <div>
+                                                <i class="fa-regular fa-heart">
+                                                
+                                                </i>
                                             </div>
                                         </button>
                                     </div>
@@ -149,10 +156,7 @@
                                     </div>
                                     
                                     
-                                    @*<div class="success-msg">
-                                        <i class="fa fa-check"></i>
-                                        <span id="successMessage"></span>
-                                    </div>*@
+                                    
                                 </div>
 
                                 <span  id="datePost" style="color: grey; display: none"></span>
@@ -171,7 +175,36 @@
                                             url: `https://localhost:7008/api/Comment/CountInteractByArtworkId?artworkId=${artworkPId}`,
                                             type: 'GET',
                                             success: function (data) {
-                                                document.getElementById('likeCount').innerText = data.dataObject;
+                                                document.getElementById('count-like').innerText = data.dataObject;
+                                               
+                                            },
+                                            error: function (error) {
+                                                console.error('Error checking like status:', error);
+                                            }
+                                        });
+                                    }
+                                    function countFollow() {
+                                        // Gửi yêu cầu API GET để kiểm tra trạng thái like
+                                        $.ajax({
+                                            url: `https://localhost:7008/api/Follow/CountFollow?userIdFollow=${userId}`,
+                                            type: 'GET',
+                                            success: function (data) {
+                                                document.getElementById('follower').innerText = data.dataObject;
+                                                
+                                            },
+                                            error: function (error) {
+                                                console.error('Error checking like status:', error);
+                                            }
+                                        });
+                                    }
+                                    function countComment() {
+                                        // Gửi yêu cầu API GET để kiểm tra trạng thái like
+                                        $.ajax({
+                                            url: `https://localhost:7008/api/Comment/CountCommentByArtworkId?artworkId=${artworkPId}`,
+                                            type: 'GET',
+                                            success: function (data) {
+                                                document.getElementById('count-comment').innerText = data.dataObject;
+                                                
                                             },
                                             error: function (error) {
                                                 console.error('Error checking like status:', error);
@@ -261,6 +294,9 @@
                                 <script>
                                     $(document).ready(function () {
                                         checkFollowing();
+                                        countlike();
+                                        countComment();
+                                        countFollow();
                                     });
 
 
@@ -457,6 +493,7 @@
                                             success: function (response) {
                                                 // Handle the success response
                                                 console.log('Added Cart successfully:', response);
+                                                document.getElementById('success-msg').style.display = 'flex';
                                                 showSuccessMessage("Add item to cart successfully.");
 
                                                 // If needed, update the UI to display the new comment immediately
@@ -659,10 +696,10 @@
                                                     document.getElementById('AvataArtist').src = 'data:image/jpeg;base64,' + response.dataObject.avatar;
                                                     if (response.dataObject.isVerifiedPage === true) {
                                                         // Nếu điều kiện đúng, hiển thị đoạn HTML
-                                                        document.getElementById("BlueTickContainer").style.display = "block";
+                                                        document.getElementById("BlueTick").style.display = "block";
                                                     } else {
                                                         // Nếu điều kiện sai, ẩn đoạn HTML
-                                                        document.getElementById("BlueTickContainer").style.display = "none";
+                                                        document.getElementById("BlueTick").style.display = "none";
                                                     }
                                                 },
                                                 error: function (error) {
