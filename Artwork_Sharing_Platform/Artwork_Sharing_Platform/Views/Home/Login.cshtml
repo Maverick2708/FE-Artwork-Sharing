@@ -80,7 +80,10 @@
                         }
 
                         <div class="text-right p-t-8 p-b-31">
-                            <a href="#" onclick="showRegisterTab()">Don't have an account?, SIGN UP HERE'</a>
+                            <a href="#" onclick="showRegisterTab()">Don't have an account?, SIGN UP HERE</a>
+                        </div>
+                        <div class="text-right p-t-8 p-b-31">
+                            <a href="#" onclick="showForgotPasswordTab()">Forgot password</a>
                         </div>
 
                         <div class="container-login100-form-btn">
@@ -134,21 +137,21 @@
                             <span class="label-input100">Email</span>
                             <input class="input100" type="email" name="accountEmail" placeholder="Type your email">
                             <span class="focus-input100" data-symbol="&#xf15a;"></span>
-                           
+
                         </div>
 
                         <div class="wrap-input100 validate-input" id="passwordInput" data-validate="Password is required">
                             <span class="label-input100">Password</span>
                             <input class="input100" type="password" name="accountPassword" placeholder="Type your password">
                             <span class="focus-input100" data-symbol="&#xf190;"></span>
-                           
+
                         </div>
 
                         <div class="wrap-input100 validate-input" id="confirmPasswordInput" data-validate="Confirm Password is required">
                             <span class="label-input100">Confirm Password</span>
                             <input class="input100" type="password" name="ConfirmAccountPassword" placeholder="Type your confirm password">
                             <span class="focus-input100" data-symbol="&#xf190;"></span>
-                            
+
                         </div>
                         <div class="text-right p-t-8 p-b-31">
                             <a href="#" onclick="showLoginTab()">Sign In</a>
@@ -164,20 +167,46 @@
                         </div>
                     </form>
                 </div>
+                <div id="forgotPasswordTab" class="tab-content">
+                    <!-- Form đăng ký -->
+                    <form class="login100-form validate-form" method="post">
+                        <!-- Các trường đăng ký, ví dụ: -->
+                        <div class="wrap-input100 validate-input m-b-23" id="emailForgot" data-validate="Recover email required">
+                            <span class="label-input100">Your Email</span>
+                            <input class="input100" type="text" name="EmailF" placeholder="Type your email">
+                            <span class="focus-input100" data-symbol="&#xf1ae;"></span>
+
+                        </div>
+                        <button class="button-inside-input" onclick="forgotPassword()">SEND</button>
+                        <div class="text-right p-t-8 p-b-31">
+                            <a href="#" onclick="showLoginTab()">Sign In</a>
+                        </div>
+
+                    </form>
+                </div>
+                
             </div>
         </div>
     </div>
 
     <script>
+        function showForgotPasswordTab() {
+            $('#loginTab').removeClass('active-tab');
+            $('#registerTab').removeClass('active-tab');
+            $('#forgotPasswordTab').addClass('active-tab');
+           
+        }
         function showRegisterTab() {
             $('#loginTab').removeClass('active-tab');
             $('#registerTab').addClass('active-tab');
+            $('#forgotPasswordTab').removeClass('active-tab');
             $('#registerTab input[type="text"], #registerTab input[type="password"]').val('');
             $('#registerTab input[type="text"], #registerTab input[type="password"]').val('');
         }
 
         function showLoginTab() {
             $('#registerTab').removeClass('active-tab');
+            $('#forgotPasswordTab').removeClass('active-tab');
             $('#loginTab').addClass('active-tab');
         }
         function signUp() {
