@@ -10,7 +10,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">OrderPage</h1>
+                <h1 class="page-header">GenrePage</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -32,7 +32,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-2">
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 Action <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
@@ -45,6 +45,9 @@
                                                 <li><a href="#">Separated link</a></li>
                                             </ul>
                                         </div>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <button id="create" class="btn btn-default" type="submit">Create</button>
                                     </div>
                                 </div>
 
@@ -81,46 +84,249 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="modal fade" id="viewDetailModal" tabindex="-1" role="dialog" aria-labelledby="viewDetailModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="viewDetailModalLabel">Artwork Detail</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="viewDetailModalContent"></div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
+
             </div>
+
         </div>
     </div>
-</div>
-<script>
-    fetch('https://localhost:7008/api/Genre/GetALLGenre')
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.querySelector('#transactionTable tbody');
-
-            data.dataObject.forEach(genre => {
-                const row = document.createElement('tr');
-
-                const genreIdCell = document.createElement('td');
-                genreIdCell.textContent = genre.genreId;
-                row.appendChild(genreIdCell);
-
-                const genreArtworkCell = document.createElement('td');
-                genreArtworkCell.textContent = genre.genreArtwork;
-                row.appendChild(genreArtworkCell);
-
-                const descriptionCell = document.createElement('td');
-                descriptionCell.textContent = genre.description;
-                row.appendChild(descriptionCell);
-
-                const updateCell = document.createElement('td');
-                const updateButton = document.createElement('button');
-                updateButton.textContent = 'Update';
-                updateButton.addEventListener('click', () => {
-                    // Add update logic here
-                });
-                updateCell.appendChild(updateButton);
-                row.appendChild(updateCell);
+    </div>
 
 
-                tableBody.appendChild(row);
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('https://localhost:7008/api/Genre/GetALLGenre')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#transactionTable tbody');
+
+                    data.dataObject.forEach(genre => {
+                        const row = document.createElement('tr');
+
+                        const genreIdCell = document.createElement('td');
+                        genreIdCell.textContent = genre.genreId;
+                        row.appendChild(genreIdCell);
+
+                        const genreArtworkCell = document.createElement('td');
+                        genreArtworkCell.textContent = genre.genreArtwork;
+                        row.appendChild(genreArtworkCell);
+
+                        const descriptionCell = document.createElement('td');
+                        descriptionCell.textContent = genre.description;
+                        row.appendChild(descriptionCell);
+
+                        const updateButton = document.createElement('button');
+                        updateButton.textContent = 'Update';
+
+                        // Add event listener for the update button
+                        updateButton.addEventListener('click', () => {
+                            showUpdatePopup(genre);
+                        });
+
+                        // Create the update cell and append the update button
+                        const updateCell = document.createElement('td');
+                        updateCell.appendChild(updateButton);
+                        row.appendChild(updateCell);
+
+                        // Add the updatebutton to the updateCell
+                        updateCell.appendChild(updateButton);
+
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+
+
+        function showUpdatePopup(genre) {
+            // Get the modal element
+            const modal = document.querySelector('#viewDetailModal');
+
+            // Populate modal with update form
+            const modalContent = modal.querySelector('.modal-body');
+            modalContent.innerHTML = ''; // Clear previous content
+
+            // Create form elements
+            const form = document.createElement('form');
+
+            // Hidden input for genreId
+            const genreIdInput = document.createElement('input');
+            genreIdInput.type = 'hidden';
+            genreIdInput.name = 'genreId'; // assuming the name to be sent to the server
+            genreIdInput.value = genre.genreId;
+            form.appendChild(genreIdInput);
+
+            const genreArtworkInput = document.createElement('input');
+            genreArtworkInput.type = 'text';
+            genreArtworkInput.placeholder = 'Genre Artwork';
+            genreArtworkInput.value = genre.genreArtwork; // Assuming genre.genreArtwork holds the current genre artwork value
+            form.appendChild(genreArtworkInput);
+
+            const descriptionInput = document.createElement('input');
+            descriptionInput.type = 'text';
+            descriptionInput.placeholder = 'Description';
+            descriptionInput.value = genre.description; // Assuming genre.description holds the current description value
+            form.appendChild(descriptionInput);
+
+            const updateButton = document.createElement('button');
+            updateButton.textContent = 'Update';
+            updateButton.classList.add('btn', 'btn-primary');
+
+            // Add event listener for the update button
+            updateButton.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent form submission
+
+                // Call the PUT API
+                const apiUrl = `https://localhost:7008/api/Genre/UpdateGenre?genreID=${genre.genreId}`;
+                const requestData = {
+                    
+                    genre: genreArtworkInput.value,
+                    description: descriptionInput.value
+                };
+
+                fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Handle success, maybe close the modal or update UI
+                            console.log('Genre updated successfully');
+                            // Close the modal after successful update
+                            console.log(requestData);
+                            // Reload the page after successful update
+                            window.location.reload();
+                        } else {
+                            // Handle error response
+                            console.error('Error updating genre');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating genre:', error);
+                    });
             });
-        })
-        .catch(error => console.error('Error fetching data:', error));
-</script>
+
+            form.appendChild(updateButton);
+            modalContent.appendChild(form);
+
+            // Show the modal
+            $(modal).modal('show');
+        }
+
+        //function updateGenre(genreId, genreArtwork, description) {
+        //    fetch(`https://localhost:7008/api/Genre/UpdateGenre?genreID=${genreId}`, {
+        //        method: 'PUT',
+        //        headers: {
+        //            'accept': '*/*',
+        //            'Content-Type': 'application/json'
+        //        },
+        //        body: JSON.stringify({
+        //            genre: genreId,
+        //            description
+        //        })
+        //    })
+        //        .then(response => response.json())
+        //        .then(data => {
+        //            // Handle the response and close the popup
+        //            const updateGenreModal = bootstrap.Modal.getInstance(document.getElementById('updateGenreModal'));
+        //            updateGenreModal.hide();
+        //        })
+        //        .catch(error => {
+        //            // Handle any errors
+        //        });
+        //}
+
+        const createButton = document.getElementById("create");
+        createButton.addEventListener("click", function () {
+            showCreatePopup();
+        });
+
+        function showCreatePopup() {
+            const modal = document.querySelector('#viewDetailModal');
+
+            // Populate modal with update form
+            const modalContent = modal.querySelector('.modal-body');
+            modalContent.innerHTML = ''; // Clear previous content
+
+            // Create form elements
+
+            const form = document.createElement("form");
+
+            const genreInput = document.createElement("input");
+            genreInput.type = "text";
+            genreInput.placeholder = "Genre";
+            form.appendChild(genreInput);
+
+            const descriptionInput = document.createElement("input");
+            descriptionInput.type = "text";
+            descriptionInput.placeholder = "Description";
+            form.appendChild(descriptionInput);
+
+            const submitButton = document.createElement("button");
+            submitButton.textContent = "Create";
+
+            submitButton.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                // Call the POST API to create a new genre
+                const apiUrl = "https://localhost:7008/api/Genre/CreateGenre";
+                const requestData = {
+                    genre: genreInput.value,
+                    description: descriptionInput.value
+                };
+
+                fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "accept": "*/*",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Handle success, maybe close the popup or update UI
+                            console.log("Genre created successfully");
+                            window.location.reload();
+                        } else {
+                            // Handle error response
+                            console.error("Error creating genre");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error creating genre: ", error);
+                    });
+            });
+
+            form.appendChild(submitButton);
+            modalContent.appendChild(form);
+
+            // Show the modal
+            $(modal).modal('show');
+        }
+
+    </script>
