@@ -3,164 +3,170 @@
 }
 
 <section class="bg-gray200 pt-5 pb-5">
-    <div class="container">
+    <div class="container">        
         <div class="row justify-content-center">
-            <div class="col-md-12">
-                <article class="card" style="border-radius: 30px;">
+            <div class="col-md-11"">
+                <article class="card" style="border-radius: 30px; box-shadow: 3px 3px 10px #c1c1c1;">
                     <div class="row">
-                        <div class="col-md-6" style="overflow: hidden; display: flex;">
+                        <div class="col-md-6" style="overflow: hidden; display: flex; max-height: 900px;">
                             <img id="artworkImage" class="card-img-top" src="" alt="Card image" style="object-fit: cover; flex-grow: 1; border-radius: 30px; padding: 10px;">
                         </div>
 
                         <div class="col-md-6" style="">
-                            <div class="description" style="padding: 10px 20px">
-                                <h1 id="artworkTitle" style="font-size: 25px; font-weight: bold; color: #2c2b2b;"></h1>
-                                <div style="height: 4px; width: 10%; background-color: #E0E0E0;"></div>
-                                <div style="margin: 5px 0; display: flex; justify-content: space-between; align-items: center">
-                                    <span id="artworkPrice" style="font-weight: 700; color: #c41818"></span>
-                                    <input type="hidden" id="artPirce">
-                                    <button type="button" class="comment-btn" onclick="addCart()" style="border: none; border-radius: 50%; width: 30px; height: 30px">
-                                        <i class="fa-solid fa-cart-plus"></i>
-                                    </button>
-                                    <div class="success-msg" id="success-msg" style ="display:none">
-                                        <i class="fa fa-check"></i>
-                                        <span id="successMessage"></span>
-                                    </div>
-                                </div>
-                                <p id="artDescription" style="font-size: 18px; max-height: 200px; overflow: auto"></p>
-
-                                <div class="artist-info" style="margin-top: 10px; display: flex; justify-content: space-between">
-                                    <div style="display: flex;">
-                                        <img id="AvataArtist" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="45" ; height="45" style="display: inline; border-radius: 50%;">
-                                        <div style="margin-left: 10px">
-                                            <div style="display: flex;">
-                                                <div id="NameArtist" style="font-weight: 600; "></div>
-                                                <div id="BlueTickSpan" style="display: flex; justify-content: center; align-items: center; margin-left: 5px;">
-                                                    <img id="BlueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="12">
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span id="follower"></span>
-                                                <span>followers</span>
-                                            </div>
+                            <div class="description" style="padding: 10px; position: relative;">
+                                <div style="">
+                                    <h1 id="artworkTitle" style="font-size: 25px; font-weight: bold; color: #2c2b2b;"></h1>
+                                    <div style="height: 4px; width: 10%; background-color: #E0E0E0;"></div>
+                                    <div style="margin: 5px 0; display: flex; justify-content: space-between; align-items: center">
+                                        <span id="artworkPrice" style="font-weight: 700; color: #c41818"></span>
+                                        <input type="hidden" id="artPirce">
+                                        <button type="button" class="comment-btn" onclick="addCart()" style="border: none; border-radius: 50%; width: 30px; height: 30px">
+                                            <i class="fa-solid fa-cart-plus"></i>
+                                        </button>
+                                        <div class="success-msg" id="success-msg" style="display:none">
+                                            <i class="fa fa-check"></i>
+                                            <span id="successMessage"></span>
                                         </div>
                                     </div>
-                                    <div style="display: flex; justify-content: center; align-items: center;">
-                                        <button id="followButton" onclick="toggleFollow()" style="border: none; padding: 10px; border-radius: 20px; font-weight: 500">+ Follow</button>
+                                    <p id="artDescription" style="font-size: 18px; max-height: 200px; overflow: auto;"></p> @*text-align: justify; text-justify: inter-word;*@
+
+                                    <div class="artist-info" style="margin-top: 10px; display: flex; justify-content: space-between">
+                                        <div style="display: flex;">
+                                            <img id="AvataArtist" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="45" ; height="45" style="display: inline; border-radius: 50%;">
+                                            <div style="margin-left: 10px">
+                                                <div style="display: flex;">
+                                                    <div id="NameArtist" style="font-weight: 600; "></div>
+                                                    <div id="BlueTickSpan" style="display: flex; justify-content: center; align-items: center; margin-left: 5px;">
+                                                        <img id="BlueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="12">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <span id="follower"></span>
+                                                    <span>followers</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; justify-content: center; align-items: center;">
+                                            <button id="followButton" onclick="toggleFollow()" style="border: none; padding: 10px; border-radius: 20px; font-weight: 500">+ Follow</button>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div style="margin: 30px 0 10px;">
-                                    <span style="font-weight: 500">Comments</span>
-                                </div>
+                                    <div style="margin: 30px 0 10px;">
+                                        <span style="font-weight: 500">Comments</span>
+                                    </div>
 
-                                <div style="margin: 10px 0;">
-                                    <section class="">
-                                        <div class="">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <article class="">
-                                                        <div class="comment-container" style="max-height: 250px; overflow: auto">
-                                                            <div id="apiDataContainer"></div>
-                                                            <script>
-                                                                $(document).ready(function () {
-                                                                    var artworkId = sessionStorage.getItem("artworkID");
-                                                                    $.ajax({
-                                                                        type: 'GET',
-                                                                        url: `https://localhost:7008/api/Comment/GetCommentForPost?artworkId=${artworkId}`,
-                                                                        success: function (response) {
-                                                                            console.log(response);
-                                                                            if (response && response.status === "Success" && response.dataObject && response.dataObject.length > 0) {
-                                                                                response.dataObject.forEach(function (comment) {
-                                                                                    // Check if the element with ID 'apiDataContainer' exists
-                                                                                    var apiDataContainer = $('#apiDataContainer');
-                                                                                    if (apiDataContainer.length) {
-                                                                                        apiDataContainer.append(
-                                                                                            `
-                                                                                                                                                                                                         <div class="profile-card" style="margin: 10px 0 20px;">
-                                                                                                                                                                                                             <div class="text-section">
-                                                                                                                                                                                                                  <div style="display: flex;">
+                                    <div style="margin: 10px 0;">
+                                        <section class="">
+                                            <div class="">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <article class="">
+                                                            <div class="comment-container" style="max-height: 250px; overflow: auto">
+                                                                <div id="apiDataContainer"></div>
+                                                                <script>
+                                                                    $(document).ready(function () {
+                                                                        var artworkId = sessionStorage.getItem("artworkID");
+                                                                        $.ajax({
+                                                                            type: 'GET',
+                                                                            url: `https://localhost:7008/api/Comment/GetCommentForPost?artworkId=${artworkId}`,
+                                                                            success: function (response) {
+                                                                                console.log(response);
+                                                                                if (response && response.status === "Success" && response.dataObject && response.dataObject.length > 0) {
+                                                                                    response.dataObject.forEach(function (comment) {
+                                                                                        // Check if the element with ID 'apiDataContainer' exists
+                                                                                        var apiDataContainer = $('#apiDataContainer');
+                                                                                        if (apiDataContainer.length) {
+                                                                                            apiDataContainer.append(
+                                                                                                `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <div class="profile-card" style="margin: 10px 0 20px;">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <div class="text-section">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <div style="display: flex;">
 
-                                                                                                                                                                                                                    <img id="AvataArtist" src="data:image/jpeg;base64,${comment.avatar}" width="30" ; height="30" style="display: inline; border-radius: 50%;">
-                                                                                                                                                                                                                    <div style="margin-left: 8px">
-                                                                                                                                                                                                                        <div style="font-weight: 500;">${comment.accountMail}</div>
-                                                                                                                                                                                                                        <div class="comment-content-date">
-                                                                                                                                                                                                                            <div class="comment-content" style="word-break: break-word; color: #646363 ">${comment.contentComment}</div>
-                                                                                                                                                                                                                            <div class="comment-date" style="font-size: 10px; margin-top: 3px; color: #6d6c6c">${formatDate(comment.dateSub)}</div>
-                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                    
-                                                                                                                                                                                                                  </div>
-                                                                                                                                                                                                                  
-                                                                                                                                                                                                                  
-                                                                                                                                                                                                             </div>
-                                                                                                                                                                                                         </div>`
-                                                                                        );
-                                                                                    } else {
-                                                                                        console.log('Element with ID "apiDataContainer" not found.');
-                                                                                    }
-                                                                                });
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <img id="AvataArtist" src="data:image/jpeg;base64,${comment.avatar}" width="30" ; height="30" style="display: inline; border-radius: 50%;">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div style="margin-left: 8px">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div style="font-weight: 500;">${comment.accountMail}</div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="comment-content-date">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="comment-content" style="word-break: break-word; color: #646363 ">${comment.contentComment}</div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="comment-date" style="font-size: 10px; margin-top: 3px; color: #6d6c6c">${formatDate(comment.dateSub)}</div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </div>
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             </div>`
+                                                                                            );
+                                                                                        } else {
+                                                                                            console.log('Element with ID "apiDataContainer" not found.');
+                                                                                        }
+                                                                                    });
+                                                                                }
+                                                                                else {
+                                                                                    console.log("ERROR HTML")
+                                                                                }
+                                                                            },
+                                                                            error: function (error) {
+                                                                                console.error('Lỗi:', error);
                                                                             }
-                                                                            else {
-                                                                                console.log("ERROR HTML")
-                                                                            }
-                                                                        },
-                                                                        error: function (error) {
-                                                                            console.error('Lỗi:', error);
-                                                                        }
+                                                                        });
                                                                     });
-                                                                });
-                                                                function formatDate(dateString) {
-                                                                    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-                                                                    const formattedDate = new Date(dateString).toLocaleDateString('vi-VN', options);
-                                                                    return `<div class="comment-date">${formattedDate}</div>`;
-                                                                }
+                                                                    function formatDate(dateString) {
+                                                                        const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+                                                                        const formattedDate = new Date(dateString).toLocaleDateString('vi-VN', options);
+                                                                        return `<div class="comment-date">${formattedDate}</div>`;
+                                                                    }
 
-                                                            </script>
+                                                                </script>
 
-                                                        </div>
-                                                    </article>
+                                                            </div>
+                                                        </article>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </section>
+                                        </section>
 
+                                    </div>
                                 </div>
 
-                                <div class="artist-info" style="margin: 20px 0; display: flex; justify-content: space-between; align-items: center;">
-                                    <div style="font-weight: 600;">
-                                        <span id="count-comment"></span>
-                                        <span>Comments</span>
-                                    </div>
-                                    <div id="ratingContainer" class="d-flex justify-content-end align-items-center">
-                                        <div id="starRatingContainer"></div>
-                                        <div style="margin-right: 5px; font-weight: 500">
-                                            <span id="count-like"></span>
-                                        </div>
-                                        <button id="likeButton" class="like-button" style="border: none; border-radius: 50%">
-                                            <div>
-                                                <i class="fa-regular fa-heart">
-                                                
-                                                </i>
+
+                                <div id="parentContainer" style="">
+                                    <div id="commentContainer" style="border-top: 1px solid #cacaca;">
+                                        <div class="artist-info" style="margin: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+                                            <div style="font-weight: 600; font-size: 20px">
+                                                <span id="count-comment"></span>
+                                                <span>Comments</span>
                                             </div>
-                                        </button>
+                                            <div id="ratingContainer" class="d-flex justify-content-end align-items-center">
+                                                <div id="starRatingContainer"></div>
+                                                <div style="margin-right: 5px; font-weight: 500; font-size: 20px">
+                                                    <span id="count-like"></span>
+                                                </div>
+                                                <button id="likeButton" class="like-button" style="border: none; border-radius: 50%; font-size: 20px;">
+                                                    <div>
+                                                        <i class="fa-regular fa-heart"></i>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="comment-input-container">
+                                            <div style="position: relative;">
+                                                <input type="text" id="commentInput" class="" placeholder="Enter your comment" style="border-radius: 20px; border: 2px solid #7b7b7b; padding: 10px 15px; margin: 0">
+                                                <button type="button" class="comment-btn" onclick="addComment()" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px; border: none; border-radius: 50%;">
+                                                    <i class="fa-solid fa-arrow-right"></i>
+                                                </button>
+                                            </div>
+
+
+
+                                        </div>
+
+                                        <span id="datePost" style="color: grey; display: none;"></span>
                                     </div>
                                 </div>
 
-                                <div class="comment-input-container">
-                                    <div style="position: relative;">
-                                        <input type="text" id="commentInput" class="" placeholder="Enter your comment" style="border-radius: 20px; border: 2px solid #7b7b7b; padding: 10px 15px; margin: 0">
-                                        <button type="button" class="comment-btn" onclick="addComment()" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px; border: none; border-radius: 50%;">
-                                            <i class="fa-solid fa-arrow-right"></i>
-                                        </button>
-                                    </div>
-                                    
-                                    
-                                    
-                                </div>
 
-                                <span  id="datePost" style="color: grey; display: none"></span>
-                                    
                                 <script>
 
                                     // Lấy tham số userId và artworkPId từ sessionStorage
@@ -176,7 +182,7 @@
                                             type: 'GET',
                                             success: function (data) {
                                                 document.getElementById('count-like').innerText = data.dataObject;
-                                               
+
                                             },
                                             error: function (error) {
                                                 console.error('Error checking like status:', error);
@@ -190,7 +196,7 @@
                                             type: 'GET',
                                             success: function (data) {
                                                 document.getElementById('follower').innerText = data.dataObject;
-                                                
+
                                             },
                                             error: function (error) {
                                                 console.error('Error checking like status:', error);
@@ -204,7 +210,7 @@
                                             type: 'GET',
                                             success: function (data) {
                                                 document.getElementById('count-comment').innerText = data.dataObject;
-                                                
+
                                             },
                                             error: function (error) {
                                                 console.error('Error checking like status:', error);
@@ -714,10 +720,73 @@
                         </div>
                     </div>
                 </article>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<span style="display: flex; justify-content: center; align-items: center; margin: 0 0 25px; font-weight: 600; font-size: 18px">More To Explore</span>
+
+<section class="">   
+    <div class="container-list-image" style="margin: 0 30px">
+        <div class="row">
+            <div class="card-columns">
+                <div id="apiDataContainerr"></div>
+                <script>
+
+                    $(document).ready(function () {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'https://localhost:7008/api/Arwork/GetAllArtwork',
+                            success: function (response) {
+                                console.log(response);
+                                console.log(sessionStorage.getItem('userId'));
+                                if (response && Array.isArray(response) && response.length > 0) {
+                                    // Iterate through each artwork in the response
+                                    response.forEach(function (artwork) {
+                                        const strHTML = `
+                                                                                                                                                                   <div class="" style="margin: 10px 0; ">
+                                                                                                                                                                        <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image" style="border-radius: 15px;">
+                                                                                                                                                                             <div class="overlay" style="">
+                                                                                                                                                                                <h2 class="card-title title">${artwork.contentArtwork}</h2>
+                                                                                                                                                                                    <div class="more">
+                                                                                                                                                                                        <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
+                                                                                                                                                                                    <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i> More
+                                                                                                                                                                                        </a>
+                                                                                                                                 </div>
+                                                                                                                             </div>
+                                                                                                                         </div>`
+                                            ;
+
+                                        $('#apiDataContainerr').append(strHTML);
+                                        // Thêm sự kiện click cho nút "More"
+                                        $('.more-btn').click(function (e) {
+                                            e.preventDefault();
+                                            const artworkId = $(this).data('artworkid');
+                                            sessionStorage.setItem('artworkID', artworkId);
+                                            // Chuyển đến trang Manage_Post với artworkId
+                                            window.location.href = `Manage_Post?artworkid=${artworkId}`;
+                                        });
+                                    });
+
+                                } else {
+                                    console.error('Invalid or empty response from the API.');
+                                }
+                            },
+                            error: function (error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+
+                </script>
             </div>
         </div>
     </div>
 </section>
 
-    <!-- HTML structure -->
-    
+<!-- HTML structure -->
+
