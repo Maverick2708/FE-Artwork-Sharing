@@ -41,5 +41,9 @@ namespace Artwork_Sharing_Platform.Areas.Admin.Controllers
         {
             return View();
         }
+        public ActionResult ProfilePage()
+        {
+            return View();
+        }
     }
 }
