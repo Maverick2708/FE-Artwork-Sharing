@@ -372,35 +372,31 @@
 <script>
 
 
-        function confirmEmail() {
-            const urlParams = new URLSearchParams(window.location.search);
+    function confirmEmail() {
+        const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         const email = urlParams.get('email');
 
         if (code && email) {
-                const xhr = new XMLHttpRequest();
-        xhr.open('POST', `https://localhost:7008/api/Person/ConfirmEmailAsync?email=${email}&token=${code}`);
-        xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            const result = JSON.parse(xhr.responseText);
-        if (result.status) {
-            document.getElementById('error-message').textContent = 'Email đã được xác thực thành công';
-                            } else {
-            document.getElementById('error-message').textContent = 'Xác thực email thất bại';
-                            }
-                        } else {
-            console.error('An error occurred during email confirmation. Status:', xhr.status);
-        document.getElementById('error-message').textContent = 'An error occurred during email confirmation';
-                        }
+            $.ajax({
+                url: `https://localhost:7008/api/Person/ConfirmEmailAsync?email=${email}&token=${code}`,
+                method: 'POST',
+                success: function (result) {
+                    if (result.status) {
+                        $('#error-message').text('Email đã được xác thực thành công');
+                    } else {
+                        $('#error-message').text('Xác thực email thất bại');
                     }
-                };
-
-        xhr.send();
-            }
+                },
+                error: function (xhr, status, error) {
+                    console.error('An error occurred during email confirmation. Status:', xhr.status);
+                    $('#error-message').text('An error occurred during email confirmation');
+                }
+            });
         }
+    }
 
-        document.addEventListener('DOMContentLoaded', confirmEmail);
+    $(document).ready(confirmEmail);
 
 
 
