@@ -1,0 +1,377 @@
+﻿
+@{
+    ViewBag.Title = "UserPageBySuperAdmin";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdminPage.cshtml";
+}
+
+<h2>UserPage</h2>
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">UserPage</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="input-group custom-search-form col-lg-12">
+                                            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="searchTable()">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary" type="button" onclick="searchTable()">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Filter <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" onclick="searchTable('All')">All</a></li>
+                                                <li><a href="#" onclick="searchTable('Active')">Active</a></li>
+                                                <li><a href="#" onclick="searchTable('Inactive')">Inactive</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table id="transactionTable" class="table table-bordered table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Full Name</th>
+                                    <th>Phone Number</th>
+                                    <th>Date Created</th>
+                                    <th>View Detail</th>
+                                    <th>Status</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                    <div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="userDetailModalLabel">User Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- User details will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    //fetch('https://localhost:7008/api/Person/GetAllAccountBySuperAdmin')
+    //    .then(response => response.json())
+    //    .then(data => {
+    //        const tbody = document.querySelector('#transactionTable tbody');
+
+    //        data.dataObject.forEach((transaction, index) => {
+    //            const row = document.createElement('tr');
+
+    //            const idCell = document.createElement('td');
+    //            idCell.textContent = index + 1;
+    //            row.appendChild(idCell);
+
+    //            const userIdCell = document.createElement('td');
+    //            userIdCell.textContent = transaction.fullName;
+    //            row.appendChild(userIdCell);
+
+    //            const descriptionCell = document.createElement('td');
+    //            descriptionCell.textContent = transaction.gender ? "Male" : "Female";
+    //            row.appendChild(descriptionCell);
+
+    //            const statusCell = document.createElement('td');
+    //            statusCell.textContent = transaction.email;
+    //            row.appendChild(statusCell);
+
+    //            const actionCell = document.createElement('td');
+
+
+
+    //            actionCell.textContent = transaction.phoneNumber;
+
+
+    //            row.appendChild(actionCell);
+    //            tbody.appendChild(row);
+    //        });
+    //    })
+    //    .catch(error => console.error('Error fetching transactions:', error));
+    window.addEventListener('load', (event) => {
+        fetchDataAndShowInTable();
+    });
+
+    function displayDataInTable(data) {
+        const tbody = $("#transactionTable tbody");
+
+        data.forEach((item) => {
+            const row = $("<tr>");
+
+            row.append($("<td>").text(item.id));
+            row.append($("<td>").text(item.fullName));
+            row.append($("<td>").text(item.phoneNumber));
+            row.append($("<td>").text(formatDate(item.dateUserRe)));
+            row.append(
+                $("<td>").append(
+                    $("<button>").text("View Detail").addClass("btn btn-primary").on("click", function () {
+                        viewDetail(item);
+                    })
+                )
+            );
+
+            row.append($("<td>").text(item.status ? "Active" : "Inactive"));
+            const roleSelect = $("<select>").addClass("form-select").on("change", function () {
+                updateUserRole(item.id, $(this).val());
+            });
+
+            ["Audience", "Admin"].forEach((role) => {
+                roleSelect.append($("<option>").text(role).val(role));
+            });
+
+            row.append($("<td>").append(roleSelect.val(item.roles[0])));
+
+            const actionTd = $("<td>");
+
+            if (item.status) {
+                const banButton = $("<button>").text("Ban").addClass("btn btn-danger").on("click", function () {
+                    banUser(item.id);
+                });
+
+                actionTd.append(banButton);
+            } else {
+                const unbanButton = $("<button>").text("Unban").addClass("btn btn-success").on("click", function () {
+                    unbanUser(item.id);
+                });
+
+                actionTd.append(unbanButton);
+            }
+
+            row.append(actionTd);
+
+            tbody.append(row);
+        });
+    }
+
+    async function fetchDataAndShowInTable() {
+        try {
+            const response = await fetch("https://localhost:7008/api/Person/GetAllAccountBySuperAdmin");
+            const data = await response.json();
+
+            if (response.ok) {
+                displayDataInTable(data.dataObject);
+            } else {
+                console.error("Error fetching data:", data);
+
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    const updateUserRole = async (userId, selectedRole) => {
+        try {
+            const response = await fetch(`https://localhost:7008/api/Person/UpdateUserRole?userId=${userId}&selectedRole=${selectedRole}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Success:', data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    function viewDetail(user) {
+        showUserDetailModal(user);
+    }
+
+    function showUserDetailModal(user) {
+        const modalBody = $("#userDetailModal .modal-body");
+
+        modalBody.empty();
+
+        const userDetailElement = $("<dl>");
+
+        userDetailElement.append($("<dt>").text("ID:"));
+        userDetailElement.append($("<dd>").text(user.id));
+
+        userDetailElement.append($("<dt>").text("User Name:"));
+        userDetailElement.append($("<dd>").text(user.userName));
+
+        userDetailElement.append($("<dt>").text("Email:"));
+        userDetailElement.append($("<dd>").text(user.email));
+
+        userDetailElement.append($("<dt>").text("Address:"));
+        userDetailElement.append($("<dd>").text(user.address));
+
+        userDetailElement.append($("<dt>").text("Gender:"));
+        userDetailElement.append(
+            user.gender
+                ? $("<dd>").text("Male")
+                : $("<dd>").text("Female")
+        );
+
+        userDetailElement.append($("<dt>").text("Phone Number:"));
+        userDetailElement.append($("<dd>").text(user.phoneNumber));
+
+        userDetailElement.append($("<dt>").text("Date of Birth:"));
+        userDetailElement.append($("<dd>").text(formatDate(user.dob)));
+
+        userDetailElement.append($("<dt>").text("Full Name:"));
+        userDetailElement.append($("<dd>").text(user.fullName));
+
+        userDetailElement.append($("<dt>").text("Date User Re:"));
+        userDetailElement.append($("<dd>").text(formatDate(user.dateUserRe)));
+
+        userDetailElement.append($("<dt>").text("Roles:"));
+        userDetailElement.append($("<dd>").text(user.roles.join(", ")));
+
+        modalBody.append(userDetailElement);
+
+        // Show the modal
+        $("#userDetailModal").modal("show");
+    }
+
+    // Helper function to format the date
+    function formatDate(date) {
+        return new Date(date).toLocaleDateString();
+    }
+
+    async function banUser(userId) {
+        try {
+            const response = await fetch(`https://localhost:7008/api/Person/BanAccount?userId=${userId}`);
+
+            if (!response.ok) {
+                throw new Error("Error banning the user");
+            }
+
+            // Optionally, you can handle the response here if needed
+            console.log("User banned successfully");
+
+            // Refresh the table or update the UI as needed
+            location.reload();
+        } catch (error) {
+            // Handle the error, e.g., show an error message
+            console.error(error);
+            alert("Error banning the user");
+        }
+    }
+
+    async function unbanUser(userId) {
+        try {
+            const response = await fetch(`https://localhost:7008/api/Person/UnBanAccount?userId=${userId}`);
+
+            if (!response.ok) {
+                throw new Error("Error banning the user");
+            }
+
+            // Optionally, you can handle the response here if needed
+            console.log("User banned successfully");
+
+            // Refresh the table or update the UI as needed
+            location.reload();
+        } catch (error) {
+            // Handle the error, e.g., show an error message
+            console.error(error);
+            alert("Error banning the user");
+        }
+    }
+
+    //function searchtable() {
+    //    // get the search input value and trim any leading/trailing whitespace
+    //    const searchvalue = document.getelementbyid("searchinput").value.trim();
+
+    //    // get all table rows except the header row
+    //    const rows = array.from(document.queryselectorall("#transactiontable tbody tr"));
+
+    //    // hide all rows initially
+    //    rows.foreach(row => row.style.display = "none");
+
+    //    // if the search input is not empty, filter the rows based on orderid
+    //    if (searchvalue !== "") {
+    //        const filteredrows = rows.filter(row => {
+    //            const orderid = row.children[0].textcontent.trim();
+    //            return orderid.tolowercase().includes(searchvalue.tolowercase());
+    //        });
+
+    //        // display the filtered rows
+    //        filteredrows.foreach(row => row.style.display = "");
+    //    } else {
+    //        // if the search input is empty, display all rows
+    //        rows.foreach(row => row.style.display = "");
+    //    }
+    //}
+    function searchTable(filter) {
+        // Get all table rows except the header row
+        const rows = Array.from(document.querySelectorAll("#transactionTable tbody tr"));
+
+        // Hide all rows initially
+        rows.forEach(row => row.style.display = "none");
+        console.log(filter);
+
+        // If the filter is not "All", filter the rows based on Status
+        if (filter !== "All") {
+            const filteredRows = rows.filter(row => {
+                const status = row.children[5].textContent.trim().toLowerCase();
+                return status === filter.toLowerCase();
+            });
+
+            // Display the filtered rows
+            filteredRows.forEach(row => row.style.display = "");
+        } else {
+            // If the filter is "All", display all rows
+            rows.forEach(row => row.style.display = "");
+        }
+
+        // If the search input is not empty, filter the rows based on ID, Name, and Status
+        const searchInput = document.getElementById("searchInput");
+        const searchValue = searchInput.value.trim().toLowerCase();
+        if (searchValue !== "") {
+            const filteredRows = rows.filter(row => {
+                const id = row.children[0].textContent.trim().toLowerCase();
+                const name = row.children[1].textContent.trim().toLowerCase();
+                /*const status = row.children[5].textContent.trim().toLowerCase();*/
+                return id.includes(searchValue) || name.includes(searchValue) /*|| status.includes(searchValue)*/;
+            });
+
+            // Display the filtered rows
+            filteredRows.forEach(row => row.style.display = "");
+        }
+    }
+
+</script>
+

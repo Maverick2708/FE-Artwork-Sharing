@@ -1,0 +1,267 @@
+﻿
+@{
+    ViewBag.Title = "OrderPage";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdminPage.cshtml";
+}
+
+<h2>OrderPage</h2>
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">OrderPage</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="input-group custom-search-form col-lg-12">
+                                            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="searchTable()">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary" type="button" onclick="searchTable()">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Action <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Action</a></li>
+                                                    <li><a href="#">Another action</a></li>
+                                                    <li><a href="#">Something else here</a></li>
+                                                    <li role="separator" class="divider"></li>
+                                                    <li><a href="#">Separated link</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                           
+                        </div>
+                        <!--panel-body-->
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive  ">
+                                    <table id="transactionTable" class="table table-bordered table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>OrderId</th>
+                                                <th>UserId</th>
+                                                <th>TotalBill</th>
+                                                <th>View Detail</th>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal fade" id="viewOrderModal" tabindex="-1" role="dialog" aria-labelledby="viewOrderModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="viewOrderModalLabel">Order Detail</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" id="viewOrderModalContent">
+                                                <!-- Order detail will be displayed here -->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //    fetch('https://localhost:7008/api/Order/GetAllOrder')
+    //        .then(response => response.json())
+    //        .then(data => {
+
+    //            const tbody = document.querySelector('#transactionTable tbody');
+    //            data.dataObject.forEach((item) => {
+    //{
+    //                console.log(item);
+    //                const row = document.createElement('tr');
+    //                const orderIdCell = document.createElement('td');
+    //                orderIdCell.textContent = item.billOrderId;
+    //                row.appendChild(orderIdCell);
+    //                const userIdCell = document.createElement('td');
+    //                userIdCell.textContent = item.userId;
+    //                row.appendChild(userIdCell);
+    //                const totalBillCell = document.createElement('td');
+    //                totalBillCell.textContent = item.totalBill;
+    //                row.appendChild(totalBillCell);
+    //                row.append(
+    //                    $("<td>").append(
+    //                        $("<button>").text("View Detail").addClass("btn btn-primary").on("click", function () {
+    //                            viewDetail(item);
+    //                        })
+    //                    )
+    //                );
+    //                tbody.appendChild(row);
+    //            }
+    //        })
+    //        .catch(error => {
+    //            console.error('Error fetching data:', error);
+    //        });
+
+    fetch('https://localhost:7008/api/Order/GetAllOrder')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#transactionTable tbody');
+
+            data.dataObject.forEach((item) => {
+
+                const row = document.createElement('tr');
+                const orderIdCell = document.createElement('td');
+                orderIdCell.textContent = item.billOrderId;
+                row.appendChild(orderIdCell);
+                const userIdCell = document.createElement('td');
+                userIdCell.textContent = item.userId;
+                row.appendChild(userIdCell);
+                const totalBillCell = document.createElement('td');
+                totalBillCell.textContent = item.totalBill;
+                row.appendChild(totalBillCell);
+                const detailButtonCell = document.createElement('td');
+                const detailButton = document.createElement('button');
+                detailButton.textContent = "View Detail";
+                detailButton.className = "btn btn-primary";
+                detailButton.addEventListener("click", function () {
+                    viewDetail(item);
+                });
+                detailButtonCell.appendChild(detailButton);
+                row.appendChild(detailButtonCell);
+                tbody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
+    //function viewDetail(user) {
+    //    showUserDetailModal(user);
+    //}
+
+    //function showUserDetailModal(user) {
+    //    const modalBody = $("#userDetailModal .modal-body");
+
+    //    modalBody.empty();
+
+    //    const userDetailElement = $("<dl>");
+
+    //    //userDetailElement.append($("<dt>").text("ID:"));
+    //    //userDetailElement.append($("<dd>").text(user.id));
+
+    //    //userDetailElement.append($("<dt>").text("User Name:"));
+    //    //userDetailElement.append($("<dd>").text(user.userName));
+
+    //    //userDetailElement.append($("<dt>").text("Email:"));
+    //    //userDetailElement.append($("<dd>").text(user.email));
+
+    //    //userDetailElement.append($("<dt>").text("Address:"));
+    //    //userDetailElement.append($("<dd>").text(user.address));
+
+    //    //userDetailElement.append($("<dt>").text("Gender:"));
+    //    //userDetailElement.append(
+    //    //    user.gender
+    //    //        ? $("<dd>").text("Male")
+    //    //        : $("<dd>").text("Female")
+    //    //);
+
+    //    //userDetailElement.append($("<dt>").text("Phone Number:"));
+    //    //userDetailElement.append($("<dd>").text(user.phoneNumber));
+
+    //    //userDetailElement.append($("<dt>").text("Date of Birth:"));
+    //    //userDetailElement.append($("<dd>").text(formatDate(user.dob)));
+
+    //    //userDetailElement.append($("<dt>").text("Full Name:"));
+    //    //userDetailElement.append($("<dd>").text(user.fullName));
+
+    //    //userDetailElement.append($("<dt>").text("Date User Re:"));
+    //    //userDetailElement.append($("<dd>").text(formatDate(user.dateUserRe)));
+
+    //    //userDetailElement.append($("<dt>").text("Roles:"));
+    //    //userDetailElement.append($("<dd>").text(user.roles.join(", ")));
+
+    //    modalBody.append(userDetailElement);
+
+    //    // Show the modal
+    //    $("#userDetailModal").modal("show");
+    //}
+
+    function viewDetail(order) {
+        console.log(order);
+        const viewOrderModalContent = document.querySelector('#viewOrderModalContent');
+        let html = '';
+        order.orderDetails.forEach((item) => {
+            html += `
+    <p><strong>Order ID:</strong> ${item.orderDetailId}</p>
+    <p><strong>Date Order:</strong> ${formatDate(item.dateOrder)}</p>
+    <p><strong>Price Order:</strong> ${item.priceOrder}</p>
+    <p><strong>Artwork ID:</strong> ${item.artworkPId}</p>
+    <p><strong>Quantity:</strong> ${item.quanity}</p>
+    <p><strong>Address:</strong> ${item.address}</p >
+    <p><strong>Phone:</strong> ${item.phone}</p>
+    <p><strong>Full Name:</strong> ${item.fullName}</p>
+    <p><strong>Status:</strong> ${item.status ? "Active" : "Inactive"}</p>
+    <p><strong> =============================== </strong> </p></br>
+  `;
+        });
+        viewOrderModalContent.innerHTML = html;
+        $('#viewOrderModal').modal('show');
+    }
+
+    // Helper function to format the date
+    function formatDate(date) {
+        return new Date(date).toLocaleDateString();
+    }
+
+    function searchTable() {
+        // Get the search input value and trim any leading/trailing whitespace
+        const searchValue = document.getElementById("searchInput").value.trim();
+
+        // Get all table rows except the header row
+        const rows = Array.from(document.querySelectorAll("#transactionTable tbody tr"));
+
+        // Hide all rows initially
+        rows.forEach(row => row.style.display = "none");
+
+        // If the search input is not empty, filter the rows based on OrderId
+        if (searchValue !== "") {
+            const filteredRows = rows.filter(row => {
+                const orderId = row.children[0].textContent.trim();
+                return orderId.toLowerCase().includes(searchValue.toLowerCase());
+            });
+
+            // Display the filtered rows
+            filteredRows.forEach(row => row.style.display = "");
+        } else {
+            // If the search input is empty, display all rows
+            rows.forEach(row => row.style.display = "");
+        }
+    }
+</script>
