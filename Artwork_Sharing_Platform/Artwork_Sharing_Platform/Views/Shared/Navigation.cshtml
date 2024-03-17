@@ -9,24 +9,111 @@
         
         <ul class="navbar-nav ml-auto align-items-center">
 
-            <li class="nav-item"  > 
+            <li class="nav-item">
                 <a class="nav-link" href="~/SuperAdmin/Manage/Manage">
-                Home</a>
+                    Home
+                </a>
             </li>
-           
-            <li class="nav-item">
-                <a class="nav-link" href="">Order</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Premium</a>
-            </li>
-            <li class="nav-item">
 
+            <li class="notification">
+                <span class="badge" id="badgeNum"></span>
+                <a class="nav-link" href="~/Audience/Manage/Cart">Cart</a>
+            </li>
+            <li class="notification-manageUser">
+                
+                <a class="nav-link" href="#">
+                    <img src="https://img.icons8.com/?size=256&id=pXOksSoyv6At&format=png" alt="Notification Icon" width="20" />
+                </a>
+
+                <!-- Dropdown thông báo -->
+                <div class="dropdown-manageUser">
+                    <div class="dropdown-content-manageUser">
+                       
+                        <div id="apiDataContainer2"></div>
+
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="glyphicon glyphicon-bell"></i>
+                    <span class="badge" id="badgeNum"></span>
+                </a>
+
+                <div class="dropdown-menu notifications" aria-labelledby="navbarDropdown">
+                    <div class="notification-heading">
+                        <h4 class="menu-title">Notifications</h4>
+                        <h4 class="menu-title pull-right">View all <i class="glyphicon glyphicon-circle-arrow-right"></i></h4>
+                    </div>
+                    <div class="notifications-wrapper">
+                        <!-- Your notification items go here -->
+                    </div>
+                    <div class="notification-footer">
+                        <h4 class="menu-title">View all <i class="glyphicon glyphicon-circle-arrow-right"></i></h4>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <script>
+                    var userId = sessionStorage.getItem('userId');
+                    $(document).ready(function () {
+                        $.ajax({
+                            type: 'GET',
+                            url: `https://localhost:7008/api/Notification/GetNotiByUserId?userId=${userId}`,
+                            success: function (response) {
+                                if (response.dataObject && Array.isArray(response.dataObject) && response.dataObject.length > 0) {
+                                    // Iterate through each artwork in the response
+                                    response.dataObject.forEach(function (noti) {
+                                      
+                                     const strHTML2 = `
+                    <div class="notification-item-manageUser">
+                    <img src="data:image/png;base64, ${noti.avatar}" alt="Avatar" class="avatar-manageUser">
+                        <span class="name-manageUser">${noti.fullName} </span>
+                            <span class="message-manageUser">${noti.contentNoti}</span>
+                    </div>
+                     <span class="date-manageUser">${formatDate(noti.dateNoti)}</span>
+                                    `;
+                                        $('#apiDataContainer2').append(strHTML2);
+                                    });
+                                } else {
+                                    console.error('Invalid or empty response from the API.');
+                                }
+                            },
+                            error: function (error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+                    function formatDate(apiDate) {
+                        const date = new Date(apiDate);
+                        const day = date.getDate().toString().padStart(2, '0'); // Lấy ngày, thêm '0' phía trước nếu chỉ có một chữ số
+                        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Lấy tháng (tháng bắt đầu từ 0), thêm '0' phía trước nếu chỉ có một chữ số
+                        const year = date.getFullYear();
+
+                        return `${day}-${month}-${year}`;
+                    }
+                </script>
 
                 <script>
-                  
-                    
-
+                    var userId = sessionStorage.getItem('userId');
+                    $(document).ready(function () {
+                        $.ajax({
+                            type: 'GET',
+                            url: `https://localhost:7008/api/ShoppingCart/user/${userId}`,
+                            success: function (response) {
+                                if (response && Array.isArray(response) && response.length > 0) {
+                                    // Iterate through each artwork in the response
+                                    document.getElementById('badgeNum').innerText = response.length;
+                                } else {
+                                    console.error('Invalid or empty response from the API.');
+                                }
+                            },
+                            error: function (error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
                     document.addEventListener('DOMContentLoaded', function () {
                         var storedUserEmail = sessionStorage.getItem('userEmail');
                         // Thực hiện đăng xuất sau 5 giây
@@ -67,13 +154,13 @@
                     function goToProfilePage() {
                         // Chuyển trang khi nút được nhấn
                         window.location.href = '/Audience/Manage/Profile';
-                        
+
                     }
                 </script>
                 <a class="nav-link" onclick="goToProfilePage()">
                     <img id="avatarNav" src="" width="30" class="rounded-circle mr-2" alt="Card image">
                     <span id="userName" class="align-middle"></span>
-                    
+
                 </a>
 
             </li>

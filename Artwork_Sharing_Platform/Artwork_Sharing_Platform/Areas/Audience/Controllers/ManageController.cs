@@ -22,5 +22,13 @@ namespace Artwork_Sharing_Platform.Areas.Audience.Controllers
         {
             return View();
         }
-    }
+		public ActionResult Cart()
+		{
+			return View();
+		}
+		public ActionResult Order()
+		{
+			return View();
+		}
+	}
 }

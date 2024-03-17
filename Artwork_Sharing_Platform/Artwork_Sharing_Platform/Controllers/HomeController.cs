@@ -17,9 +17,15 @@ namespace Artwork_Sharing_Platform.Controllers
            return View();
             
         }
-        
-      
-        public ActionResult Logout()
+		public ActionResult ForgotPassword()
+		{
+
+			return View();
+
+		}
+
+
+		public ActionResult Logout()
         {
             
             return RedirectToAction("Login");
