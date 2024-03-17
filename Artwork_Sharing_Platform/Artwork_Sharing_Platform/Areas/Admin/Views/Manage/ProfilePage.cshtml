@@ -42,7 +42,7 @@
             <label for="backgroundImg">Background Image:</label>
             <input type="text" class="form-control" id="backgroundImg">
         </div>*@
-                        <div class="form-group">
+                        @*<div class="form-group">
                             <label for="avatar">Avatar:</label>
                             <img id="avatarImage" src="" alt="Avatar" class="img-thumbnail" style="width: 100px; height: 100px;">
                             <input type="text" class="form-control" id="avatar" style="display: none;">
@@ -51,7 +51,7 @@
                             <label for="backgroundImg">Background Image:</label>
                             <img id="backgroundImgImage" src="" alt="Background Image" class="img-responsive" style="width: 100%;">
                             <input type="text" class="form-control" id="backgroundImg" style="display: none;">
-                        </div>
+                        </div>*@
                         <div class="form-group">
                             <label for="gender">Gender:</label>
                             <select class="form-control" id="gender">
@@ -63,13 +63,13 @@
                             <label for="address">Address:</label>
                             <input type="text" class="form-control" id="address">
                         </div>
-                        <div class="form-group" id="isVerifiedPageGroup">
+                        @*<div class="form-group" id="isVerifiedPageGroup">
                             <label for="isVerifiedPage">Is Verified Page:</label>
                             <select class="form-control" id="isVerifiedPage">
                                 <option value="true">Yes</option>
                                 <option value="false">No</option>
                             </select>
-                        </div>
+                        </div>*@
                         <button type="submit" class="btn btn-primary" id="updateButton">Update</button>
                     </form>
                 </div>
@@ -98,19 +98,19 @@
             dobInput.value = dobValue;
             //document.getElementById('avatar').value = data.avatar;
             //document.getElementById('backgroundImg').value = data.backgroundImg;
-            const avatarInput = document.getElementById('avatar');
-            const backgroundImgInput = document.getElementById('backgroundImg');
-            const avatarImage = document.getElementById('avatarImage');
-            const backgroundImgImage = document.getElementById('backgroundImgImage');
+            //const avatarInput = document.getElementById('avatar');
+            //const backgroundImgInput = document.getElementById('backgroundImg');
+            //const avatarImage = document.getElementById('avatarImage');
+            //const backgroundImgImage = document.getElementById('backgroundImgImage');
 
-            avatarInput.value = data.avatar;
-            avatarImage.src = data.avatar;
+            //avatarInput.value = data.avatar;
+            //avatarImage.src = data.avatar;
 
-            backgroundImgInput.value = 'data:image/jpeg;base64,' + data.backgroundImg;
-            backgroundImgImage.src = 'data:image/jpeg;base64,' + data.backgroundImg;
+            //backgroundImgInput.value = 'data:image/jpeg;base64,' + data.backgroundImg;
+            //backgroundImgImage.src = 'data:image/jpeg;base64,' + data.backgroundImg;
             document.getElementById('gender').value = data.gender ? 'true' : 'false';
             document.getElementById('address').value = data.address;
-            document.getElementById('isVerifiedPage').value = data.isVerifiedPage ? 'true' : 'false';
+            /*document.getElementById('isVerifiedPage').value = data.isVerifiedPage ? 'true' : 'false';*/
         })
         .catch((error) => {
             console.error('There has been a problem with your fetch operation:', error);
@@ -123,11 +123,11 @@
         const fullName = document.getElementById('fullName').value;
         const phoneNumber = document.getElementById('phoneNumber').value;
         const dob = document.getElementById('dob').value;
-        const avatar = document.getElementById('avatar').value;
-        const backgroundImg = document.getElementById('backgroundImg').value;
+        //const avatar = document.getElementById('avatar').value;
+        //const backgroundImg = document.getElementById('backgroundImg').value;
         const gender = document.getElementById('gender').value === 'true';
         const address = document.getElementById('address').value;
-        const isVerifiedPage = document.getElementById('isVerifiedPage').value === 'true';
+        /*const isVerifiedPage = document.getElementById('isVerifiedPage').value === 'true';*/
 
         const apiUrl = `https://localhost:7008/api/Person/${id}`;
 
@@ -136,11 +136,11 @@
             fullName,
             phoneNumber,
             dob,
-            avatar,
-            backgroundImg,
+            //avatar,
+            //backgroundImg,
             gender,
             address,
-            isVerifiedPage,
+            /*isVerifiedPage,*/
         };
 
         fetch(apiUrl, {
@@ -175,11 +175,11 @@
         const fullName = document.getElementById('fullName').value;
         const phoneNumber = document.getElementById('phoneNumber').value;
         const dob = document.getElementById('dob').value;
-        const avatar = document.getElementById('avatar').value;
-        const backgroundImg = document.getElementById('backgroundImg').value;
+        //const avatar = document.getElementById('avatar').value;
+        //const backgroundImg = document.getElementById('backgroundImg').value;
         const gender = document.getElementById('gender').value === 'true';
         const address = document.getElementById('address').value;
-        const isVerifiedPage = document.getElementById('isVerifiedPage').value === 'true';
+        /*const isVerifiedPage = document.getElementById('isVerifiedPage').value === 'true';*/
 
         const data = {
             fullName,

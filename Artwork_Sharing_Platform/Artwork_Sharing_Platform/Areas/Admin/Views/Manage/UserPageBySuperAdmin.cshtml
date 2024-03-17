@@ -17,10 +17,43 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="input-group custom-search-form col-lg-12">
+                                            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="searchTable()">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary" type="button" onclick="searchTable()">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Filter <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" onclick="searchTable('All')">All</a></li>
+                                                <li><a href="#" onclick="searchTable('Active')">Active</a></li>
+                                                <li><a href="#" onclick="searchTable('Inactive')">Inactive</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-lg-12">
                     <div class="table-responsive">
                         <table id="transactionTable" class="table table-bordered table-hover table-striped">
                             <thead>
                                 <tr>
+                                    <th>Id</th>
                                     <th>Full Name</th>
                                     <th>Phone Number</th>
                                     <th>Date Created</th>
@@ -101,6 +134,7 @@
         data.forEach((item) => {
             const row = $("<tr>");
 
+            row.append($("<td>").text(item.id));
             row.append($("<td>").text(item.fullName));
             row.append($("<td>").text(item.phoneNumber));
             row.append($("<td>").text(formatDate(item.dateUserRe)));
@@ -274,6 +308,68 @@
             // Handle the error, e.g., show an error message
             console.error(error);
             alert("Error banning the user");
+        }
+    }
+
+    //function searchtable() {
+    //    // get the search input value and trim any leading/trailing whitespace
+    //    const searchvalue = document.getelementbyid("searchinput").value.trim();
+
+    //    // get all table rows except the header row
+    //    const rows = array.from(document.queryselectorall("#transactiontable tbody tr"));
+
+    //    // hide all rows initially
+    //    rows.foreach(row => row.style.display = "none");
+
+    //    // if the search input is not empty, filter the rows based on orderid
+    //    if (searchvalue !== "") {
+    //        const filteredrows = rows.filter(row => {
+    //            const orderid = row.children[0].textcontent.trim();
+    //            return orderid.tolowercase().includes(searchvalue.tolowercase());
+    //        });
+
+    //        // display the filtered rows
+    //        filteredrows.foreach(row => row.style.display = "");
+    //    } else {
+    //        // if the search input is empty, display all rows
+    //        rows.foreach(row => row.style.display = "");
+    //    }
+    //}
+    function searchTable(filter) {
+        // Get all table rows except the header row
+        const rows = Array.from(document.querySelectorAll("#transactionTable tbody tr"));
+
+        // Hide all rows initially
+        rows.forEach(row => row.style.display = "none");
+        console.log(filter);
+
+        // If the filter is not "All", filter the rows based on Status
+        if (filter !== "All") {
+            const filteredRows = rows.filter(row => {
+                const status = row.children[5].textContent.trim().toLowerCase();
+                return status === filter.toLowerCase();
+            });
+
+            // Display the filtered rows
+            filteredRows.forEach(row => row.style.display = "");
+        } else {
+            // If the filter is "All", display all rows
+            rows.forEach(row => row.style.display = "");
+        }
+
+        // If the search input is not empty, filter the rows based on ID, Name, and Status
+        const searchInput = document.getElementById("searchInput");
+        const searchValue = searchInput.value.trim().toLowerCase();
+        if (searchValue !== "") {
+            const filteredRows = rows.filter(row => {
+                const id = row.children[0].textContent.trim().toLowerCase();
+                const name = row.children[1].textContent.trim().toLowerCase();
+                /*const status = row.children[5].textContent.trim().toLowerCase();*/
+                return id.includes(searchValue) || name.includes(searchValue) /*|| status.includes(searchValue)*/;
+            });
+
+            // Display the filtered rows
+            filteredRows.forEach(row => row.style.display = "");
         }
     }
 

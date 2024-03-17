@@ -27,7 +27,7 @@
                                             <th>UserId</th>
                                             <th>Description</th>
                                             <th>Status</th>
-                                            <th>Rejected</th>
+                                            <th>Approved</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -49,6 +49,7 @@
             const tbody = document.querySelector('#transactionTable tbody');
 
             data.dataObject.forEach((transaction, index) => {
+                console.log(transaction);
                 const row = document.createElement('tr');
 
                 const idCell = document.createElement('td');
@@ -72,8 +73,8 @@
 
                 if (transaction.status) {
                     const rejectButton = document.createElement('button');
-                    rejectButton.textContent = 'Reject';
-                    rejectButton.addEventListener('click', () => rejectRequest(transaction.RequestId));
+                    rejectButton.textContent = 'Approved';
+                    rejectButton.addEventListener('click', () => rejectRequest(transaction));
                     actionCell.appendChild(rejectButton);
 
                     row.appendChild(actionCell);
@@ -86,19 +87,49 @@
 
 
 
-    function rejectRequest(requestId) {
-        fetch(`https://localhost:7008/api/Request/UpdateStatusRequest?requestId=${requestId}`, {
+    const baseUrl = 'https://localhost:7008/api';
+
+    function rejectRequest(transaction) {
+        if (!transaction) {
+            console.error('Transaction object is undefined or null');
+            return;
+        }
+
+        fetch(`${baseUrl}/Request/UpdateStatusRequest?requestId=${transaction.requestId}`, {
             method: 'PUT',
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error rejecting request requestId');
+                }
+                return response.json();
+            })
             .then(data => {
-                if (data.Status === 'Success') {
+                if (data.status === 'Success') {
+                    return fetch(`${baseUrl}/Person/UpdateVerifiedPage?userId=${transaction.userId}`, {
+                        method: 'PUT',
+                    });
+                } else {
+                    throw new Error('Error rejecting request userId');
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error updating verified page status');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'Success') {
                     alert('Request rejected successfully');
                     window.location.reload();
                 } else {
-                    alert('Error rejecting request');
+                    throw new Error('Error rejecting request');
                 }
             })
-            .catch(error => console.error('Error rejecting request:', error));
+            .catch(error => {
+                console.error('Error rejecting request:', error);
+                alert('Error rejecting request');
+            });
     }
 </script>

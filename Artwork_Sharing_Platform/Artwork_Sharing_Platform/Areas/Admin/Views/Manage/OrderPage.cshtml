@@ -24,7 +24,7 @@
                                 <div class="row">
                                     <div class="col-lg-8">
                                         <div class="input-group custom-search-form col-lg-12">
-                                            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                                            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="searchTable()">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-primary" type="button" onclick="searchTable()">
                                                     <i class="fa fa-search"></i>
@@ -50,54 +50,45 @@
 
 
                                 </div>
-                            @*col-lg-8*@
-                        @*<div class="btn-group col-lg-4 col-lg-offset-4" >
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Action <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#">Separated link</a></li>
-                            </ul>
-                        </div>*@
+                           
                         </div>
                         <!--panel-body-->
 
                         <div class="row">
-                            <div class="table-responsive col-lg-12 ">
-                                <table id="transactionTable" class="table table-bordered table-hover table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>OrderId</th>
-                                            <th>UserId</th>
-                                            <th>TotalBill</th>
-                                            <th>View Detail</th>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="modal fade" id="viewOrderModal" tabindex="-1" role="dialog" aria-labelledby="viewOrderModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="viewOrderModalLabel">Order Detail</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body" id="viewOrderModalContent">
-                                            <!-- Order detail will be displayed here -->
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <div class="col-lg-12">
+                                <div class="table-responsive  ">
+                                    <table id="transactionTable" class="table table-bordered table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>OrderId</th>
+                                                <th>UserId</th>
+                                                <th>TotalBill</th>
+                                                <th>View Detail</th>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal fade" id="viewOrderModal" tabindex="-1" role="dialog" aria-labelledby="viewOrderModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="viewOrderModalLabel">Order Detail</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" id="viewOrderModalContent">
+                                                <!-- Order detail will be displayed here -->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -247,5 +238,30 @@
     // Helper function to format the date
     function formatDate(date) {
         return new Date(date).toLocaleDateString();
+    }
+
+    function searchTable() {
+        // Get the search input value and trim any leading/trailing whitespace
+        const searchValue = document.getElementById("searchInput").value.trim();
+
+        // Get all table rows except the header row
+        const rows = Array.from(document.querySelectorAll("#transactionTable tbody tr"));
+
+        // Hide all rows initially
+        rows.forEach(row => row.style.display = "none");
+
+        // If the search input is not empty, filter the rows based on OrderId
+        if (searchValue !== "") {
+            const filteredRows = rows.filter(row => {
+                const orderId = row.children[0].textContent.trim();
+                return orderId.toLowerCase().includes(searchValue.toLowerCase());
+            });
+
+            // Display the filtered rows
+            filteredRows.forEach(row => row.style.display = "");
+        } else {
+            // If the search input is empty, display all rows
+            rows.forEach(row => row.style.display = "");
+        }
     }
 </script>
