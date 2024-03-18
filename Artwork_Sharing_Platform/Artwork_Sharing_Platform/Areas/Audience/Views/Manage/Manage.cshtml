@@ -169,6 +169,7 @@
                 });
 
             }
+
             function saveArtwork() {
                 // Get values from input fields
                 var ArtName1 = document.getElementById('artName').value;
@@ -225,6 +226,35 @@
                     reader.readAsDataURL(selectedFile);
                 }
             }
+
+
+            $(document).ready(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://localhost:7008/api/Genre/GetALLGenre',
+                    success: function (response) {
+                        if (response.dataObject && Array.isArray(response.dataObject) && response.dataObject.length > 0) {
+                            // Iterate through each artwork in the response
+                            response.dataObject.forEach(function (genre) {
+                                const strHTML = `
+                                  <li class="nav-item">
+      <a class="nav-link" onclick="SortType('${genre.genreArtwork}')" href="#">${genre.genreArtwork}</a>
+  </li>
+                     `;
+
+                                $('#GerneAPI').append(strHTML);
+                                // Thêm sự kiện click cho nút "More"
+
+                            });
+                        } else {
+                            console.error('Invalid or empty response from the API.');
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Lỗi:', error);
+                    }
+                });
+            });
         </script>
         <section class="mt-4 mb-5">
             <div class="container mb-4">
@@ -238,8 +268,8 @@
                             <img src="https://img.icons8.com/ios/150/000000/plus-math.png" alt="Plus Icon">
                         </button>
                         <div class="collapse navbar-collapse" id="navbarsExplore">
-                            <ul class="navbar-nav active">
-                                <li class="nav-item">
+                            <ul class="navbar-nav active" id="GerneAPI">
+                                @*<li class="nav-item">
                                     <a class="nav-link" onclick="SortType('Lifestyle')" href="#">Lifestyle</a>
                                 </li>
                                 <li class="nav-item">
@@ -265,13 +295,14 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" onclick="SortType('Shui')" href="#">Shui</a>
-                                </li>
+                                </li>*@
+                              
                                 <ul class="navbar-nav mr-auto align-items-center">
                                     <form class="bd-search hidden-sm-down">
                                         <input type="text" class="form-control bg-graylight border-0 font-weight-bold" id="search-input" placeholder="Search..." autocomplete="off">
 
                                         <button type="button" onclick="search()" class="search-button">
-                                            <img src="https://img.icons8.com/?size=24&id=1649&format=png" alt="Search Icon">
+                                            <img src="https://img.icons8.com/?size=256&id=131&format=png" alt="Search Icon">
                                         </button>
                                     </form>
 
@@ -296,7 +327,8 @@
                                         if (response && Array.isArray(response) && response.length > 0) {
                                             // Iterate through each artwork in the response
                                             response.forEach(function (artwork) {
-                                                const strHTML = `
+                                                if (artwork.status == true) {
+                                                    const strHTML = `
                                                 <div class="card card-pin">
                                                     <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
                                                         <div class="overlay">
@@ -310,7 +342,8 @@
                                                         </div>
                                                 `;
 
-                                                $('#apiDataContainer').append(strHTML);
+                                                    $('#apiDataContainer').append(strHTML);
+                                                }
                                                 // Thêm sự kiện click cho nút "More"
                                                 $('.more-btn').click(function (e) {
                                                     e.preventDefault();
@@ -349,8 +382,9 @@
                                             // Hiển thị dữ liệu từ API lên trang
                                             if (response.dataObject && Array.isArray(response.dataObject) && response.dataObject.length > 0) {
                                                 // Duyệt qua mỗi tác phẩm nghệ thuật trong phản hồi
-                                                response.dataObject.forEach(function (artwork) {  // Thay đổi từ SearchArtwork thành artwork
-                                                    const strHTML = `
+                                                response.dataObject.forEach(function (artwork) {
+                                                    if (artwork.status == true) {// Thay đổi từ SearchArtwork thành artwork
+                                                        const strHTML = `
 <div class="card card-pin">
     <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
     <div class="overlay">
@@ -364,7 +398,8 @@
 </div>
 `;
 
-                                                    $('#apiDataContainer').append(strHTML);
+                                                        $('#apiDataContainer').append(strHTML);
+                                                    }
                                                     // Thêm sự kiện click cho nút "More"
                                                     $('.more-btn').click(function (e) {
                                                         e.preventDefault();
@@ -397,7 +432,8 @@
                                         if (response && Array.isArray(response) && response.length > 0) {
                                             // Iterate through each artwork in the response
                                             response.forEach(function (artwork) {
-                                                const strHTML = `
+                                                if (artwork.status == true) {
+                                                    const strHTML = `
                                                    <div class="card card-pin">
                                                         <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
                                                              <div class="overlay">
@@ -409,9 +445,10 @@
                  </div>
              </div>
          </div>`
-                                                    ;
+                                                        ;
 
-                                                $('#apiDataContainer').append(strHTML);
+                                                    $('#apiDataContainer').append(strHTML);
+                                                }
                                                 // Thêm sự kiện click cho nút "More"
                                                 $('.more-btn').click(function (e) {
                                                     e.preventDefault();

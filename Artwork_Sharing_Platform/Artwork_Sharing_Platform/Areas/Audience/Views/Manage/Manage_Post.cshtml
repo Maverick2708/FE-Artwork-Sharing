@@ -47,7 +47,7 @@
                                             </div>
                                         </div>
                                         <div style="display: flex; justify-content: center; align-items: center;">
-                                            <button id="followButton" onclick="toggleFollow()" style="border: none; padding: 10px; border-radius: 20px; font-weight: 500">+ Follow</button>
+                                            <button id="followButton" onclick="toggleFollow()" style="border: none; padding: 10px; border-radius: 20px; font-weight: 500; display:flex">+ Follow</button>
                                         </div>
                                     </div>
 
@@ -138,7 +138,7 @@
                                                 <span>Comments</span>
                                             </div>
                                             <div id="ratingContainer" class="d-flex justify-content-end align-items-center">
-                                                <div id="starRatingContainer"></div>
+                                            
                                                 <div style="margin-right: 5px; font-weight: 500; font-size: 20px">
                                                     <span id="count-like"></span>
                                                 </div>
@@ -185,23 +185,40 @@
 
                                             },
                                             error: function (error) {
-                                                console.error('Error checking like status:', error);
+                                                document.getElementById('count-like').innerText = 0;
                                             }
                                         });
                                     }
                                     function countFollow() {
-                                        // Gửi yêu cầu API GET để kiểm tra trạng thái like
                                         $.ajax({
-                                            url: `https://localhost:7008/api/Follow/CountFollow?userIdFollow=${userId}`,
+                                            url: `https://localhost:7008/api/Arwork/GetArtistByArtworkId?artworkid=${artworkPId}`,
                                             type: 'GET',
-                                            success: function (data) {
-                                                document.getElementById('follower').innerText = data.dataObject;
+                                            success: function (respone) {
+                                                $.ajax({
+                                                    url: `https://localhost:7008/api/Follow/CountFollow?userIdFollow=${respone.dataObject.id}`,
+                                                    type: 'GET',
+                                                    success: function (data) {
+                                                        console.log(data.dataObject);
+                                                        if (data.message == 'Follow found') {
+                                                            document.getElementById('follower').innerText = data.dataObject;
+                                                        }
+                                                        else {
+                                                            document.getElementById('follower').innerText = 0;
+                                                        }
+
+                                                    },
+                                                    error: function (error) {
+
+                                                    }
+                                                });
 
                                             },
                                             error: function (error) {
-                                                console.error('Error checking like status:', error);
+
                                             }
                                         });
+                                        // Gửi yêu cầu API GET để kiểm tra trạng thái like
+                                       
                                     }
                                     function countComment() {
                                         // Gửi yêu cầu API GET để kiểm tra trạng thái like
@@ -213,11 +230,11 @@
 
                                             },
                                             error: function (error) {
-                                                console.error('Error checking like status:', error);
+                                                document.getElementById('count-comment').innerText = 0;
                                             }
                                         });
                                     }
-                                    // Thêm sự kiện click cho nút like
+                                    // Like ở đây
                                     $('#likeButton').click(function () {
                                         if ($(this).hasClass('liked')) {
                                             // Nếu đã like, gửi yêu cầu API để xóa like
@@ -233,6 +250,8 @@
                                     // Hàm kiểm tra trạng thái like khi trang được tải
                                     function checkLikeStatus() {
                                         // Gửi yêu cầu API GET để kiểm tra trạng thái like
+
+
                                         $.ajax({
                                             url: `https://localhost:7008/api/Comment/GetUseLikerOrNotLike?userId=${userId}&artworkId=${artworkPId}`,
                                             type: 'GET',
@@ -320,10 +339,16 @@
                                                     type: 'GET',
                                                     url: `https://localhost:7008/api/Follow/GetFollow?userId=${userId}&userIdFollow=${respone.dataObject.userId}`,
                                                     success: function (data) {
-                                                        checkFollowStatus(data.message);
-                                                        console.log(data);
-                                                        console.log(respone.dataObject.userId);
-                                                        console.log(userId);
+                                                        if (userId == respone.dataObject.userId) {
+                                                            document.getElementById('followButton').style.display = 'none';
+                                                        }
+                                                        else {
+                                                            checkFollowStatus(data.message);
+                                                            console.log(data);
+                                                            console.log(respone.dataObject.userId);
+                                                            console.log(userId);
+                                                        }
+                                                      
                                                     },
                                                     error: function (error) {
                                                         console.error('Lỗi:', error);
@@ -518,36 +543,7 @@
                                     // Trạng thái ban đầu là chưa thả tim
 
                                     // Function to generate the star rating
-                                    function generateStarRating() {
-                                        starRatingContainer.innerHTML = ''; // Clear previous content
-
-                                        // Create a star for each rating
-                                        for (var i = 0; i < starRating; i++) {
-                                            var star = document.createElement('i');
-                                            star.className = 'fa fa-star text-warning'; // Assuming FontAwesome for stars
-                                            starRatingContainer.appendChild(star);
-                                        }
-
-                                        // You can add half stars or empty stars based on your requirements
-                                    }
-                                    function getAverageStarRating() {
-                                        var artworkId = getParameterByName('artworkid');
-                                        $.ajax({
-                                            type: 'GET',
-                                            url: `https://localhost:7008/api/RateStar/GetAverageRateStar?artworkID=${artworkId}`,
-                                            success: function (data) {
-                                                starRating = data.dataObject;
-                                                generateStarRating();
-                                            },
-                                            error: function (error) {
-                                                console.error('Lỗi:', error);
-                                            }
-                                        });
-                                    }
-                                    $(document).ready(function () {
-                                        getAverageStarRating();
-
-                                    });
+                                  
                                     function getParameterByName(name, url) {
                                         if (!url) url = window.location.href;
                                         name = name.replace(/[[]]/g, "\$&");
@@ -575,7 +571,7 @@
                                         return decodeURIComponent(results[2].replace(/\+/g, ' '));
                                     }
                                     // Call the function to generate the star rating
-                                    generateStarRating();
+                                    
 
 
                                     $(document).ready(function () {

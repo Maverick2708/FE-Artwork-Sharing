@@ -183,6 +183,27 @@
 </div>
 
 <script>
+    function RequestConfirm() {
+        var Userid = sessionStorage.getItem('userId');
+
+        $.ajax({
+            type: 'POST',
+            url: 'https://localhost:7008/api/Request/CreateRequest',
+            success: function (response) {
+                // Hiển thị dữ liệu từ API lên trang
+
+                if (response.status == 'Success') {
+                    alert('Gửi yêu cầu xác nhận thành công!');
+                }
+                else {
+                    alert('Gửi yêu cầu xác nhận thất bại!');
+                }
+            },
+            error: function (error) {
+                console.error('Lỗi:', error);
+            }
+        });
+    }
     $(document).ready(function () {
         var Userid = sessionStorage.getItem('userId');
 
@@ -249,8 +270,11 @@
                         success: function (response) {
                             // Hiển thị dữ liệu từ API lên trang
 
-                            if (response.message == 'Found Request') {
+                            if (response.message == 'Found Request' && response.dataObject[response.dataObject.length - 1].status == true) {
                                 document.getElementById('Confirming').style.display = "flex";
+                            }
+                            else if (response.message == 'Found Request' && response.dataObject[response.dataObject.length - 1].status == false) {
+                                document.getElementById('Request').style.display = "flex";
                             }
                             else if (response.message == 'Request not found') {
                                 $.ajax({
@@ -271,6 +295,7 @@
                                     }
                                 });
                             }
+                           
                         },
                         error: function (error) {
                             console.error('Lỗi:', error);

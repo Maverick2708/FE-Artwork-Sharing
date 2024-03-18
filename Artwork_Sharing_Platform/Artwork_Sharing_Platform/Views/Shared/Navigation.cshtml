@@ -116,6 +116,7 @@
                     });
                     document.addEventListener('DOMContentLoaded', function () {
                         var storedUserEmail = sessionStorage.getItem('userEmail');
+                        var storedUserEmailLocal = localStorage.getItem('userEmailLocal');
                         // Thực hiện đăng xuất sau 5 giây
                         var sessionTimeout = 3600000;
                         setTimeout(function () {
