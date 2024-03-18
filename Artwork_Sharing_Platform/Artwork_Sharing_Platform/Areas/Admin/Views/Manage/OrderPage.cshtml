@@ -240,28 +240,26 @@
         return new Date(date).toLocaleDateString();
     }
 
+    // Function to search the table based on input value
     function searchTable() {
-        // Get the search input value and trim any leading/trailing whitespace
-        const searchValue = document.getElementById("searchInput").value.trim();
+        // Get the input value
+        const inputValue = document.getElementById("searchInput").value.toLowerCase();
 
-        // Get all table rows except the header row
-        const rows = Array.from(document.querySelectorAll("#transactionTable tbody tr"));
+        // Get all table rows
+        const tableRows = document.querySelectorAll("#transactionTable tbody tr");
 
-        // Hide all rows initially
-        rows.forEach(row => row.style.display = "none");
+        // Loop through the rows and hide/show based on input value
+        tableRows.forEach((row) => {
+            const orderIdCell = row.children[0];
+            const userIdCell = row.children[1];
 
-        // If the search input is not empty, filter the rows based on OrderId
-        if (searchValue !== "") {
-            const filteredRows = rows.filter(row => {
-                const orderId = row.children[0].textContent.trim();
-                return orderId.toLowerCase().includes(searchValue.toLowerCase());
-            });
+            const orderIdText = orderIdCell.textContent.toLowerCase();
+            const userIdText = userIdCell.textContent.toLowerCase();
 
-            // Display the filtered rows
-            filteredRows.forEach(row => row.style.display = "");
-        } else {
-            // If the search input is empty, display all rows
-            rows.forEach(row => row.style.display = "");
-        }
+            const showRow = orderIdText.includes(inputValue) || userIdText.includes(inputValue);
+
+            // Toggle visibility of the row
+            row.style.display = showRow ? "" : "none";
+        });
     }
 </script>
