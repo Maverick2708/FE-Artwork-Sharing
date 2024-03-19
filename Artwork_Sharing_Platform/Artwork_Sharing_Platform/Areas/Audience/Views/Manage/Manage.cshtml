@@ -139,13 +139,8 @@
                                                             <label for="artImage">Select Image:</label>
                                                             <input type="file" id="artImage" accept="image/*,.png" class="form-control mb-2">
                                                             <label for="artGenre">Art Genre:</label>
-                                                            <select id="artGenre" class="form-control mb-2">
-                                                                <option value="1">Landscape</option>
-                                                                <option value="4">Lifestyle</option>
-                                                                <option value="5">Animation</option>
-                                                                <option value="6">Portrait</option>
-                                                                <option value="7">Scenery</option>
-                                                             </select>
+
+                                                             <select id="artGenre" class="form-control mb-2"></select>
 
                                                         </div>
                                                          <div class="modal-footer">
@@ -166,6 +161,26 @@
                 // Remove the modal from the DOM when it's closed
                 $('#artPopup').on('hidden.bs.modal', function () {
                     $(this).remove();
+                });
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://localhost:7008/api/Genre/GetALLGenre',
+                    success: function (response) {
+                        if (response && Array.isArray(response.dataObject) && response.dataObject.length > 0) {
+                            // Xóa các option hiện tại trong select (nếu có)
+                            $('#artGenre').empty();
+
+                            // Thêm các option mới dựa trên dữ liệu trả về từ API
+                            response.dataObject.forEach(function (genre) {
+                                $('#artGenre').append(`<option value="${genre.genreId}">${genre.genreArtwork}</option>`);
+                            });
+                        } else {
+                            console.error('Invalid or empty response from the API.');
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
                 });
 
             }
@@ -328,7 +343,7 @@
                                             // Iterate through each artwork in the response
                                             response.forEach(function (artwork) {
                                                 if (artwork.status == true) {
-                                                    const strHTML = `
+                                                const strHTML = `
                                                 <div class="card card-pin">
                                                     <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
                                                         <div class="overlay">
