@@ -17,13 +17,13 @@
     }
 
     .avatar-container {
-        width: 128px;
+        width: 140px;
         position: relative;
     }
 
     .avatar {
         width: 100%;
-        height: 128px;
+        height: 140px;
         object-fit: cover; /*để hình ảnh tự động điều chỉnh kích thước và giữ nguyên tỉ lệ */
     }
 
@@ -126,61 +126,75 @@
     }
 </style>
 
-<div class="jumbotron border-round-0 min-50vh" id="backgroundProfile" style="background-image: url();">
-    <button class="update-background-button" id="update-background" onclick="UpdateBackgroundPopUp()" style="display: flex; justify-content: space-between; align-items: center;">
-        <i class="fa-solid fa-camera" style="margin-right: 10px"></i>
-        <h4 style="font-size: 15px; margin: 0 auto;">Cập nhật ảnh bìa</h4>
-    </button>
-    <button class="update-profile-button" id="update-profile" onclick="openArtPopup()" style="display: flex; justify-content: space-between; align-items: center;">
-        <i class="fa-solid fa-pen" style="margin-right: 10px; color: white"></i>
-        <h4 style="color: white; font-size: 15px; margin: 0 auto;">Chỉnh sửa hồ sơ người dùng</h4>
-    </button>
-    <button class="req-profile-button" id="Request" onclick="RequestConfirm()" style="display: none; justify-content: space-between; align-items: center;">
-        <i class="fa-regular fa-circle-check" style="margin-right: 10px; color: white"></i>
-        <h4 style="color: white; font-size: 15px; margin: 0 auto;">Yêu cầu xác nhận</h4>
-    </button>
-    <button class="reqed-profile-button" id="Confirming" style="display: none; justify-content: space-between; align-items: center;">
-        <i class="fa-solid fa-circle-xmark" style="margin-right: 10px; color: white"></i>
-        <h4 style="color: black; font-size: 15px; margin: 0 auto;">Đợi xác nhận</h4>
-    </button>
-    <button class="conf-profile-button" id="Confirmed" style="display: none; justify-content: space-between; align-items: center;">
-        <i class="fa-solid fa-circle-check" style="margin-right: 10px; color: white"></i>
-        <h4 style="color: white; font-size: 15px; margin: 0 auto;">Đã xác nhận</h4>
-    </button>
-    <button class="n-req-profile-button" id="NoCofirm" style="display: none; justify-content: space-between; align-items: center;">
-        <i class="fa-regular fa-circle-check" style="margin-right: 10px; color: white"></i>
-        <h4 style="color: white; font-size: 15px; margin: 0 auto;">Bạn cần 10 follower để gửi yêu cầu xác nhận tài khoản</h4>
-    </button>
-   
 
+<div style="display: flex; justify-content: center; align-items:center;">
+    <div class="col-md-10">
+        <div class="jumbotron border-round-0 min-50vh" id="backgroundProfile" style="background-image: url();">
+            <button class="update-background-button" id="update-background" onclick="UpdateBackgroundPopUp()" style="display: flex; justify-content: space-between; align-items: center;">
+                <i class="fa-solid fa-camera" style="margin-right: 10px"></i>
+                <h4 style="font-size: 15px; margin: 0 auto;">Cập nhật ảnh bìa</h4>
+            </button>
+            <button class="update-profile-button" id="update-profile" onclick="openArtPopup()" style="display: flex; justify-content: space-between; align-items: center;">
+                <i class="fa-solid fa-pen" style="margin-right: 10px; color: white"></i>
+                <h4 style="color: white; font-size: 15px; margin: 0 auto;">Chỉnh sửa hồ sơ người dùng</h4>
+            </button>
+            <button class="req-profile-button" id="Request" onclick="RequestConfirm()" style="display: none; justify-content: space-between; align-items: center;">
+                <i class="fa-regular fa-circle-check" style="margin-right: 10px; color: white"></i>
+                <h4 style="color: white; font-size: 15px; margin: 0 auto;">Yêu cầu xác nhận</h4>
+            </button>
+            <button class="reqed-profile-button" id="Confirming" style="display: none; justify-content: space-between; align-items: center;">
+                <i class="fa-solid fa-circle-xmark" style="margin-right: 10px; color: white"></i>
+                <h4 style="color: black; font-size: 15px; margin: 0 auto;">Đợi xác nhận</h4>
+            </button>
+            <button class="conf-profile-button" id="Confirmed" style="display: none; justify-content: space-between; align-items: center;">
+                <i class="fa-solid fa-circle-check" style="margin-right: 10px; color: white"></i>
+                <h4 style="color: white; font-size: 15px; margin: 0 auto;">Đã xác nhận</h4>
+            </button>
+            <button class="n-req-profile-button" id="NoCofirm" style="display: none; justify-content: space-between; align-items: center;">
+                <i class="fa-regular fa-circle-check" style="margin-right: 10px; color: white"></i>
+                <h4 style="color: white; font-size: 15px; margin: 0 auto;">Bạn cần 10 follower để gửi yêu cầu xác nhận tài khoản</h4>
+            </button>
+        </div>
+
+        <div class="profile mb-4">
+            <div class="avatar-container">
+                <img id="avatarProfile" src="" class="avatar mt-neg100 mb-4 rounded-circle">
+                <button class="update-avatar-button" id="circleButton" onclick="changeAvatarPopup()">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+            </div>
+
+
+            <div style="display: flex; justify-content: space-between;">
+                <div class="left-child">
+                    <h2 id="userNameProfile" class="font-weight-bold title"></h2>
+                </div>
+                <div class="right-child" style="display: flex; align-items: center; justify-content: center; margin-left: 10px;">
+                    <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" />
+                </div>
+            </div>
+            <div style="display: flex;">
+                <h7 class="your-art" id="followNumber"></h7>
+                <h7 style="margin-left: 5px">followers</h7>
+            </div>
+
+
+            <div style="display: flex; align-content: center; margin-top: 10px">
+                <div>
+                    <h4 class="your-art" style="font-weight: 700">Art</h4>
+                    <div style="background-color: black; height: 3px; border-radius: 5px;"></div>
+                </div>
+                <h4 class="your-art" style="margin: 0 15px">|</h4>
+                <h4 class="your-art" style="">
+                    <a class="" href="~/Audience/Manage/Order" style="font-weight: 500; color: #7d7e7f">Order</a>
+                </h4>
+            </div>
+
+        </div>
+    </div>
 </div>
 
-<div class="profile mb-4">
-    <div class="avatar-container">
-        <img id="avatarProfile" src="" class="avatar mt-neg100 mb-4 rounded-circle">
-        <button class="update-avatar-button" id="circleButton" onclick="changeAvatarPopup()">
-            <i class="fa-solid fa-camera"></i>
-        </button>
-    </div>
 
-
-    <div style="display: flex; justify-content: space-between;">
-        <div class="left-child">
-            <h1 id="userNameProfile" class="font-weight-bold title"></h1>
-        </div>
-        <div class="right-child" style="display: flex; align-items: center; justify-content: center; margin-left: 10px;">
-            <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" />
-        </div>
-    </div>
-    <h6 class="your-art" id="followNumber"></h6>
-
-    <div>------------</div>
-    <h4 class="your-art">Your art</h4>
-    <h4 class="your-art">
-      
-        <a class="nav-link" href="~/Audience/Manage/Order">  Your order</a>
-    </h4> 
-</div>
 
 <script>
     function RequestConfirm() {
@@ -739,9 +753,9 @@
                                 // Iterate through each artwork in the response
                                 response.dataObject.forEach(function (artwork) {
                                     const strHTML = `
-                                                                                                                <div class="card card-pin">
-                                                                                                                    <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
-                                                                                                                    <div class="overlay">
+                                                                                                                <div class="card card-pin" style="border-radius: 15px">
+                                                                                                                    <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image" style="border-radius: 15px">
+                                                                                                                    <div class="overlay" style="border-radius: 15px">
                                                                                                                         <h2 class="card-title title">${artwork.contentArtwork}</h2>
                                                                                                                         <div class="more">
                                                                                                                             <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
