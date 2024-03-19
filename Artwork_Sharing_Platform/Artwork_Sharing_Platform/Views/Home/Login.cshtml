@@ -373,25 +373,33 @@
 
 
     function confirmEmail() {
-        const queryString = window.location.search.substring(1); // Lấy query string không giải mã và bỏ đi dấu "?"
-        console.log('queryString:', queryString);
-        const queryParams = queryString.split('&'); // Tách các tham số
-        console.log('queryParams:', queryParams);
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const email = urlParams.get('email');
 
-        let code, email;
-        queryParams.forEach(param => {
-            const eqIndex = param.indexOf('=');
-            const key = param.substring(0, eqIndex);
-            const value = param.substring(eqIndex + 1);
+        console.log('code: ', code);
+        console.log('email: ', email);
 
-            if (key === 'code') {
-                code = decodeURIComponent(value);
-                console.log('code', code);
-            } else if (key === 'email') {
-                email = decodeURIComponent(value);
-                console.log('email', email);
-            }
-        });
+        console.log('encode code: ', encodeURIComponent(code));
+
+        if (code && email) {
+            $.ajax({
+                url: `https://localhost:7008/api/Person/ConfirmEmailAsync?email=${email}&token=${encodeURIComponent(code)}`,
+                method: 'POST',
+                success: function (result) {
+                    console.log('API Response:', result);
+                    if (result.status === "Success") {
+                        $('#error-message').text('Email đã được xác thực thành công');
+                    } else {
+                        $('#error-message').text('Xác thực email thất bại');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('An error occurred during email confirmation. Status:', xhr.status);
+                    $('#error-message').text('An error occurred during email confirmation');
+                }
+            });
+        }
     }
 
     $(document).ready(confirmEmail);
