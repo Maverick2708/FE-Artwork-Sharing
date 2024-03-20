@@ -20,8 +20,11 @@
                                     <div style="margin: 5px 0; display: flex; justify-content: space-between; align-items: center">
                                         <span id="artworkPrice" style="font-weight: 700; color: #c41818"></span>
                                         <input type="hidden" id="artPirce">
-                                        <button type="button" class="comment-btn" onclick="addCart()" style="border: none; border-radius: 50%; width: 30px; height: 30px">
+                                        <button type="button" class="comment-btn" onclick="addCart()" id="addCart" style="display:flex;border: none; border-radius: 50%; width: 30px; height: 30px">
                                             <i class="fa-solid fa-cart-plus"></i>
+                                        </button>
+                                        <button type="button" class="comment-btn" onclick="report()" style="border: none; border-radius: 50%; width: 30px; height: 30px">
+                                            <i class="fa-solid fa-exclamation"></i>
                                         </button>
                                         <div class="success-msg" id="success-msg" style="display:none">
                                             <i class="fa fa-check"></i>
@@ -64,6 +67,7 @@
                                                             <div class="comment-container" style="max-height: 250px; overflow: auto">
                                                                 <div id="apiDataContainer"></div>
                                                                 <script>
+                                                                    
                                                                     $(document).ready(function () {
                                                                         var artworkId = sessionStorage.getItem("artworkID");
                                                                         $.ajax({
@@ -116,7 +120,30 @@
                                                                         const formattedDate = new Date(dateString).toLocaleDateString('vi-VN', options);
                                                                         return `<div class="comment-date">${formattedDate}</div>`;
                                                                     }
+                                                                    function report() {
+                                                                        var userId = sessionStorage.getItem('userId');
+                                                                        var artworkPId = sessionStorage.getItem('artworkID');
+                                                                        const data = {
+                                                                           
+                                                                            artworkPId: artworkPId,
+                                                                            userId: userId,
+                                                                            description: "report"
+                                                                        };
 
+                                                                        $.ajax({
+                                                                            url: 'https://localhost:7008/api/Report/CreateReport',
+                                                                            type: 'POST',
+                                                                            data: JSON.stringify(data),
+                                                                            contentType: 'application/json',
+                                                                            success: function (data) {
+                                                                                alert('Report sent successfully!');
+
+                                                                            },
+                                                                            error: function (error) {
+                                                                                alert('Report sent error');
+                                                                            }
+                                                                        });
+                                                                    }
                                                                 </script>
 
                                                             </div>
@@ -322,6 +349,20 @@
                                         countlike();
                                         countComment();
                                         countFollow();
+                                        var userId = sessionStorage.getItem('userId');
+                                        var artworkPId = sessionStorage.getItem('artworkID');
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkPId}`,
+                                            success: function (response) {
+                                                if (response && response.dataObject && response.dataObject.userId == userId) {
+                                                    document.getElementById('addCart').style.display = "none";
+                                                }
+                                            },
+                                            error: function (error) {
+                                                console.error('Lỗi:', error);
+                                            }
+                                        });
                                     });
 
 
@@ -334,6 +375,9 @@
                                             type: 'GET',
                                             url: `https://localhost:7008/api/Arwork/GetArtworkById?artworkid=${artworkPId}`,
                                             success: function (respone) {
+                                                if (respone.dataObject.userId == userId) {
+                                                    document.getElementById('addCart').display.style = "none";
+                                                }
 
                                                 $.ajax({
                                                     type: 'GET',
@@ -511,7 +555,8 @@
                                         // Ẩn message sau một khoảng thời gian (ví dụ: 3 giây)
                                         setTimeout(function () {
                                             $(".success-msg").fadeOut();
-                                        }, 3000); // 3000 milliseconds = 3 seconds
+                                        }, 3000);
+                                        location.reload();// 3000 milliseconds = 3 seconds
                                     }
 
 
@@ -601,7 +646,7 @@
                                             document.getElementById('artworkTitle').innerText = data.contentArtwork;
                                             // Thêm các thông tin khác tùy thuộc vào cấu trúc dữ liệu của API
                                             document.getElementById('artworkImage').src = 'data:image/jpeg;base64,' + data.pictureArtwork;
-                                            document.getElementById('artworkPrice').innerText = (data.priceArtwork).toLocaleString('vi-VN') + 'VNĐ';
+                                            document.getElementById('artworkPrice').innerText = (data.priceArtwork).toLocaleString('vi-VN') + 'đ';
                                             document.getElementById('artPirce').value = (data.priceArtwork);
                                             var datePost = new Date(data.datePost);
                                             var formattedDate = ('0' + datePost.getDate()).slice(-2) + '-' + ('0' + (datePost.getMonth() + 1)).slice(-2) + '-' + datePost.getFullYear();
@@ -724,7 +769,7 @@
 </section>
 
 
-<span style="display: flex; justify-content: center; align-items: center; margin: 0 0 25px; font-weight: 600; font-size: 18px">More To Explore</span>
+@*<span style="display: flex; justify-content: center; align-items: center; margin: 0 0 25px; font-weight: 600; font-size: 18px">More To Explore</span>
 
 <section class="">   
     <div class="container-list-image" style="margin: 0 30px">
@@ -782,7 +827,7 @@
             </div>
         </div>
     </div>
-</section>
+</section>*@
 
 <!-- HTML structure -->
 

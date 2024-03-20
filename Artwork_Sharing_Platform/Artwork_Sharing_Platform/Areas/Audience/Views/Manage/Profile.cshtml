@@ -182,7 +182,7 @@
             <div style="display: flex; justify-content: space-between;">
                 <div class="left-child" style="display: flex; align-items: center;">
                     <h2 id="userNameProfile" class="font-weight-bold title"></h2>
-                    <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" style="margin-left: 10px;" />
+                    <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" style="display:none; margin-left: 10px;" />
                 </div>
             </div>
 
@@ -203,7 +203,7 @@
                 </h4>
                 <h4 class="your-art" style="margin: 0 15px">|</h4>
                 <h4 class="" style="">
-                    <a class="custom-link" href="" style="">Sell</a>
+                    <a class="custom-link" href="~/Audience/Manage/Sell" style="">Sell</a>
                 </h4>
             </div>
 
@@ -245,7 +245,7 @@
                 // Hiển thị dữ liệu từ API lên trang
 
                 if (response.message == 'Follow found') {
-                    document.getElementById('followNumber').innerText = response.dataObject + " Follower(s)";
+                    document.getElementById('followNumber').innerText = response.dataObject;
                 }
                 else if (response.message == 'Follow not found') {
                     document.getElementById('followNumber').innerText = 0;
@@ -291,8 +291,9 @@
             type: 'GET',
             url: `https://localhost:7008/api/Person/email?email=${email}`,
             success: function (response1) {
-                if (response1.isVerifiedPage == true) {
+                if (response1.isVerifiedPage === true) {
                     document.getElementById('Confirmed').style.display = "flex";
+                    document.getElementById('blueTick').style.display = "flex";
                 }
                 else {
                     $.ajax({

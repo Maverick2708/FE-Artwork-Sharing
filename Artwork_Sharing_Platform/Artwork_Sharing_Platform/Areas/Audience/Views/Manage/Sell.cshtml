@@ -247,7 +247,7 @@
                 <div style="display: flex; justify-content: space-between;">
                     <div class="left-child" style="display: flex; align-items: center;">
                         <h2 id="userNameProfile" class="font-weight-bold title"></h2>
-                        <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" style="display:none; margin-left: 10px;" />
+                        <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" style="display:none; margin-left: 10px;"/>
                     </div>
                     <div class="right-child">
 
@@ -264,14 +264,14 @@
                         <a class="custom-link" href="~/Audience/Manage/Profile" style="">Art</a>
                     </h4>
                     <h4 class="your-art" style="margin: 0 15px">|</h4>
+                    <h4 class="" style="">
+                        <a class="custom-link" href="~/Audience/Manage/Order" style="">Order</a>
+                    </h4>
+                    <h4 class="your-art" style="margin: 0 15px">|</h4>
                     <div>
-                        <h4 class="" style="font-weight: 700">Order</h4>
+                        <h4 class="" style="font-weight: 700">Sell</h4>
                         <div style="background-color: black; height: 3px; border-radius: 5px;"></div>
                     </div>
-                    <h4 class="your-art" style="margin: 0 15px">|</h4>
-                    <h4 class="" style="">
-                        <a class="custom-link" href="~/Audience/Manage/Sell" style="">Sell</a>
-                    </h4>
                 </div>
 
             </div>
@@ -308,7 +308,7 @@
                                                 <th scope="col">Tổng tiền</th>
                                                 <th scope="col">Mã tranh</th>
                                                 <th scope="col">Thêm...</th>
-                                                
+                                                <th scope="col">Hình thức thanh toán</th>
                                             </tr>
                                         </thead>
                                         <tbody id="apiDataContainer" style="text-align: center">
@@ -854,71 +854,34 @@
             var userId = sessionStorage.getItem('userId');
             $.ajax({
                 type: 'GET',
-                url: `https://localhost:7008/api/Order/GetOrderByUserId?userid=${userId}`,
+                url: `https://localhost:7008/api/Order/GetOrdersByUserIdRe?userid=${userId}`,
                 success: function (response) {
                     if (response.status === "Success" && Array.isArray(response.dataObject) && response.dataObject.length > 0) {
-                        var groupedOrders = {};
-
                         response.dataObject.forEach(function (order) {
-                            order.orderDetails.forEach(function (orderDetail) {
-                                if (!groupedOrders.hasOwnProperty(orderDetail.billOrderId)) {
-                                    groupedOrders[orderDetail.billOrderId] = {
-                                        billOrderId: orderDetail.billOrderId,
-                                        dateOrder: formatDate(orderDetail.dateOrder),
-                                        totalBill: formatPrice(orderDetail.totalBill),
-                                        fullname: orderDetail.fullName,
-                                        address: orderDetail.address,
-                                        phone: orderDetail.phone,
-                                        
-                                        artworks: []
-                                    };
-                                }
+                            var artworksHtml = order.orderDetail.map(function (orderDetail) {
+                                return `${orderDetail.artworkPId}`;
+                            }).join(", ");
 
-                                // Giải mã pictureArtwork từ base64
-                                var imageDataUrl = 'data:image/jpeg;base64,' + orderDetail.artwork.pictureArtwork;
-
-                                groupedOrders[orderDetail.billOrderId].artworks.push({
-                                    artworkPId: orderDetail.artworkPId,
-                                    priceOrder: formatPrice(orderDetail.priceOrder),
-                                    quanity: orderDetail.quanity,
-                                    address: orderDetail.address,
-                                    phone: orderDetail.phone,
-                                    fullName: orderDetail.fullName,
-                                    status: orderDetail.status,
-                                    imageUrl: imageDataUrl
-                                });
-                            });
+                            const strHTML = `
+                        <tr class="rounded" style="background-color: white;">
+                            <td class="item order-id">${order.orderID}</td>
+                            <td class="item">${formatDate(order.orderDetail[0].dateOrder)}</td>
+                            <td class="item">${formatPrice(order.totalBill)}</td>
+                            <td class="item">${artworksHtml}</td>
+                            <td class="item">
+                                <a href="#" class="order-detail-link">Chi tiết</a>
+                            </td>
+                        </tr>
+                    `;
+                            $('#apiDataContainer').append(strHTML);
                         });
-
-                        for (var orderId in groupedOrders) {
-                            if (groupedOrders.hasOwnProperty(orderId)) {
-                                var order = groupedOrders[orderId];
-                                var artworksHtml = order.artworks.map(function (artwork) {
-                                    return `${artwork.artworkPId}`;
-                                }).join(", ");
-
-                                const strHTML = `
-                            <tr class="rounded" style="background-color: white;">
-                                <td class="item order-id">${order.billOrderId}</td>
-                                <td class="item">${order.dateOrder}</td>
-                                <td class="item">${order.totalBill}</td>
-                                <td class="item">${artworksHtml}</td>
-
-                                <td class="item">
-                                    <a href="#" class="order-detail-link">Chi tiết</a>
-                                </td>
-                            </tr>
-                        `;
-                                $('#apiDataContainer').append(strHTML);
-                            }
-                        }
 
                         // Khi người dùng nhấp vào liên kết "Chi tiết"
                         $(document).on('click', '.order-detail-link', function (e) {
                             e.preventDefault();
 
                             var orderId = $(this).closest('tr').find('.item.order-id').text();
-                            var order = groupedOrders[orderId];
+                            var order = response.dataObject.find(o => o.orderID == orderId);
                             showOrderDetails(order);
                         });
                     } else {
@@ -929,6 +892,7 @@
                     console.error('Error:', error);
                 }
             });
+        });
 
             //    function showOrderDetails(order) {
             //        var orderInfoHtml = `
@@ -961,133 +925,97 @@
             //    });
 
 
-            function showOrderDetails(order) {
-                var orderInfoHtml = `
-            <div class="" style="display: flex; justify-content: center; align-items: center;">
-                <div class="col-12 user_history" style="padding: 0.5% 0;">
-                    <div class="order-detail-header" style="background-color: #E65555; display: space-btween; padding-left: 5px; text-align: center;">
-                        <h2 style="font-weight: bold; font-size: 2rem; padding-left: 1%; color: white;">Chi tiết đơn hàng</h2>
-                        <span class="close">&times;</span>
-                    </div>
-                    <div style="display: flex; align-items: center; justify-content: center; padding: 0 1%;">
-                        <div class="order-detail-body">
-                            <div class="body-head" style="display: flex; align-items: center; justify-content: space-between;">
-                                <h3 style="font-weight: bold; font-size: 1rem; margin: 5px 0;"><b>Mã đơn hàng: </b>${order.billOrderId}</h3>
-                                <h3 style="font-weight: bold; font-size: 1rem; margin: 5px 0;"><b>Ngày đặt: </b>${order.dateOrder}</h3>
+        function showOrderDetails(order) {
+            var orderInfoHtml = `
+        <div class="" style="display: flex; justify-content: center; align-items: center;">
+            <div class="col-12 user_history" style="padding: 0.5% 0;">
+                <div class="order-detail-header" style="background-color: #E65555; display: space-btween; padding-left: 5px; text-align: center;">
+                    <h2 style="font-weight: bold; font-size: 2rem; padding-left: 1%; color: white;">Chi tiết đơn hàng</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: center; padding: 0 1%;">
+                    <div class="order-detail-body">
+                        <div class="body-head" style="display: flex; align-items: center; justify-content: space-between;">
+                            <h3 style="font-weight: bold; font-size: 1rem; margin: 5px 0;"><b>Mã đơn hàng: </b>${order.orderID}</h3>
+                            <h3 style="font-weight: bold; font-size: 1rem; margin: 5px 0;"><b>Ngày đặt: </b>${formatDate(order.orderDetail[0].dateOrder)}</h3>
+                        </div>
+                        <div class="body-content" style="margin: 0 0 5px;">
+                            <table class="table" style="text-align: center; border: none; border-collapse: collapse;">
+                                <thead style="font-size: 1rem;">
+                                    <tr>
+                                        <th>
+                                            <h4>Mã sản phẩm</h4>
+                                        </th>
+                                        <th>
+                                            <h4>Ảnh</h4>
+                                        </th>
+                                        <th>
+                                            <h4>Số lượng</h4>
+                                        </th>
+                                        <th>
+                                            <h4>Giá</h4>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${generateArtworksRows(order.orderDetail)}
+                                    <tr>
+                                        <td colspan="4" style="text-align: left; padding-left: 5px;">
+                                            <b>Tổng tiền: </b>
+                                        </td>
+                                        <td>
+                                            ${formatPrice(order.totalBill)}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="user-infor">
+                            <h3 style="font-weight: bold; font-size: 1rem; margin: 15px 0 5px;">Thông tin người nhận</h3>
+                        </div>
+                        <div style="border: 1px solid black; padding: 5px; margin-bottom: 5px;">
+                            <div>
+                                <span>
+                                    <b>Người nhận: </b>${order.orderDetail[0].personInfo.fullName}
+                                </span>
                             </div>
-                            <div class="body-content" style="margin: 0 0 5px;">
-                                <table class="table" style="text-align: center; border: none; border-collapse: collapse;">
-                                    <thead style="font-size: 1rem;">
-                                        <tr>
-                                            <th>
-                                                <h4>Mã sản phẩm</h4>
-                                            </th>
-                                            <th>
-                                                <h4>Ảnh</h4>
-                                            </th>
-                                            <th>
-                                                <h4>Số lượng</h4>
-                                            </th>
-                                            <th>
-                                                <h4>Giá</h4>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${generateArtworksRows(order.artworks)}
-                                        <tr>
-                                            <td colspan="4" style="text-align: left; padding-left: 5px;">
-                                                <b>Tổng tiền: </b>
-                                            </td>
-                                            <td>
-                                                ${order.totalBill}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div>
+                                <span>
+                                    <b>Địa chỉ: </b>${order.orderDetail[0].address}
+                                </span>
                             </div>
-                            <div class="user-infor">
-                                <h3 style="font-weight: bold; font-size: 1rem; margin: 15px 0 5px;">Thông tin người nhận</h3>
-                            </div>
-                            <div style="border: 1px solid black; padding: 5px; margin-bottom: 5px;">
-                                <div>
-                                    <span>
-                                        <b>Người nhận: </b>${order.fullname}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>
-                                        <b>Địa chỉ: </b>${order.address}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>
-                                        <b>Số điện thoại: </b>${order.phone}
-                                    </span>
-                                </div>
-                                
+                            <div>
+                                <span>
+                                    <b>Số điện thoại: </b>${order.orderDetail[0].phone}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    `;
+
+            $('#orderDetailContainer').html(orderInfoHtml);
+            $('#orderDetailPopup').show();
+        }
+
+        function generateArtworksRows(orderDetails) {
+            return orderDetails.map(function (orderDetail) {
+               return `
+            <tr>
+                <td>${orderDetail.artworkPId}</td>
+                <td><img src="data:image/png;base64, ${orderDetail.pictureArtwork}" alt="Artwork Image" style="height: 100px; width: 100px;"></td>
+                <td>${orderDetail.quanity}</td>
+                <td>${formatPrice(orderDetail.priceOrder)}</td>
+            </tr>
         `;
+            }).join("");
+        }
 
-                $('#orderDetailContainer').html(orderInfoHtml);
-                $('#orderDetailPopup').show();
-            }
-
-            function generateArtworksRows(artworks) {
-                return artworks.map(function (artwork) {
-                    return `
-                <tr>
-                    <td>${artwork.artworkPId}</td>
-                    <td><img src="${artwork.imageUrl}" alt="Artwork Image" style="height: 60px; width: 60px;"></td>
-                    <td>${artwork.quanity}</td>
-                    <td>${artwork.priceOrder}</td>
-                </tr>
-            `;
-                }).join("");
-            }
-
-            $(document).on('click', '.close', function () {
-                $('#orderDetailPopup').hide();
-            });
-
-            function generateArtworksRows(artworks) {
-                return artworks.map(function (artwork) {
-                    return `
-                <tr>
-                    <td>${artwork.artworkPId}</td>
-                    <td><img src="${artwork.imageUrl}" alt="Artwork Image" style="height: 80px; width: 80px;"></td>
-                    <td>${artwork.quanity}</td>
-                    <td>${artwork.priceOrder}</td>
-                </tr>
-            `;
-                }).join("");
-            }
-
-            $(document).on('click', '.close', function () {
-                $('#orderDetailPopup').hide();
-            });
-
-            function generateArtworksRows(artworks) {
-                return artworks.map(function (artwork) {
-                    return `
-                <tr>
-                    <td>${artwork.artworkPId}</td>
-                    <td><img src="${artwork.imageUrl}" alt="Artwork Image" style="height: 100px; width: 100px;"></td>
-                    <td>${artwork.quanity}</td>
-                    <td>${artwork.priceOrder}</td>
-                </tr>
-            `;
-                }).join("");
-            }
-
-            $(document).on('click', '.close', function () {
-                $('#orderDetailPopup').hide();
-            });
-
+        $(document).on('click', '.close', function () {
+            $('#orderDetailPopup').hide();
+          
         });
 
         // Hàm định dạng ngày
