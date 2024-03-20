@@ -252,10 +252,10 @@
                             // Iterate through each artwork in the response
                             response.dataObject.forEach(function (genre) {
                                 const strHTML = `
-                                  <li class="nav-item">
-      <a class="nav-link" onclick="SortType('${genre.genreArtwork}')" href="#">${genre.genreArtwork}</a>
-  </li>
-                     `;
+                                <li class="nav-item" style="display: flex; justify-content: center; align-items: center">
+                                    <a class="nav-link" onclick="SortType('${genre.genreArtwork}')" style="" href="#">${genre.genreArtwork}</a>
+                                </li>
+                                `;
 
                                 $('#GerneAPI').append(strHTML);
                                 // Thêm sự kiện click cho nút "More"
@@ -271,6 +271,27 @@
                 });
             });
         </script>
+
+        <style>
+            .navbar-nav::-webkit-scrollbar-track {
+                background-color: #f1f1f1;
+            }
+
+            .navbar-nav::-webkit-scrollbar {
+                height: 4px;
+            }
+
+            .navbar-nav::-webkit-scrollbar-thumb {
+                border-radius: 7px;
+                background: #888;
+                width: 5px;
+            }
+
+                /*.navbar-nav::-webkit-scrollbar-thumb:hover {
+                    background: #555;
+                }*/
+        </style>
+
         <section class="mt-4 mb-5">
             <div class="container mb-4">
                 <h1 class="font-weight-bold title">Explore</h1>
@@ -282,47 +303,21 @@
                         <button class="navbar-light button" type="button" onclick="openArtPopup()">
                             <img src="https://img.icons8.com/ios/150/000000/plus-math.png" alt="Plus Icon">
                         </button>
-                        <div class="collapse navbar-collapse" id="navbarsExplore">
-                            <ul class="navbar-nav active" id="GerneAPI">
-                                @*<li class="nav-item">
-                                    <a class="nav-link" onclick="SortType('Lifestyle')" href="#">Lifestyle</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" onclick="SortType('Animation')" href="#">Animation</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" onclick="SortType('Portrait')" href="#">Portrait</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" onclick="SortType('Scenery')" href="#">Scenery</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" onclick="SortType('Monumental')" href="#">Monumental</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" onclick="SortType('Folk')" href="#">Folk</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" onclick="SortType('Promote')" href="#">Promote</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" onclick="SortType('Religious')" href="#">Religious</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" onclick="SortType('Shui')" href="#">Shui</a>
-                                </li>*@
-                              
-                                <ul class="navbar-nav mr-auto align-items-center">
+                        <div class="collapse navbar-collapse" id="navbarsExplore" style="display: flex; justify-content: center; align-items: center">
+                            <div class="navbar-nav active" id="GerneAPI" style="overflow-x: auto; white-space: nowrap;">
+                                                           
+                            </div>
+                            <div>
+                                <li class="navbar-nav mr-auto align-items-center" >
                                     <form class="bd-search hidden-sm-down">
                                         <input type="text" class="form-control bg-graylight border-0 font-weight-bold" id="search-input" placeholder="Search..." autocomplete="off">
 
-                                        <button type="button" onclick="search()" class="search-button">
+                                        <button type="button" onclick="search()" class="search-button" style="top: 35px">
                                             <img src="https://img.icons8.com/?size=256&id=131&format=png" alt="Search Icon">
                                         </button>
                                     </form>
-
-                                </ul>
-                            </ul>
+                                </li>
+                            </div>
                         </div>
                     </nav>
                 </div>
@@ -345,8 +340,8 @@
                                                 if (artwork.status == true) {
                                                 const strHTML = `
                                                 <div class="card card-pin">
-                                                    <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
-                                                        <div class="overlay">
+                                                    <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image" style="border-radius: 15px">
+                                                        <div class="overlay" style="border-radius: 15px">
                                                             <h2 class="card-title title">${artwork.contentArtwork}</h2>
                                                                 <div class="more">
                                                                     <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
@@ -401,8 +396,8 @@
                                                     if (artwork.status == true) {// Thay đổi từ SearchArtwork thành artwork
                                                         const strHTML = `
 <div class="card card-pin">
-    <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
-    <div class="overlay">
+    <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image" style="border-radius: 15px">
+    <div class="overlay" style="border-radius: 15px">
         <h2 class="card-title title">${artwork.contentArtwork}</h2>
         <div class="more">
             <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
@@ -450,8 +445,8 @@
                                                 if (artwork.status == true) {
                                                     const strHTML = `
                                                    <div class="card card-pin">
-                                                        <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image">
-                                                             <div class="overlay">
+                                                        <img class="card-img" src="data:image/png;base64, ${artwork.pictureArtwork}" alt="Artwork image" style="border-radius: 15px">
+                                                             <div class="overlay" style="border-radius: 15px">
                                                                 <h2 class="card-title title">${artwork.contentArtwork}</h2>
                                                                     <div class="more">
                                                                         <a href="#" class="more-btn" data-artworkid="${artwork.artworkPId}">
