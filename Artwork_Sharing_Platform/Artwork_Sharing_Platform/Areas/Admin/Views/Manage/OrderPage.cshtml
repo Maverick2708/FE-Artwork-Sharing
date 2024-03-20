@@ -32,7 +32,7 @@
                                             </span>
                                         </div>
                                         </div>
-                                        <div class="col-lg-4">
+                                        @*<div class="col-lg-4">
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     Action <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
@@ -45,7 +45,7 @@
                                                     <li><a href="#">Separated link</a></li>
                                                 </ul>
                                             </div>
-                                        </div>
+                                        </div>*@
                                     </div>
 
 
@@ -213,26 +213,83 @@
     //    $("#userDetailModal").modal("show");
     //}
 
+  //  function viewDetail(order) {
+  //      console.log(order);
+  //      const viewOrderModalContent = document.querySelector('#viewOrderModalContent');
+  //      let html = '';
+  //      order.orderDetails.forEach((item) => {
+  //          html += `
+  //  <p><strong>Order ID:</strong> ${item.orderDetailId}</p>
+  //  <p><strong>Date Order:</strong> ${formatDate(item.dateOrder)}</p>
+  //  <p><strong>Price Order:</strong> ${item.priceOrder}</p>
+  //  <p><strong>Artwork ID:</strong> ${item.artworkPId}</p>
+  //  <p><strong>Quantity:</strong> ${item.quanity}</p>
+  //  <p><strong>Address:</strong> ${item.address}</p >
+  //  <p><strong>Phone:</strong> ${item.phone}</p>
+  //  <p><strong>Full Name:</strong> ${item.fullName}</p>
+  //  <p><strong>Status:</strong> ${item.status ? "Active" : "Inactive"}</p>
+  //  <p><strong> =============================== </strong> </p></br>
+  //`;
+  //      });
+  //      viewOrderModalContent.innerHTML = html;
+  //      $('#viewOrderModal').modal('show');
+  //  }
+
+
+    // Function to fetch artwork details by ID
+    function fetchArtworkDetails(artworkId, callback) {
+        // Call the API and use the artworkId to get the details
+        // Assuming you're using jQuery's AJAX method for API calls
+        $.ajax({
+            url: "https://localhost:7008/api/Arwork/GetAllArtwork",
+            method: "GET",
+            success: (data) => {
+                // Filter the data to find the artwork with the matching ID
+                const artwork = data.find((artwork) => artwork.artworkPId === artworkId);
+                // Call the provided callback function with the artwork as an argument
+                callback(artwork);
+            },
+            error: (xhr, status, error) => {
+                console.error(error);
+            },
+        });
+    }
+
+    // Modify the viewDetail function
     function viewDetail(order) {
         console.log(order);
-        const viewOrderModalContent = document.querySelector('#viewOrderModalContent');
-        let html = '';
+        const viewOrderModalContent = document.querySelector("#viewOrderModalContent");
+        let html = "";
         order.orderDetails.forEach((item) => {
-            html += `
-    <p><strong>Order ID:</strong> ${item.orderDetailId}</p>
-    <p><strong>Date Order:</strong> ${formatDate(item.dateOrder)}</p>
-    <p><strong>Price Order:</strong> ${item.priceOrder}</p>
-    <p><strong>Artwork ID:</strong> ${item.artworkPId}</p>
-    <p><strong>Quantity:</strong> ${item.quanity}</p>
-    <p><strong>Address:</strong> ${item.address}</p >
-    <p><strong>Phone:</strong> ${item.phone}</p>
-    <p><strong>Full Name:</strong> ${item.fullName}</p>
-    <p><strong>Status:</strong> ${item.status ? "Active" : "Inactive"}</p>
-    <p><strong> =============================== </strong> </p></br>
-  `;
+            // Fetch the artwork details and display the image
+            fetchArtworkDetails(item.artworkPId, (artwork) => {
+                html += `
+        <p><strong>Order ID:</strong> ${item.orderDetailId}</p>
+        <p><strong>Date Order:</strong> ${formatDate(item.dateOrder)}</p>
+        <p><strong>Price Order:</strong> ${item.priceOrder}</p>
+        <p><strong>Artwork ID:</strong> ${item.artworkPId}</p>
+        <p><strong>Quantity:</strong> ${item.quanity}</p>
+        <p><strong>Address:</strong> ${item.address}</p>
+        <p><strong>Phone:</strong> ${item.phone}</p>
+        <p><strong>Full Name:</strong> ${item.fullName}</p>
+        <p><strong>Status:</strong> ${item.status ? "Active" : "Inactive"}</p>
+        <p class="artwork-image"></p>
+        <p><strong>===============================</strong></p></br>
+      `;
+
+                viewOrderModalContent.innerHTML = html;
+
+                // Display the image
+                if (artwork && artwork.pictureArtwork) {
+                    const pictureImg = document.createElement("img");
+                    pictureImg.src = `data:image/jpeg;base64,${artwork.pictureArtwork}`;
+                    pictureImg.style.height = "100px";
+                    document.querySelectorAll(".artwork-image")[0].innerHTML = "";
+                    document.querySelectorAll(".artwork-image")[0].appendChild(pictureImg);
+                }
+            });
         });
-        viewOrderModalContent.innerHTML = html;
-        $('#viewOrderModal').modal('show');
+        $("#viewOrderModal").modal("show");
     }
 
     // Helper function to format the date
