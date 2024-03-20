@@ -377,12 +377,19 @@
         const code = urlParams.get('code');
         const email = urlParams.get('email');
 
+
+        console.log('code: ', code);
+        console.log('email: ', email);
+
+        console.log('encode code: ', encodeURIComponent(code));
+
         if (code && email) {
             $.ajax({
-                url: `https://localhost:7008/api/Person/ConfirmEmailAsync?email=${email}&token=${code}`,
+                url: `https://localhost:7008/api/Person/ConfirmEmailAsync?email=${email}&token=${encodeURIComponent(code)}`,
                 method: 'POST',
                 success: function (result) {
-                    if (result.status) {
+                    console.log('API Response:', result);
+                    if (result.status === "Success") {
                         $('#error-message').text('Email đã được xác thực thành công');
                     } else {
                         $('#error-message').text('Xác thực email thất bại');
@@ -413,7 +420,7 @@
 
                 var username = $('input[name="username"]').val();
                 var password = $('input[name="password"]').val();
-
+            
                 var loginData = {
                     accountEmail: username,
                     accountPassword: password
@@ -440,9 +447,11 @@
             var userEmail = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
             sessionStorage.setItem('userEmail', userEmail);
             sessionStorage.setItem('jwtToken', JwtToken);
+           
             var storedUserEmail = sessionStorage.getItem('userEmail');
-            console.log(storedUserEmail);
-
+          
+           
+        
             checkUserRole(storedUserEmail, decodedToken);
         }
 
