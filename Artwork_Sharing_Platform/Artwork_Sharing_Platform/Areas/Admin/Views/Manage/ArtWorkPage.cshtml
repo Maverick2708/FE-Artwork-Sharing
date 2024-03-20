@@ -18,13 +18,15 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">
-                        <div class="input-group custom-search-form col-lg-8">
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" type="button" onclick="searchTable()">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
+                        <div class="col-lg-8">
+                            <div class="input-group custom-search-form col-lg-12">
+                                <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="searchTable()">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button" onclick="searchTable()">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
                         </div>
 
                     </div>
@@ -192,5 +194,28 @@
     // Helper function to format the date
     function formatDate(date) {
         return new Date(date).toLocaleDateString();
+    }
+
+    // Function to search the table based on input value
+    function searchTable() {
+        // Get the input value
+        const inputValue = document.getElementById("searchInput").value.toLowerCase();
+
+        // Get all table rows
+        const tableRows = document.querySelectorAll("#transactionTable tbody tr");
+
+        // Loop through the rows and hide/show based on input value
+        tableRows.forEach((row) => {
+            const artworkIdCell = row.children[0];
+            const userIdCell = row.children[1];
+
+            const artworkIdText = artworkIdCell.textContent.toLowerCase();
+            const userIdText = userIdCell.textContent.toLowerCase();
+
+            const showRow = artworkIdText.includes(inputValue) || userIdText.includes(inputValue);
+
+            // Toggle visibility of the row
+            row.style.display = showRow ? "" : "none";
+        });
     }
 </script>

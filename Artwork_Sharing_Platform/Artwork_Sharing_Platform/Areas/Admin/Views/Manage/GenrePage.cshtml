@@ -24,7 +24,7 @@
                                 <div class="row">
                                     <div class="col-lg-8">
                                         <div class="input-group custom-search-form col-lg-12">
-                                            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                                            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="searchTable()">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-primary" type="button" onclick="searchTable()">
                                                     <i class="fa fa-search"></i>
@@ -32,20 +32,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-lg-2">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Action <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Action</a></li>
-                                                <li><a href="#">Another action</a></li>
-                                                <li><a href="#">Something else here</a></li>
-                                                <li role="separator" class="divider"></li>
-                                                <li><a href="#">Separated link</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    
                                     <div class="col-lg-1">
                                         <button id="create" class="btn btn-default" type="submit">Create</button>
                                     </div>
@@ -329,4 +316,26 @@
             $(modal).modal('show');
         }
 
+        // Function to search the table based on input value
+        function searchTable() {
+            // Get the input value
+            const inputValue = document.getElementById("searchInput").value.toLowerCase();
+
+            // Get all table rows
+            const tableRows = document.querySelectorAll("#transactionTable tbody tr");
+
+            // Loop through the rows and hide/show based on input value
+            tableRows.forEach((row) => {
+                const genreIdCell = row.children[0];
+                const genreArtworkCell = row.children[1];
+
+                const genreIdText = genreIdCell.textContent.toLowerCase();
+                const genreArtworkText = genreArtworkCell.textContent.toLowerCase();
+
+                const showRow = genreIdText.includes(inputValue) || genreArtworkText.includes(inputValue);
+
+                // Toggle visibility of the row
+                row.style.display = showRow ? "" : "none";
+            });
+        }
     </script>
