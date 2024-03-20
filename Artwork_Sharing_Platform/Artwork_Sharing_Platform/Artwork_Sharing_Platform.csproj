@@ -429,6 +429,14 @@
     <Content Include="Areas\Audience\Views\Manage\Cart.cshtml" />
     <Content Include="Areas\Audience\Views\Manage\Order.cshtml" />
     <Content Include="Areas\Audience\Views\Manage\Sell.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\UserPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\RequestPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\UserPageBySuperAdmin.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\ReportPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\OrderPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\ArtWorkPage.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\GenrePage.cshtml" />
+    <Content Include="Areas\Admin\Views\Manage\ProfilePage.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
