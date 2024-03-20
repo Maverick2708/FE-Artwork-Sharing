@@ -1,4 +1,20 @@
 ﻿
+<style>
+    .dropdown-content-manageUser::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown-content-manageUser::-webkit-scrollbar {
+        height: 2px;
+        width: 4px;
+    }
+
+    .dropdown-content-manageUser::-webkit-scrollbar-thumb {
+        border-radius: 7px;
+        background: #888;
+        width: 5px;
+    }
+</style>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
     <a class="navbar-brand font-weight-bolder mr-3" href="~/Audience/Manage/Manage"><img src="~/Assets/template-pintereso-bootstrap-html-master/docs/assets/img/logo.png"></a>
@@ -21,15 +37,15 @@
             </li>
             <li class="notification-manageUser">
                 
-                <a class="nav-link" href="#">
-                    <img src="https://img.icons8.com/?size=256&id=pXOksSoyv6At&format=png" alt="Notification Icon" width="20" />
-                </a>
+                
+                <img src="https://img.icons8.com/?size=256&id=pXOksSoyv6At&format=png" alt="Notification Icon" width="20" />
+                
 
                 <!-- Dropdown thông báo -->
-                <div class="dropdown-manageUser">
-                    <div class="dropdown-content-manageUser">
+                <div class="dropdown-manageUser" style="background-color: #f1f1f1">
+                    <div class="dropdown-content-manageUser" style="max-height: 500px; margin-right: 50px; overflow: auto">
                        
-                        <div id="apiDataContainer2"></div>
+                        <div id="apiDataContainer2" class="notice" @*style="max-height: 500px; margin-right: 50px; overflow: auto"*@ ></div>
 
                     </div>
                 </div>
@@ -67,12 +83,16 @@
                                     response.dataObject.forEach(function (noti) {
                                       
                                      const strHTML2 = `
-                    <div class="notification-item-manageUser">
-                    <img src="data:image/png;base64, ${noti.avatar}" alt="Avatar" class="avatar-manageUser">
-                        <span class="name-manageUser">${noti.fullName} </span>
-                            <span class="message-manageUser">${noti.contentNoti}</span>
+                    <div class="" style="display: flex; align-items: center; margin: 5px 0; border-bottom: solid 1px #cdcdcd">
+                    <div style="width: 60px">
+                        <img src="data:image/png;base64, ${noti.avatar}" alt="Avatar" class="avatar-manageUser" style="height: 40px; width: 40px; border-radius: 50%">
                     </div>
-                     <span class="date-manageUser">${formatDate(noti.dateNoti)}</span>
+                    <div style="margin-left: 8px">
+                        <div class="message-manageUser" style="font-size: 15px; font-weight: 500">${noti.contentNoti}</div>
+                        <div class="date-manageUser" style="font-size: 12px">${formatDate(noti.dateNoti)}</div>
+                    </div>
+                    </div>
+                     
                                     `;
                                         $('#apiDataContainer2').append(strHTML2);
                                     });
