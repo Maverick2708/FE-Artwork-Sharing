@@ -78,7 +78,7 @@
                 row.appendChild(descriptionCell);
 
                 const statusCell = document.createElement('td');
-                statusCell.textContent = transaction.status ? "Approved" : "Rejected";
+                statusCell.textContent = transaction.status ? "Waiting" : "Approved";
                 row.appendChild(statusCell);
 
                 const actionCell = document.createElement('td');
@@ -134,7 +134,7 @@
             })
             .then(data => {
                 if (data.status === 'Success') {
-                    alert('Request rejected successfully');
+                    alert('Request approved successfully');
                     window.location.reload();
                 } else {
                     throw new Error('Error rejecting request');
