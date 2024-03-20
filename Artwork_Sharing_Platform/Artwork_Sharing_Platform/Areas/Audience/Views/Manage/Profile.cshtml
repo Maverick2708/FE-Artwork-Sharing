@@ -182,7 +182,7 @@
             <div style="display: flex; justify-content: space-between;">
                 <div class="left-child" style="display: flex; align-items: center;">
                     <h2 id="userNameProfile" class="font-weight-bold title"></h2>
-                    <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" style="margin-left: 10px;" />
+                    <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" style="display:none; margin-left: 10px;" />
                 </div>
             </div>
 
@@ -203,7 +203,7 @@
                 </h4>
                 <h4 class="your-art" style="margin: 0 15px">|</h4>
                 <h4 class="" style="">
-                    <a class="custom-link" href="" style="">Sell</a>
+                    <a class="custom-link" href="~/Audience/Manage/Sell" style="">Sell</a>
                 </h4>
             </div>
 
@@ -245,7 +245,7 @@
                 // Hiển thị dữ liệu từ API lên trang
 
                 if (response.message == 'Follow found') {
-                    document.getElementById('followNumber').innerText = response.dataObject + " Follower(s)";
+                    document.getElementById('followNumber').innerText = response.dataObject;
                 }
                 else if (response.message == 'Follow not found') {
                     document.getElementById('followNumber').innerText = 0;
@@ -291,8 +291,9 @@
             type: 'GET',
             url: `https://localhost:7008/api/Person/email?email=${email}`,
             success: function (response1) {
-                if (response1.isVerifiedPage == true) {
+                if (response1.isVerifiedPage === true) {
                     document.getElementById('Confirmed').style.display = "flex";
+                    document.getElementById('blueTick').style.display = "flex";
                 }
                 else {
                     $.ajax({
@@ -390,9 +391,9 @@
 
         // Create a Bootstrap modal for the popup
         var modal3 = `
-                          <div class="modal" id="artPopup" tabindex="-1" role="dialog">
+                          <div class="modal" id="artPopup" tabindex="-1" role="dialog" style="margin-top: 50px">
                               <div class="modal-dialogg" role="document" style="display: flex; align-item: center; justify-content: center">
-                                  <div class="modal-content" style="width: 70%">
+                                  <div class="modal-content" style="width: 50%">
                                       <div class="modal-header">
                                           <h5 class="modal-title">Information</h5>
                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -401,7 +402,7 @@
                                       </div>
                                       <div class="modal-body">
                                               <label for="CurrentBackground">Background:</label>
-                                                   <img src="" id="CurrentBackground" class="form-control mb-2" style="object-fit: cover; width: 200px; height: 200px;">
+                                                   <img src="" id="CurrentBackground" class="form-control mb-2" style="object-fit: cover; width: 100%; height: 80%;">
                                                  <label for="Background">Select Background:</label>
                                                 <input type="file" id="Background" accept="image/*,.png" class="form-control mb-2" onchange="checkBRFileSelection()">
                                                 <img id="previewImageBR" src="#" alt="Ảnh xem trước" style="display: none; max-width: 100%; max-height: 100%;">
@@ -492,21 +493,29 @@
 
         // Create a Bootstrap modal for the popup
         var modal2 = `
-                            <div class="modal" id="artPopup" tabindex="-1" role="dialog">
+                            <div class="modal" id="artPopup" tabindex="-1" role="dialog" style="margin-top: 50px">
                                 <div class="modal-dialogg" role="document" style="display: flex; align-item: center; justify-content: center">
-                                    <div class="modal-content" style="width: 70%">
+                                    <div class="modal-content" style="width: 50%">
                                         <div class="modal-header">
                                             <h5 class="modal-title">Information</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <div class="modal-body">
-                                               <label for="CurrentAvatar">Avatar:</label>
+                                        <div class="modal-body" style="display: flex; justify-content: center; align-items: center;">
+                                               
+                                                    <div>
+                                                    <label for="CurrentAvatar">Avatar:</label>
                                                     <img src="" id="CurrentAvatar" class="form-control mb-2" style="width: 200px; height: 200px;">
-                                                    <label for="Avatar">Select Image:</label>
+                                                    </div>
+                                                    
+                                                    <div style="margin-left: 30px">
+                                                        <label for="Avatar">Select Image:</label>
                                                     <input type="file" id="Avatar" accept="image/*,.png" class="form-control mb-2" onchange="checkAvatarFileSelection()">
                                                      <img id="previewImage" src="#" alt="Ảnh xem trước" style="display: none; max-width: 100%; max-height: 100%;">
+
+                                                    </div>
+                                                    
 
 
                                         </div>
@@ -599,9 +608,9 @@
 
         // Create a Bootstrap modal for the popup
         var modal = `
-                                <div class="modal" id="artPopup" tabindex="-1" role="dialog">
+                                <div class="modal" id="artPopup" tabindex="-1" role="dialog" style="margin-top: 50px;">
                                     <div class="modal-dialogg" role="document" style="display: flex; align-item: center; justify-content: center">
-                                        <div class="modal-content" style="width: 70%">
+                                        <div class="modal-content" style="width: 50%">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Information</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -609,14 +618,14 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <div style="display: flex">
+                                                <div style="">
                                                     <label for="Fullname">Full name:</label>
                                                     <input type="text" id="Fullname" class="form-control mb-2">
                                                      <label>  </label>
                                                     <label for="Phone">Phone number:</label>
                                                     <input type="text" id="Phone" class="form-control mb-2">
                                                 </div>
-                                                <div style="display: flex">
+                                                <div style="">
                                                     <label for="Address">Address:</label>
                                                     <input type="text" id="Address" class="form-control mb-2">
                                                     <label for="Birth">Brith Day:</label>
