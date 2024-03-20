@@ -124,6 +124,20 @@
     .update-profile-button:hover, .update-background-button:hover {
         background-color: #A0A0A0;
     }
+
+    .custom-link {
+        color: #7d7e7f; /* Màu chữ mặc định */
+        font-weight: 500;
+    }
+
+    .custom-link:hover {
+        padding: 3px 15px;
+        border-radius: 5px;
+        color: #343A40;
+        background-color: #dbdbdb; /* Màu nền khi di chuột vào */
+        text-decoration: none; /* Xóa gạch chân */
+        /*transition: background-color 0.3s;*/ /* Áp dụng hiệu ứng chuyển đổi màu nền */
+    }   
 </style>
 
 
@@ -166,13 +180,12 @@
 
 
             <div style="display: flex; justify-content: space-between;">
-                <div class="left-child">
+                <div class="left-child" style="display: flex; align-items: center;">
                     <h2 id="userNameProfile" class="font-weight-bold title"></h2>
-                </div>
-                <div class="right-child" style="display: flex; align-items: center; justify-content: center; margin-left: 10px;">
-                    <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" />
+                    <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" style="margin-left: 10px;" />
                 </div>
             </div>
+
             <div style="display: flex;">
                 <h7 class="your-art" id="followNumber"></h7>
                 <h7 style="margin-left: 5px">followers</h7>
@@ -186,7 +199,11 @@
                 </div>
                 <h4 class="your-art" style="margin: 0 15px">|</h4>
                 <h4 class="your-art" style="">
-                    <a class="" href="~/Audience/Manage/Order" style="font-weight: 500; color: #7d7e7f">Order</a>
+                    <a class="custom-link" href="~/Audience/Manage/Order" style="">Order</a>
+                </h4>
+                <h4 class="your-art" style="margin: 0 15px">|</h4>
+                <h4 class="" style="">
+                    <a class="custom-link" href="" style="">Sell</a>
                 </h4>
             </div>
 

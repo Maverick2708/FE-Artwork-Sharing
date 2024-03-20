@@ -186,6 +186,22 @@
         .update-profile-button:hover, .update-background-button:hover {
             background-color: #A0A0A0;
         }
+
+
+        .custom-link {
+            color: #7d7e7f; /* Màu chữ mặc định */
+            font-weight: 500;
+        }
+
+        .custom-link:hover {
+            padding: 3px 15px;
+            border-radius: 5px;
+            color: #343A40;
+            background-color: #dbdbdb; /* Màu nền khi di chuột vào */
+            text-decoration: none; /* Xóa gạch chân */
+            /*transition: background-color 0.3s;*/ /* Áp dụng hiệu ứng chuyển đổi màu nền */
+        }
+            
     </style>
     <title>ARS</title>
 </head>
@@ -193,7 +209,7 @@
 <body>
     <div style="display: flex; justify-content: center; align-items:center;">
         <div class="col-md-10">
-            <div class="jumbotron border-round-0 min-50vh" id="backgroundProfile" style="background-image: url();">
+            <div class="jumbotron border-round-0 min-50vh" id="backgroundProfile" style="background-image: url(); border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
                 <button class="update-background-button" id="update-background" onclick="UpdateBackgroundPopUp()" style="display: flex; justify-content: space-between; align-items: center;">
                     <i class="fa-solid fa-camera" style="margin-right: 10px"></i>
                     <h4 style="font-size: 15px; margin: 0 auto;">Cập nhật ảnh bìa</h4>
@@ -220,7 +236,7 @@
                 </button>
             </div>
 
-            <div class="profile mb-4">
+            <div class="profile mb-4" style="">
                 <div class="avatar-container">
                     <img id="avatarProfile" src="" class="avatar mt-neg100 mb-4 rounded-circle">
                     <button class="update-avatar-button" id="circleButton" onclick="changeAvatarPopup()">
@@ -228,30 +244,34 @@
                     </button>
                 </div>
 
-
                 <div style="display: flex; justify-content: space-between;">
-                    <div class="left-child">
+                    <div class="left-child" style="display: flex; align-items: center;">
                         <h2 id="userNameProfile" class="font-weight-bold title"></h2>
+                        <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" style="margin-left: 10px;" />
                     </div>
-                    <div class="right-child" style="display: flex; align-items: center; justify-content: center; margin-left: 10px;">
-                        <img id="blueTick" src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" width="24" />
+                    <div class="right-child">
+
                     </div>
                 </div>
+
                 <div style="display: flex;">
                     <h7 class="your-art" id="followNumber"></h7>
                     <h7 style="margin-left: 5px">followers</h7>
                 </div>
 
-
                 <div style="display: flex; align-content: center; margin-top: 10px">
-                    <h4 class="your-art" style="">
-                        <a class="" href="~/Audience/Manage/Profile" style="font-weight: 500; color: #7d7e7f">Art</a>
+                    <h4 class="" style="">
+                        <a class="custom-link" href="~/Audience/Manage/Profile" style="">Art</a>
                     </h4>
                     <h4 class="your-art" style="margin: 0 15px">|</h4>
                     <div>
-                        <h4 class="your-art" style="font-weight: 700">Order</h4>
+                        <h4 class="" style="font-weight: 700">Order</h4>
                         <div style="background-color: black; height: 3px; border-radius: 5px;"></div>
                     </div>
+                    <h4 class="your-art" style="margin: 0 15px">|</h4>
+                    <h4 class="" style="">
+                        <a class="custom-link" href="" style="">Sell</a>
+                    </h4>
                 </div>
 
             </div>
@@ -264,71 +284,34 @@
 
     <div class="container">
         <div class="row flex-lg-nowrap">
-            @*<div class="col-12 col-lg-auto mb-3" style="width: 300px;">
-                    <div class="card p-3">
-                        <div class="e-navlist e-navlist--active-bg">
-                            <ul class="nav">
-                                <li class="nav-item">
-                                    <a class="nav-link px-2 active" href="#">
-                                        <i class="fa-solid fa-user mr-3"></i>
-                                        <span>Thông tin tài khoản</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link px-2" href="">
-                                        <i class="fa-solid fa-location-dot mr-3"></i>
-                                        <span>Quản lí địa chỉ</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link px-2" href="" style="color: darkgoldenrod;">
-                                        <i class="fa-solid fa-file-lines mr-3"></i>
-                                        <span>Lịch sử đơn hàng</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link px-2" href="">
-                                        <i class="fa-solid fa-retweet fa-sm mr-3"></i>
-                                        <span>Đổi mật khẩu</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link px-2" href="">
-                                        <i class="fa-solid fa-arrow-right-from-bracket mr-3"></i>
-                                        <span>Đăng xuất</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>*@
             <div class="col">
 
                 <div class="card">
                     <div class="card-body">
                         <div class="e-profile">
-                            <ul class="nav">
-                                <li class="nav-item" id="orderTab">
-                                    <span class="active nav-link" onclick="toggleTab('order')">Danh sách đơn hàng</span>
-                                </li>
-                                <li class="nav-item" id="salesTab">
-                                    <span class="nav-link" onclick="toggleTab('sales')">Danh sách bán</span>
-                                </li>
-                            </ul>
+                            @*<ul class="nav">
+                                    <li class="nav-item" id="orderTab">
+                                        <span class="active nav-link" onclick="toggleTab('order')">Danh sách đơn hàng</span>
+                                    </li>
+                                    <li class="nav-item" id="salesTab">
+                                        <span class="nav-link" onclick="toggleTab('sales')">Danh sách bán</span>
+                                    </li>
+                                </ul>*@
 
                             <div class="tab-content">
                                 <div class="container">
                                     <table class="table table-borderless main">
                                         <thead>
-                                            <tr class="head" style="text-align: center;">
+                                            <tr class="head" style="text-align: center">
                                                 <th scope="col">Mã đơn hàng</th>
                                                 <th scope="col">Ngày đặt hàng</th>
                                                 <th scope="col">Tổng tiền</th>
                                                 <th scope="col">Mã tranh</th>
                                                 <th scope="col">Thêm...</th>
+                                                <th scope="col">Hình thức thanh toán</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="apiDataContainer" style="text-align: center;">
+                                        <tbody id="apiDataContainer" style="text-align: center">
                                             <!-- Dữ liệu sẽ được thêm vào đây -->
                                         </tbody>
 
@@ -494,31 +477,31 @@
 
             // Create a Bootstrap modal for the popup
             var modal3 = `
-                                 <div class="modal" id="artPopup" tabindex="-1" role="dialog">
-                                     <div class="modal-dialogg" role="document" style="display: flex; align-item: center; justify-content: center">
-                                         <div class="modal-content" style="width: 70%">
-                                             <div class="modal-header">
-                                                 <h5 class="modal-title">Information</h5>
-                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                     <span aria-hidden="true">&times;</span>
-                                                 </button>
-                                             </div>
-                                             <div class="modal-body">
-                                                     <label for="CurrentBackground">Background:</label>
-                                                          <img src="" id="CurrentBackground" class="form-control mb-2" style="object-fit: cover; width: 200px; height: 200px;">
-                                                        <label for="Background">Select Background:</label>
-                                                       <input type="file" id="Background" accept="image/*,.png" class="form-control mb-2" onchange="checkBRFileSelection()">
-                                                       <img id="previewImageBR" src="#" alt="Ảnh xem trước" style="display: none; max-width: 100%; max-height: 100%;">
+                                     <div class="modal" id="artPopup" tabindex="-1" role="dialog">
+                                         <div class="modal-dialogg" role="document" style="display: flex; align-item: center; justify-content: center">
+                                             <div class="modal-content" style="width: 70%">
+                                                 <div class="modal-header">
+                                                     <h5 class="modal-title">Information</h5>
+                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                         <span aria-hidden="true">&times;</span>
+                                                     </button>
+                                                 </div>
+                                                 <div class="modal-body">
+                                                         <label for="CurrentBackground">Background:</label>
+                                                              <img src="" id="CurrentBackground" class="form-control mb-2" style="object-fit: cover; width: 200px; height: 200px;">
+                                                            <label for="Background">Select Background:</label>
+                                                           <input type="file" id="Background" accept="image/*,.png" class="form-control mb-2" onchange="checkBRFileSelection()">
+                                                           <img id="previewImageBR" src="#" alt="Ảnh xem trước" style="display: none; max-width: 100%; max-height: 100%;">
 
+                                                 </div>
+                                                  <div class="modal-footer">
+                                             <button type="button" class="btn btn-primary" onclick="EditBR()">Save</button>
+                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                         </div>
                                              </div>
-                                              <div class="modal-footer">
-                                         <button type="button" class="btn btn-primary" onclick="EditBR()">Save</button>
-                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                     </div>
                                          </div>
                                      </div>
-                                 </div>
-                             `;
+                                 `;
 
             // Append the modal HTML to the body
             $('body').append(modal3);
@@ -596,32 +579,32 @@
 
             // Create a Bootstrap modal for the popup
             var modal2 = `
-                                   <div class="modal" id="artPopup" tabindex="-1" role="dialog">
-                                       <div class="modal-dialogg" role="document" style="display: flex; align-item: center; justify-content: center">
-                                           <div class="modal-content" style="width: 70%">
-                                               <div class="modal-header">
-                                                   <h5 class="modal-title">Information</h5>
-                                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                       <span aria-hidden="true">&times;</span>
-                                                   </button>
-                                               </div>
-                                               <div class="modal-body">
-                                                      <label for="CurrentAvatar">Avatar:</label>
-                                                           <img src="" id="CurrentAvatar" class="form-control mb-2" style="width: 200px; height: 200px;">
-                                                           <label for="Avatar">Select Image:</label>
-                                                           <input type="file" id="Avatar" accept="image/*,.png" class="form-control mb-2" onchange="checkAvatarFileSelection()">
-                                                            <img id="previewImage" src="#" alt="Ảnh xem trước" style="display: none; max-width: 100%; max-height: 100%;">
+                                       <div class="modal" id="artPopup" tabindex="-1" role="dialog">
+                                           <div class="modal-dialogg" role="document" style="display: flex; align-item: center; justify-content: center">
+                                               <div class="modal-content" style="width: 70%">
+                                                   <div class="modal-header">
+                                                       <h5 class="modal-title">Information</h5>
+                                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                           <span aria-hidden="true">&times;</span>
+                                                       </button>
+                                                   </div>
+                                                   <div class="modal-body">
+                                                          <label for="CurrentAvatar">Avatar:</label>
+                                                               <img src="" id="CurrentAvatar" class="form-control mb-2" style="width: 200px; height: 200px;">
+                                                               <label for="Avatar">Select Image:</label>
+                                                               <input type="file" id="Avatar" accept="image/*,.png" class="form-control mb-2" onchange="checkAvatarFileSelection()">
+                                                                <img id="previewImage" src="#" alt="Ảnh xem trước" style="display: none; max-width: 100%; max-height: 100%;">
 
 
+                                                   </div>
+                                                    <div class="modal-footer">
+                                               <button type="button" class="btn btn-primary" onclick="EditAvatar()">Save</button>
+                                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                           </div>
                                                </div>
-                                                <div class="modal-footer">
-                                           <button type="button" class="btn btn-primary" onclick="EditAvatar()">Save</button>
-                                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                       </div>
                                            </div>
                                        </div>
-                                   </div>
-                               `;
+                                   `;
 
             // Append the modal HTML to the body
             $('body').append(modal2);
@@ -703,41 +686,41 @@
 
             // Create a Bootstrap modal for the popup
             var modal = `
-                                       <div class="modal" id="artPopup" tabindex="-1" role="dialog">
-                                           <div class="modal-dialogg" role="document" style="display: flex; align-item: center; justify-content: center">
-                                               <div class="modal-content" style="width: 70%">
-                                                   <div class="modal-header">
-                                                       <h5 class="modal-title">Information</h5>
-                                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                           <span aria-hidden="true">&times;</span>
-                                                       </button>
-                                                   </div>
-                                                   <div class="modal-body">
-                                                       <div style="display: flex">
-                                                           <label for="Fullname">Full name:</label>
-                                                           <input type="text" id="Fullname" class="form-control mb-2">
-                                                            <label>  </label>
-                                                           <label for="Phone">Phone number:</label>
-                                                           <input type="text" id="Phone" class="form-control mb-2">
+                                           <div class="modal" id="artPopup" tabindex="-1" role="dialog">
+                                               <div class="modal-dialogg" role="document" style="display: flex; align-item: center; justify-content: center">
+                                                   <div class="modal-content" style="width: 70%">
+                                                       <div class="modal-header">
+                                                           <h5 class="modal-title">Information</h5>
+                                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                               <span aria-hidden="true">&times;</span>
+                                                           </button>
                                                        </div>
-                                                       <div style="display: flex">
-                                                           <label for="Address">Address:</label>
-                                                           <input type="text" id="Address" class="form-control mb-2">
-                                                           <label for="Birth">Brith Day:</label>
-                                                           <input type="date" id="Birth" class="form-control mb-2">
+                                                       <div class="modal-body">
+                                                           <div style="display: flex">
+                                                               <label for="Fullname">Full name:</label>
+                                                               <input type="text" id="Fullname" class="form-control mb-2">
+                                                                <label>  </label>
+                                                               <label for="Phone">Phone number:</label>
+                                                               <input type="text" id="Phone" class="form-control mb-2">
+                                                           </div>
+                                                           <div style="display: flex">
+                                                               <label for="Address">Address:</label>
+                                                               <input type="text" id="Address" class="form-control mb-2">
+                                                               <label for="Birth">Brith Day:</label>
+                                                               <input type="date" id="Birth" class="form-control mb-2">
+                                                           </div>
+
+
+
                                                        </div>
-
-
-
+                                                        <div class="modal-footer">
+                                                   <button type="button" class="btn btn-primary" onclick="Editinfo()">Save</button>
+                                                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                               </div>
                                                    </div>
-                                                    <div class="modal-footer">
-                                               <button type="button" class="btn btn-primary" onclick="Editinfo()">Save</button>
-                                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                           </div>
                                                </div>
                                            </div>
-                                       </div>
-                                   `;
+                                       `;
 
             // Append the modal HTML to the body
             $('body').append(modal);
@@ -909,17 +892,17 @@
                                 }).join(", ");
 
                                 const strHTML = `
-                        <tr class="rounded" style="background-color: white;">
-                            <td class="item order-id">${order.billOrderId}</td>
-                            <td class="item">${order.dateOrder}</td>
-                            <td class="item">${order.totalBill}</td>
-                            <td class="item">${artworksHtml}</td>
+                            <tr class="rounded" style="background-color: white;">
+                                <td class="item order-id">${order.billOrderId}</td>
+                                <td class="item">${order.dateOrder}</td>
+                                <td class="item">${order.totalBill}</td>
+                                <td class="item">${artworksHtml}</td>
 
-                            <td class="item">
-                                <a href="#" class="order-detail-link">Chi tiết</a>
-                            </td>
-                        </tr>
-                    `;
+                                <td class="item">
+                                    <a href="#" class="order-detail-link">Chi tiết</a>
+                                </td>
+                            </tr>
+                        `;
                                 $('#apiDataContainer').append(strHTML);
                             }
                         }
@@ -941,35 +924,168 @@
                 }
             });
 
+            //    function showOrderDetails(order) {
+            //        var orderInfoHtml = `
+            //    <h2>Đơn hàng ${order.billOrderId}</h2>
+            //    <p>Ngày đặt hàng: ${order.dateOrder}</p>
+            //    <p>Tổng hóa đơn: ${order.totalBill}</p>
+            //    <p>Địa chỉ: ${order.address}</p>
+            //    <p>Số điện thoại: ${order.phone}</p>
+            //    <p>Người đặt hàng: ${order.fullname}</p>
+            //`;
+
+            //        var artworksHtml = order.artworks.map(function (artwork) {
+            //            return `
+            //        <div class="artwork-item" style="display: flex; align-items: center;">
+            //            <img src="${artwork.imageUrl}" alt="Artwork Image" style="height: 100px; width: 100px; margin-right: 20px;">
+            //            <div style="display: flex; flex-direction: column;">
+            //                <p style="margin-bottom: 5px;">Số lượng: ${artwork.quanity}</p>
+            //                <p style="margin-bottom: 5px; margin-left: auto;">Giá: ${artwork.priceOrder}</p>
+            //            </div>
+            //        </div>
+            //    `;
+            //        }).join("");
+
+            //        $('#orderDetailContainer').html(orderInfoHtml + artworksHtml);
+            //        $('#orderDetailPopup').show();
+            //    }
+
+            //    $(document).on('click', '.close', function () {
+            //        $('#orderDetailPopup').hide();
+            //    });
+
+
             function showOrderDetails(order) {
                 var orderInfoHtml = `
-            <h2>Đơn hàng ${order.billOrderId}</h2>
-            <p>Ngày đặt hàng: ${order.dateOrder}</p>
-            <p>Tổng hóa đơn: ${order.totalBill}</p>
-            <p>Địa chỉ: ${order.address}</p>
-            <p>Số điện thoại: ${order.phone}</p>
-            <p>Người đặt hàng: ${order.fullname}</p>
-        `;
-
-                var artworksHtml = order.artworks.map(function (artwork) {
-                    return `
-                <div class="artwork-item" style="display: flex; align-items: center;">
-                    <img src="${artwork.imageUrl}" alt="Artwork Image" style="height: 100px; width: 100px; margin-right: 20px;">
-                    <div style="display: flex; flex-direction: column;">
-                        <p style="margin-bottom: 5px;">Số lượng: ${artwork.quanity}</p>
-                        <p style="margin-bottom: 5px; margin-left: auto;">Giá: ${artwork.priceOrder}</p>
+            <div class="" style="display: flex; justify-content: center; align-items: center;">
+                <div class="col-12 user_history" style="padding: 0.5% 0;">
+                    <div class="order-detail-header" style="background-color: #E65555; display: space-btween; padding-left: 5px; text-align: center;">
+                        <h2 style="font-weight: bold; font-size: 2rem; padding-left: 1%; color: white;">Chi tiết đơn hàng</h2>
+                        <span class="close">&times;</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: center; padding: 0 1%;">
+                        <div class="order-detail-body">
+                            <div class="body-head" style="display: flex; align-items: center; justify-content: space-between;">
+                                <h3 style="font-weight: bold; font-size: 1rem; margin: 5px 0;"><b>Mã đơn hàng: </b>${order.billOrderId}</h3>
+                                <h3 style="font-weight: bold; font-size: 1rem; margin: 5px 0;"><b>Ngày đặt: </b>${order.dateOrder}</h3>
+                            </div>
+                            <div class="body-content" style="margin: 0 0 5px;">
+                                <table class="table" style="text-align: center; border: none; border-collapse: collapse;">
+                                    <thead style="font-size: 1rem;">
+                                        <tr>
+                                            <th>
+                                                <h4>Mã sản phẩm</h4>
+                                            </th>
+                                            <th>
+                                                <h4>Ảnh</h4>
+                                            </th>
+                                            <th>
+                                                <h4>Số lượng</h4>
+                                            </th>
+                                            <th>
+                                                <h4>Giá</h4>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${generateArtworksRows(order.artworks)}
+                                        <tr>
+                                            <td colspan="4" style="text-align: left; padding-left: 5px;">
+                                                <b>Tổng tiền: </b>
+                                            </td>
+                                            <td>
+                                                ${order.totalBill}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="user-infor">
+                                <h3 style="font-weight: bold; font-size: 1rem; margin: 15px 0 5px;">Thông tin người nhận</h3>
+                            </div>
+                            <div style="border: 1px solid black; padding: 5px; margin-bottom: 5px;">
+                                <div>
+                                    <span>
+                                        <b>Người nhận: </b>${order.fullname}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <b>Địa chỉ: </b>${order.address}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <b>Số điện thoại: </b>${order.phone}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        <b>Email: </b>${order.email}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        `;
+
+                $('#orderDetailContainer').html(orderInfoHtml);
+                $('#orderDetailPopup').show();
+            }
+
+            function generateArtworksRows(artworks) {
+                return artworks.map(function (artwork) {
+                    return `
+                <tr>
+                    <td>${artwork.artworkPId}</td>
+                    <td><img src="${artwork.imageUrl}" alt="Artwork Image" style="height: 60px; width: 60px;"></td>
+                    <td>${artwork.quanity}</td>
+                    <td>${artwork.priceOrder}</td>
+                </tr>
             `;
                 }).join("");
-
-                $('#orderDetailContainer').html(orderInfoHtml + artworksHtml);
-                $('#orderDetailPopup').show();
             }
 
             $(document).on('click', '.close', function () {
                 $('#orderDetailPopup').hide();
             });
+
+            function generateArtworksRows(artworks) {
+                return artworks.map(function (artwork) {
+                    return `
+                <tr>
+                    <td>${artwork.artworkPId}</td>
+                    <td><img src="${artwork.imageUrl}" alt="Artwork Image" style="height: 80px; width: 80px;"></td>
+                    <td>${artwork.quanity}</td>
+                    <td>${artwork.priceOrder}</td>
+                </tr>
+            `;
+                }).join("");
+            }
+
+            $(document).on('click', '.close', function () {
+                $('#orderDetailPopup').hide();
+            });
+
+            function generateArtworksRows(artworks) {
+                return artworks.map(function (artwork) {
+                    return `
+                <tr>
+                    <td>${artwork.artworkPId}</td>
+                    <td><img src="${artwork.imageUrl}" alt="Artwork Image" style="height: 100px; width: 100px;"></td>
+                    <td>${artwork.quanity}</td>
+                    <td>${artwork.priceOrder}</td>
+                </tr>
+            `;
+                }).join("");
+            }
+
+            $(document).on('click', '.close', function () {
+                $('#orderDetailPopup').hide();
+            });
+
         });
 
         // Hàm định dạng ngày
@@ -993,14 +1109,19 @@
             $(containerId).html(imageElement);
         }
     </script>
-    <div id="orderDetailPopup" class="popup" style="width:70%">
+
+    <style>
+    </style>
+
+    <div id="orderDetailPopup" class="modal show" style="width: 50%; height: 90%; margin: 50px auto; background-color: white;" tabindex="-1" role="dialog">
         <div class="popup-content-order">
-            <span class="close">&times;</span>
+            
             <div id="orderDetailContainer">
                 <!-- Thông tin đơn hàng và sản phẩm sẽ được thêm vào đây -->
             </div>
         </div>
     </div>
+    
     <script src="https://kit.fontawesome.com/6208ee92db.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/js/bootstrap.bundle.min.js"></script>
